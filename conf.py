@@ -622,8 +622,8 @@ REDIRECTIONS = [["about-the-author/index.html", "/pages/about-the-author.html"],
 # For more details, read the manual:
 # https://getnikola.com/handbook.html#deploying-to-github
 # You will need to configure the deployment branch on GitHub.
-GITHUB_SOURCE_BRANCH = 'src'
-GITHUB_DEPLOY_BRANCH = 'master'
+GITHUB_SOURCE_BRANCH = 'master'
+GITHUB_DEPLOY_BRANCH = 'gh-pages'
 
 # The name of the remote where you wish to push to, using github_deploy.
 GITHUB_REMOTE_NAME = 'origin'
