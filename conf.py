@@ -20,11 +20,11 @@ BLOG_AUTHOR = "Juan Nunez-Iglesias"  # (translatable)
 BLOG_TITLE = "I Love Symposia!"  # (translatable)
 # This is the main URL for your site. It will be used
 # in a prominent link. Don't forget the protocol (http/https)!
-SITE_URL = "http://ilovesymposia.com/"
+SITE_URL = "https://jni.github.io/ilovesymposia.com/"
 # This is the URL where Nikola's output will be deployed.
 # If not set, defaults to SITE_URL
 # BASE_URL = "http://ilovesymposia.com/"
-BLOG_EMAIL = "jni.soma@gmail.com"
+BLOG_EMAIL = "jni.soma@fastmail.com"
 BLOG_DESCRIPTION = "Science & Tech for the Small Fry"  # (translatable)
 
 # Nikola is multilingual!
