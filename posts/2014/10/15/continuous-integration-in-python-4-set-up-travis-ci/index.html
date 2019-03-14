@@ -7,13 +7,25 @@
 <link href="../../../../../assets/css/all.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="../../../../../rss.xml">
-<link rel="canonical" href="http://ilovesymposia.com/posts/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/">
-<!--[if lt IE 9]><script src="../../../../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Juan Nunez-Iglesias">
+<link rel="canonical" href="https://jni.github.io/ilovesymposia.com/posts/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+    },
+    displayAlign: 'center', // Change this to 'left' if you want left-aligned equations.
+    "HTML-CSS": {
+        styles: {'.MathJax_Display': {"margin": 0}}
+    }
+});
+</script><!--[if lt IE 9]><script src="../../../../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Juan Nunez-Iglesias">
 <link rel="prev" href="../../13/continuous-integration-in-python-3-set-up-your-test-configuration-files/" title="Continuous integration in Python 3: set up your test configuration files" type="text/html">
 <link rel="next" href="../continuous-integration-in-python-5-report-test-coverage-using-coveralls/" title="Continuous integration in Python, 5: report test coverage using Coveralls" type="text/html">
 <meta property="og:site_name" content="I Love Symposia!">
 <meta property="og:title" content="Continuous integration in Python, 4: set up Travis-CI">
-<meta property="og:url" content="http://ilovesymposia.com/posts/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/">
+<meta property="og:url" content="https://jni.github.io/ilovesymposia.com/posts/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/">
 <meta property="og:description" content="Automated testing with pytest
 Measuring test coverage
 Setting up test configuration files
@@ -53,7 +65,7 @@ Once you've set up your tests locally, it does you no good if you don't remember
         <div class="container">
           
     <h3 id="brand" class="masthead-title">
-      <a href="http://ilovesymposia.com/" title="I Love Symposia!" rel="home">I Love Symposia!</a>
+      <a href="https://jni.github.io/ilovesymposia.com/" title="I Love Symposia!" rel="home">I Love Symposia!</a>
     </h3>
 
         </div>
@@ -154,7 +166,7 @@ Once you've set up your tests locally, it does you no good if you don't remember
         <div id="disqus_thread"></div>
         <script>
         var disqus_shortname ="nikolademo",
-            disqus_url="http://ilovesymposia.com/posts/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/",
+            disqus_url="https://jni.github.io/ilovesymposia.com/posts/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/",
         disqus_title="Continuous integration in Python, 4: set up Travis-CI",
         disqus_identifier="cache/posts/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci.html",
         disqus_config = function () {
@@ -170,7 +182,7 @@ Once you've set up your tests locally, it does you no good if you don't remember
     <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
 
 
-        </section></article><script>var disqus_shortname="nikolademo";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><footer id="footer"><p>Contents © 2019         <a href="mailto:jni.soma@gmail.com">Juan Nunez-Iglesias</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
+        </section></article><script>var disqus_shortname="nikolademo";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><footer id="footer"><p>Contents © 2019         <a href="mailto:jni.soma@fastmail.com">Juan Nunez-Iglesias</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
             
         </footer>
 </div>

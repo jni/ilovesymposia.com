@@ -7,13 +7,25 @@
 <link href="../../../../../assets/css/all.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="../../../../../rss.xml">
-<link rel="canonical" href="http://ilovesymposia.com/posts/2014/10/27/continuous-integration-in-python-7-some-helper-tools-and-final-thoughts/">
-<!--[if lt IE 9]><script src="../../../../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Juan Nunez-Iglesias">
+<link rel="canonical" href="https://jni.github.io/ilovesymposia.com/posts/2014/10/27/continuous-integration-in-python-7-some-helper-tools-and-final-thoughts/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+    },
+    displayAlign: 'center', // Change this to 'left' if you want left-aligned equations.
+    "HTML-CSS": {
+        styles: {'.MathJax_Display': {"margin": 0}}
+    }
+});
+</script><!--[if lt IE 9]><script src="../../../../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Juan Nunez-Iglesias">
 <link rel="prev" href="../../17/continuous-integration-in-python-6-show-off-your-work/" title="Continuous integration in Python, 6: Show off your work" type="text/html">
 <link rel="next" href="../../../../2015/01/04/some-things-i-learned-while-building-a-site-on-github-pages/" title="Some things I learned while building a site on GitHub Pages" type="text/html">
 <meta property="og:site_name" content="I Love Symposia!">
 <meta property="og:title" content="Continuous integration in Python, 7: some helper tools and final thoug">
-<meta property="og:url" content="http://ilovesymposia.com/posts/2014/10/27/continuous-integration-in-python-7-some-helper-tools-and-final-thoughts/">
+<meta property="og:url" content="https://jni.github.io/ilovesymposia.com/posts/2014/10/27/continuous-integration-in-python-7-some-helper-tools-and-final-thoughts/">
 <meta property="og:description" content="Almost everything I know about good Python development I've learned from Stéfan van der Walt, Tony Yu, and the rest of the scikit-image team. But a few weeks ago, I was trying to emulate the scikit-im">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2014-10-27T07:03:52Z">
@@ -48,7 +60,7 @@
         <div class="container">
           
     <h3 id="brand" class="masthead-title">
-      <a href="http://ilovesymposia.com/" title="I Love Symposia!" rel="home">I Love Symposia!</a>
+      <a href="https://jni.github.io/ilovesymposia.com/" title="I Love Symposia!" rel="home">I Love Symposia!</a>
     </h3>
 
         </div>
@@ -148,7 +160,7 @@
         <div id="disqus_thread"></div>
         <script>
         var disqus_shortname ="nikolademo",
-            disqus_url="http://ilovesymposia.com/posts/2014/10/27/continuous-integration-in-python-7-some-helper-tools-and-final-thoughts/",
+            disqus_url="https://jni.github.io/ilovesymposia.com/posts/2014/10/27/continuous-integration-in-python-7-some-helper-tools-and-final-thoughts/",
         disqus_title="Continuous integration in Python, 7: some helper tools and final thoughts",
         disqus_identifier="cache/posts/2014/10/27/continuous-integration-in-python-7-some-helper-tools-and-final-thoughts.html",
         disqus_config = function () {
@@ -164,7 +176,7 @@
     <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
 
 
-        </section></article><script>var disqus_shortname="nikolademo";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><footer id="footer"><p>Contents © 2019         <a href="mailto:jni.soma@gmail.com">Juan Nunez-Iglesias</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
+        </section></article><script>var disqus_shortname="nikolademo";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><footer id="footer"><p>Contents © 2019         <a href="mailto:jni.soma@fastmail.com">Juan Nunez-Iglesias</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
             
         </footer>
 </div>

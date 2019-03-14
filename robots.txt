@@ -1,4 +1,4 @@
-Sitemap: http://ilovesymposia.com/sitemapindex.xml
+Sitemap: https://jni.github.io/ilovesymposia.com/sitemapindex.xml
 
 User-Agent: *
-Host: ilovesymposia.com
+Host: jni.github.io
