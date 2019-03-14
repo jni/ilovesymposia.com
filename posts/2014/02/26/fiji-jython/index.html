@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Get the best of both worlds with Fiji's Jython interpreter | I Love Symposia!</title>
+<link href="../../../../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900" rel="stylesheet">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../../../../rss.xml">
+<link rel="canonical" href="http://ilovesymposia.com/posts/2014/02/26/fiji-jython/">
+<!--[if lt IE 9]><script src="../../../../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Juan Nunez-Iglesias">
+<link rel="prev" href="../../../01/09/best-practices-addendum-find-and-follow-the-conventions-of-your-programming-community/" title="Best practices addendum: find and follow the conventions of your programming community" type="text/html">
+<link rel="next" href="../../../03/15/an-update-on-mixing-java-and-python-with-fiji/" title="An update on mixing Java and Python with Fiji" type="text/html">
+<meta property="og:site_name" content="I Love Symposia!">
+<meta property="og:title" content="Get the best of both worlds with Fiji's Jython interpreter">
+<meta property="og:url" content="http://ilovesymposia.com/posts/2014/02/26/fiji-jython/">
+<meta property="og:description" content="Fiji is just ImageJ, with batteries included. It contains plugins to do virtually anything you would want to do to an image. Since my go-to programming language is Python, my favorite feature of Fiji ">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2014-02-26T01:21:38Z">
+<meta property="article:tag" content="Planet SciPy">
+<meta property="article:tag" content="programming">
+<meta property="article:tag" content="Research Blogging">
+<meta property="article:tag" content="software">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Header and menu bar -->
+<div class="container">
+      <header class="blog-header py-3"><div class="row nbb-header align-items-center">
+          <div class="col-md-3 col-xs-2 col-sm-2" style="width: auto;">
+            <button class="navbar-toggler navbar-light bg-light nbb-navbar-toggler" type="button" data-toggle="collapse" data-target=".bs-nav-collapsible" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse bs-nav-collapsible bootblog4-search-form-holder">
+                
+            </div>
+        </div>
+          <div class="col-md-6 col-xs-10 col-sm-10 bootblog4-brand" style="width: auto;">
+            <a class="navbar-brand blog-header-logo text-dark" href="http://ilovesymposia.com/">
+
+            <span id="blog-title">I Love Symposia!</span>
+        </a>
+          </div>
+            <div class="col-md-3 justify-content-end align-items-center bs-nav-collapsible collapse flex-collapse bootblog4-right-nav">
+            <nav class="navbar navbar-light bg-white"><ul class="navbar-nav bootblog4-right-nav">
+<li class="nav-item">
+    <a href="index.md" id="sourcelink" class="nav-link">Source</a>
+    </li>
+
+
+                    
+            </ul></nav>
+</div>
+    </div>
+</header><nav class="navbar navbar-expand-md navbar-light bg-white static-top"><div class="collapse navbar-collapse bs-nav-collapsible" id="bs-navbar">
+            <ul class="navbar-nav nav-fill d-flex w-100">
+<li class="nav-item">
+<a href="../../../../../archive.html" class="nav-link">Archives</a>
+                </li>
+<li class="nav-item">
+<a href="../../../../../categories/index.html" class="nav-link">Tags</a>
+                </li>
+<li class="nav-item">
+<a href="../../../../../rss.xml" class="nav-link">RSS feed</a>
+
+                
+            </li>
+</ul>
+</div>
+<!-- /.navbar-collapse -->
+</nav>
+</div>
+
+<div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Get the best of both worlds with Fiji's Jython interpreter</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    Juan Nunez-Iglesias
+            </span></p>
+            <p class="dateline">
+            <a href="." rel="bookmark">
+            <time class="published dt-published" datetime="2014-02-26T01:21:38Z" itemprop="datePublished" title="2014-02-26 01:21">2014-02-26 01:21</time></a>
+            </p>
+                <p class="commentline">
+        
+    <a href="#disqus_thread" data-disqus-identifier="cache/posts/2014/02/26/fiji-jython.html">Comments</a>
+
+
+            
+        </p>
+<p class="sourceline"><a href="index.md" class="sourcelink">Source</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p></p>
+<a href="http://fiji.sc">Fiji is just ImageJ</a>, with batteries included. It contains plugins to do virtually anything you would want to do to an image. Since my go-to programming language is Python, my favorite feature of Fiji is its language-agnostic API, which supports a plethora of languages, including Java, Javascript, Clojure, and of course Python; 7 languages in all. (Find these under Plugins/Scripting/Script Editor.) Read on to learn more about the ins and outs of using Python to drive Fiji.
+<p>Among the plugin smorgasbord of Fiji is the Bio-Formats importer, which can open any proprietary microscopy file under the sun. (And there’s a lot of them!) Below I will use Jython to open some .lifs, do some processing, and output some .pngs that I can process further using Python/NumPy/scikit-image. (A .lif is a Leica Image File, because there were not enough image file formats before Leica came along.)</p>
+<p>The first thing to note is that Jython is not Python, and it is certainly not Python 2.7. In fact, the Fiji Jython interpreter implements Python 2.5, which means no <code>argparse</code>. Not to worry though, as <code>argparse</code> is implemented in a <a href="https://code.google.com/p/argparse/source/browse/argparse.py">single, pure Python file</a> distributed under the Python license. So:</p>
+<p><strong>Tip #1: copy argparse.py into your project.</strong></p>
+<p>This way you’ll have access the state of the art in command line argument processing from within the Jython interpreter.</p>
+<p>To get Fiji to run your code, you simply feed it your source file on the command line. So, let’s try it out with a simple example, <code>echo.py</code>:
+</p>
+<pre><code class="python">import argparse
+<p>if <strong>name</strong> == '<strong>main</strong>':
+    parser = argparse.ArgumentParser(description=
+                                     "Parrot back your arguments.")
+    parser.add_argument('args', nargs="*", help="The input arguments.")
+    args = parser.parse_args()
+    for arg in args.args:
+        print(arg)</p></code></pre>
+Now we can just run this:
+<pre><code>$ fiji echo.py hello world
+hello
+world</code></pre>
+But sadly, Fiji captures any -h calls, which defeats the purpose of using argparse in the first place!
+<pre><code>$ fiji echo.py -h
+Usage: /Applications/Fiji.app/Contents/MacOS/fiji-macosx [&lt;Java options&gt;.. --] [&lt;ImageJ options&gt;..] [&lt;files&gt;..]
+<p>Java options are passed to the Java Runtime, ImageJ
+options to ImageJ (or Jython, JRuby, ...).</p>
+<p>In addition, the following options are supported by ImageJ:
+General options:
+--help, -h
+    show this help
+--dry-run
+    show the command line, but do not run anything
+--debug
+    verbose output</p></code></pre>
+(… and so on, the output is quite huge.)
+<p>(Note also that I aliased the Fiji binary, that long path under <code>/Applications</code>, to a simple <code>fiji</code> command; I recommend you do the same.)</p>
+<p>However, we can work around this by calling help using <em>Python</em> as the interpreter, and only using Fiji to actually run the file:
+</p>
+<pre><code>$ python echo.py -h
+usage: echo.py [-h] [args [args ...]]
+<p>Parrot back your arguments.</p>
+<p>positional arguments:
+  args        The input arguments.</p>
+<p>optional arguments:
+  -h, --help  show this help message and exit</p></code></pre>
+That’s more like it! Now we can start to build something a bit more interesting, for example, something that converts arbitrary image files to png:
+<pre><code class="python">import argparse
+from ij import IJ # the IJ class has utility methods for many common tasks.
+<p>def convert_file(fn):
+    """Convert the input file to png format.</p>
+<pre class="code literal-block"><span></span><span class="gh">Parameters</span>
+<span class="gh">----------</span>
+fn : string
+    The filename of the image to be converted.
+"""
+imp = IJ.openImage(fn)
+# imp is the common name for an ImagePlus object,
+# ImageJ's base image class
+fnout = fn.rsplit('.', 1)[0] + '.png'
+IJ.saveAs(imp, 'png', fnout)
+</pre>
+
+
+<p>if <strong>name</strong> == '<strong>main</strong>':
+    parser = argparse.ArgumentParser(description="Convert TIFF to PNG.")
+    parser.add_argument('images', nargs='+', help="Input images.")</p>
+<pre class="code literal-block"><span></span>args = parser.parse_args()
+for fn in args.images:
+    convert_file(fn)<span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</pre>
+
+
+<p>Boom, we’re done. But wait, we actually broke the Python interpreter compatibility, since ij is not a Python library!
+</p>
+<pre><code>$ python convert2png.py -h
+Traceback (most recent call last):
+  File "convert.py", line 2, in &lt;module&gt;
+    from ij import IJ # the IJ class has utility methods for many common tasks.
+ImportError: No module named ij</code></pre>
+Which brings us to:
+<p><strong>Tip #2: only import Java API functions within the functions that use them.</strong></p>
+<p>By moving the <code>from ij import IJ</code> statement into the <code>convert</code> function, we maintain compatibility with Python, and can continue to use <code>argparse</code>’s helpful documentation strings.</p>
+<p>Next, we want to use the Bio-Formats importer, which is class <code>BF</code> in <code>loci.plugins</code>. Figuring out the class hierarchy for arbitrary plugins is tricky, but you can find it <a href="http://rsbweb.nih.gov/ij/developer/api/index.html">here</a> for core ImageJ (using lovely 1990s-style frames) and <a href="http://ci.openmicroscopy.org/job/BIOFORMATS-5.0-latest/javadoc/index.html">here</a> for Bio-Formats, and Curtis Rueden has made <a href="http://javadoc.imagej.net/">this list</a> for other common plugins.</p>
+<p>When you try to open a file with Bio-Formats importer using the Fiji GUI, you get the following dialog:</p>
+<figure><img alt="BioFormats import window" src="http://ilovesymposia.files.wordpress.com/2014/02/bioformats-window.png"><figcaption>BioFormats import window</figcaption></figure><p>That’s a lot of options, and we actually want to set some of them. If you look at the <a href="http://ci.openmicroscopy.org/job/BIOFORMATS-5.0-latest/javadoc/loci/plugins/BF.html#openImagePlus(loci.plugins.in.ImporterOptions)"><code>BF.openImagePlus</code></a> documentation, you can see that this is done through an <code>ImporterOptions</code> class located in <code>loci.plugins.in</code>. You’ll notice that “in” is a reserved word in Python, so <code>from loci.plugins.in import ImporterOptions</code> is not a valid Python statement. Yay! My workaround:</p>
+<p><strong>Tip #3: move your Fiji imports to an external file.</strong></p>
+<p>So I have a <code>jython_imports.py</code> file with just:
+</p>
+<pre><code class="python">from ij import IJ
+from loci.plugins import BF
+from loci.plugins.in import ImporterOptions</code></pre>
+Then, inside the <code>convert_files()</code> function, we just do:
+<pre><code class="python">from jython_imports import IJ, BF, ImporterOptions</code></pre>
+This way, the main file remains Python-compatible until the convert() function is actually called, regardless of whatever funky and unpythonic stuff is happening in <code>jython_imports.py</code>.
+<p>Onto the options. If you untick “Open files individually”, it will open up all matching files in a directory, regardless of your input filename! Not good. So now we play a pattern-matching game in which we match the option description in the above dialog with the <a href="http://ci.openmicroscopy.org/job/BIOFORMATS-5.0-latest/javadoc/loci/plugins/in/ImporterOptions.html">ImporterOptions API</a> calls. In this case, we <code>setUngroupFiles(True)</code>. To specify a filename, we <code>setId(filename)</code>. Additionally, because we want all of the images in the .lif file, we <code>setOpenAllSeries(True)</code>.</p>
+<p>Next, each image in the series is 3D and has three channels, but we are only interested in a summed z-projection of the first channel. There’s a set of ImporterOptions methods tantalizingly named <code>setCBegin</code>, <code>setCEnd</code>, and <code>setCStep</code>, but this is where I found the <a href="http://ci.openmicroscopy.org/job/BIOFORMATS-5.0-latest/javadoc/loci/plugins/in/ImporterOptions.html#setCEnd(int,%20int)">documentation</a> sorely lacking. The functions take <code>(int s, int value)</code> as arguments, but what’s <code>s</code>??? Are the limits closed or open? Code review is a wonderful thing, and this would not have passed it. To figure things out:</p>
+<p><strong>Tip #4: use Fiji’s interactive Jython interpreter to figure things out quickly.</strong></p>
+<p>You can find the Jython interpreter under Plugins/Scripting/Jython Interpreter. It’s no IPython, but it is extremely helpful to answer the questions I had above. My hypothesis was that <code>s</code> was the series, and that the intervals would be closed. So:
+</p>
+<pre><code class="python">&gt;&gt;&gt; from loci.plugins import BF
+&gt;&gt;&gt; from loci.plugins.in import ImporterOptions
+&gt;&gt;&gt; opts = ImporterOptions()
+&gt;&gt;&gt; opts.setId("myFile.lif")
+&gt;&gt;&gt; opts.setOpenAllSeries(True)
+&gt;&gt;&gt; opts.setUngroupFiles(True)
+&gt;&gt;&gt; imps = BF.openImagePlus(opts)</code></pre>
+Now we can play around, with one slight annoyance: the interpreter won’t print the output of your last statement, so you have to specify it:
+<pre><code class="python">&gt;&gt;&gt; len(imps)
+&gt;&gt;&gt; print(len(imps))
+18</code></pre>
+Which is what I expected, as there are 18 series in my .lif file. The image shape is given by the <code>getDimensions()</code> method of the ImagePlus class:
+<pre><code class="python">&gt;&gt;&gt; print(imps[0].getDimensions())
+array('i', [1024, 1024, 3, 31, 1])
+<p>&gt;&gt;&gt; print(imps[1].getDimensions())
+array('i', [1024, 1024, 3, 34, 1])</p></code></pre>
+That’s (x, y, channels, z, time).
+<p>Now, let’s try the same thing with <code>setCEnd</code>, assuming closed interval:
+</p>
+<pre><code class="python">&gt;&gt;&gt; opts.setCEnd(0, 0) ## only read channels up to 0 for series 0?
+&gt;&gt;&gt; opts.setCEnd(2, 0) ## only read channels up to 0 for series 2?
+&gt;&gt;&gt; imps = BF.openImagePlus(opts)
+&gt;&gt;&gt; print(imps[0].getDimensions())
+array('i', [1024, 1024, 1, 31, 1])
+<p>&gt;&gt;&gt; print(imps[1].getDimensions())
+array('i', [1024, 1024, 3, 34, 1])</p>
+<p>&gt;&gt;&gt; print(imps[2].getDimensions())
+array('i', [1024, 1024, 1, 30, 1])</p></code></pre>
+Nothing there to disprove my hypothesis! So we move on to the final step, which is to z-project the stack by summing the intensity over all z values. This is normally accessed via Image/Stacks/Z Project in the Fiji GUI, and I found the corresponding <code>ij.plugin.ZProjector</code> class by searching for <a href="http://rsbweb.nih.gov/ij/developer/api/ij/plugin/ZProjector.html">“proj” in the ImageJ documentation</a>. A <code>ZProjector</code> object has a <code>setMethod</code> method that usefully takes an int as an argument, with no explanation in its docstring as to which int translates to which method (sum, average, max, etc.). A little more digging in the <a href="http://rsb.info.nih.gov/ij/developer/source/ij/plugin/ZProjector.java.html">source code</a> reveals some class static variables, <code>AVG_METHOD</code>, <code>MAX_METHOD</code>, and so on.
+<p><strong>Tip #5: don’t be afraid to look at the source code. It’s one of the main advantages of working in open-source.</strong></p>
+<p>So:
+</p>
+<pre><code class="python">&gt;&gt;&gt; from ij.plugin import ZProjector
+&gt;&gt;&gt; proj = ZProjector()
+&gt;&gt;&gt; proj.setMethod(ZProjector.SUM_METHOD)
+&gt;&gt;&gt; proj.setImage(imps[0])
+&gt;&gt;&gt; proj.doProjection()
+&gt;&gt;&gt; impout = proj.getProjection()
+&gt;&gt;&gt; print(impout.getDimensions())
+array('i', [1024, 1024, 1, 1, 1])</code></pre>
+The output is actually a float-typed image, which will get rescaled to [0, 255] uint8 on save if we don’t fix it. So, to wrap up, we convert the image to 16 bits (making sure to <a href="https://groups.google.com/d/msg/fiji-users/HfuHj0QBo40/CR9s3MQ5vUsJ">turn off scaling</a>), use the series title to generate a unique filename, and save as a PNG:
+<pre><code class="python">&gt;&gt;&gt; from ij.process import ImageConverter
+&gt;&gt;&gt; ImageConverter.setDoScaling(False)
+&gt;&gt;&gt; conv = ImageConverter(impout)
+&gt;&gt;&gt; conv.convertToGray16()
+&gt;&gt;&gt; title = imps[0].getTitle().rsplit(" ", 1)[-1]
+&gt;&gt;&gt; IJ.saveAs(impout, 'png', "myFile-" + title + ".png")</code></pre>
+You can see the final result of my sleuthing in <a href="https://github.com/jni/lesion/blob/6f77cccd1e0f3ddf92ce35a7040ada5328fd90ff/lesion/lif2png.py">lif2png.py</a> and <a href="https://github.com/jni/lesion/blob/6f77cccd1e0f3ddf92ce35a7040ada5328fd90ff/lesion/jython_imports.py">jython_imports.py</a>. If you would do something differently, pull requests are always welcome.
+<p>Before I sign off, let me recap my tips:</p>
+<ol>
+<li>
+<p>copy argparse.py into your project;</p>
+</li>
+<li>
+<p>only import Java API functions within the functions that use them;</p>
+</li>
+<li>
+<p>move your Fiji imports to an external file;</p>
+</li>
+<li>
+<p>use Fiji’s interactive Jython interpreter to figure things out quickly; and</p>
+</li>
+<li>
+<p>don’t be afraid to look at the source code.</p>
+</li>
+</ol>
+<p>And let me add a few final comments: once I started digging into all of Fiji’s plugins, I found documentation of very variable quality, and worse, virtually zero consistency between the interfaces to each plugin. Some work on “the currently active image”, some take an <code>ImagePlus</code> instance as input, and others still a filename or a directory name. Outputs are equally variable. This has been a huge pain when trying to work with these plugins.</p>
+<p>But, on the flipside, this is the most complete collection of image processing functions anywhere. Along with the seamless access to all those functions from Jython and other languages, that makes Fiji very worthy of your attention.
+</p>
+<h4 id="acknowledgements">Acknowledgements</h4>
+This post was possible thanks to the help of <a href="http://albert.rierol.net/">Albert Cardona</a>, <a href="http://loci.wisc.edu/people/johannes-schindelin">Johannes Schindelin</a>, <a href="http://loci.wisc.edu/people/wayne-rasband">Wayne Rasband</a>, and <a href="http://lammertlab.org/Jan_Eglinger">Jan Eglinger</a>, who restlessly respond to (it seems) every query on the <a href="http://imagej.1557.x6.nabble.com/">ImageJ mailing list</a>. Thanks!
+<h4 id="reference">References</h4>
+<p><span class="Z3988" title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;rft.jtitle=Nature+methods&amp;rft_id=info%3Apmid%2F22743772&amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;rft.atitle=Fiji%3A+an+open-source+platform+for+biological-image+analysis.&amp;rft.issn=1548-7091&amp;rft.date=2012&amp;rft.volume=9&amp;rft.issue=7&amp;rft.spage=676&amp;rft.epage=82&amp;rft.artnum=&amp;rft.au=Schindelin+J&amp;rft.au=Arganda-Carreras+I&amp;rft.au=Frise+E&amp;rft.au=Kaynig+V&amp;rft.au=Longair+M&amp;rft.au=Pietzsch+T&amp;rft.au=Preibisch+S&amp;rft.au=Rueden+C&amp;rft.au=Saalfeld+S&amp;rft.au=Schmid+B&amp;rft.au=Tinevez+JY&amp;rft.au=White+DJ&amp;rft.au=Hartenstein+V&amp;rft.au=Eliceiri+K&amp;rft.au=Tomancak+P&amp;rft.au=Cardona+A&amp;rfe_dat=bpr3.included=1;bpr3.tags=Biology%2CComputer+Science+%2F+Engineering%2CComputational+Biology%2C+Bioinformatics">Schindelin J, Arganda-Carreras I, Frise E, Kaynig V, Longair M, Pietzsch T, Preibisch S, Rueden C, Saalfeld S, Schmid B, Tinevez JY, White DJ, Hartenstein V, Eliceiri K, Tomancak P, &amp; Cardona A (2012). Fiji: an open-source platform for biological-image analysis. <span style="font-style:italic;">Nature methods, 9</span> (7), 676-82 PMID: <a rev="review" href="http://www.ncbi.nlm.nih.gov/pubmed/22743772">22743772</a></span></p>
+<p><span class="Z3988" title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;rft.jtitle=The+Journal+of+cell+biology&amp;rft_id=info%3Apmid%2F20513764&amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;rft.atitle=Metadata+matters%3A+access+to+image+data+in+the+real+world.&amp;rft.issn=0021-9525&amp;rft.date=2010&amp;rft.volume=189&amp;rft.issue=5&amp;rft.spage=777&amp;rft.epage=82&amp;rft.artnum=&amp;rft.au=Linkert+M&amp;rft.au=Rueden+CT&amp;rft.au=Allan+C&amp;rft.au=Burel+JM&amp;rft.au=Moore+W&amp;rft.au=Patterson+A&amp;rft.au=Loranger+B&amp;rft.au=Moore+J&amp;rft.au=Neves+C&amp;rft.au=Macdonald+D&amp;rft.au=Tarkowska+A&amp;rft.au=Sticco+C&amp;rft.au=Hill+E&amp;rft.au=Rossner+M&amp;rft.au=Eliceiri+KW&amp;rft.au=Swedlow+JR&amp;rfe_dat=bpr3.included=1;bpr3.tags=Biology%2CComputer+Science+%2F+Engineering%2CComputational+Biology%2C+Bioinformatics">Linkert M, Rueden CT, Allan C, Burel JM, Moore W, Patterson A, Loranger B, Moore J, Neves C, Macdonald D, Tarkowska A, Sticco C, Hill E, Rossner M, Eliceiri KW, &amp; Swedlow JR (2010). Metadata matters: access to image data in the real world. <span style="font-style:italic;">The Journal of cell biology, 189</span> (5), 777-82 PMID: <a rev="review" href="http://www.ncbi.nlm.nih.gov/pubmed/20513764">20513764</a></span></p></code></pre>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../../../../categories/planet-scipy/" rel="tag">Planet SciPy</a></li>
+            <li><a class="tag p-category" href="../../../../../categories/programming/" rel="tag">programming</a></li>
+            <li><a class="tag p-category" href="../../../../../categories/research-blogging/" rel="tag">Research Blogging</a></li>
+            <li><a class="tag p-category" href="../../../../../categories/software/" rel="tag">software</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../../../01/09/best-practices-addendum-find-and-follow-the-conventions-of-your-programming-community/" rel="prev" title="Best practices addendum: find and follow the conventions of your programming community">Previous post</a>
+            </li>
+            <li class="next">
+                <a href="../../../03/15/an-update-on-mixing-java-and-python-with-fiji/" rel="next" title="An update on mixing Java and Python with Fiji">Next post</a>
+            </li>
+        </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
+        
+        
+        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="nikolademo",
+            disqus_url="http://ilovesymposia.com/posts/2014/02/26/fiji-jython/",
+        disqus_title="Get the best of both worlds with Fiji's Jython interpreter",
+        disqus_identifier="cache/posts/2014/02/26/fiji-jython.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section></article><script>var disqus_shortname="nikolademo";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer">
+            Contents © 2019         <a href="mailto:jni.soma@gmail.com">Juan Nunez-Iglesias</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="../../../../../assets/js/all-nocdn.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    </script>
+</body>
+</html>

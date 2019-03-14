@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>I Love Symposia! (Posts about Research Blogging)</title><link>http://ilovesymposia.com/</link><description></description><atom:link href="http://ilovesymposia.com/categories/research-blogging.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><copyright>Contents © 2019 &lt;a href="mailto:jni.soma@gmail.com"&gt;Juan Nunez-Iglesias&lt;/a&gt; </copyright><lastBuildDate>Thu, 14 Mar 2019 02:09:39 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>A clever use of SciPy's ndimage.generic_filter for n-dimensional image processing</title><link>http://ilovesymposia.com/posts/2014/06/24/a-clever-use-of-scipys-ndimage-generic_filter-for-n-dimensional-image-processing/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;Vighnesh is &lt;a href="http://www.google-melange.com/gsoc/proposal/public/google/gsoc2014/vighneshbirodkar/5870670537818112"&gt;tasked&lt;/a&gt; with implementing region adjacency graphs and graph based methods for image segmentation. He initially wrote specific functions for 2D and 3D images, and I suggested that he should merge them: either with n-dimensional code, or, at the very least, by making 2D a special case of 3D. He chose the former, and produced extremely elegant code. Three nested for loops and a large number of neighbour computations were replaced by a function call and a simple loop. Read on to find out how.&lt;/p&gt;
+
+&lt;p&gt;.. has_math: no
+.. status: published
+.. wp-status: publish
+--&amp;gt;&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;&lt;p&gt;This year I am privileged to be a mentor in the &lt;a href="https://www.google-melange.com/gsoc/homepage/google/gsoc2014"&gt;Google Summer of Code&lt;/a&gt; for the &lt;a href="http://scikit-image.org"&gt;scikit-image&lt;/a&gt; project, as part of the Python Software Foundation organisation. Our student, &lt;a href="https://github.com/vighneshbirodkar"&gt;Vighnesh Birodkar&lt;/a&gt;, recently came up with a clever use of SciPy’s &lt;a href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.filters.generic_filter.html"&gt;&lt;code&gt;ndimage.generic_filter&lt;/code&gt;&lt;/a&gt; that is certainly worth sharing widely.&lt;/p&gt;
+&lt;p&gt;Vighnesh is &lt;a href="http://www.google-melange.com/gsoc/proposal/public/google/gsoc2014/vighneshbirodkar/5870670537818112"&gt;tasked&lt;/a&gt; with implementing region adjacency graphs and graph based methods for image segmentation. He initially wrote specific functions for 2D and 3D images, and I suggested that he should merge them: either with n-dimensional code, or, at the very least, by making 2D a special case of 3D. He chose the former, and produced extremely elegant code. Three nested for loops and a large number of neighbour computations were replaced by a function call and a simple loop. Read on to find out how.&lt;/p&gt;
+&lt;p&gt;Iterating over an array of unknown dimension is not trivial a priori, but thankfully, someone else has already solved that problem: NumPy’s &lt;a href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.nditer.html"&gt;&lt;code&gt;nditer&lt;/code&gt;&lt;/a&gt; and &lt;a href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndindex.html"&gt;&lt;code&gt;ndindex&lt;/code&gt;&lt;/a&gt; functions allow one to efficiently iterate through every point of an n-dimensional array. However, that still leaves the problem of finding neighbors, to determine which regions are adjacent to each other. Again, this is not trivial to do in nD.&lt;/p&gt;
+&lt;p&gt;scipy.ndimage provides a suitable function, &lt;code&gt;generic_filter&lt;/code&gt;. Typically, a filter is used to iterate a “selector” (called a structuring element) over an array, compute some function of all the values covered by the structuring element, and replace the central value by the output of the function. For example, using the structuring element:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[code lang=python]&lt;/span&gt;
+&lt;span class="na"&gt;fp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;np.array([[0, 1, 0],&lt;/span&gt;
+&lt;span class="s"&gt;               [1, 1, 1],&lt;/span&gt;
+&lt;span class="s"&gt;               [0, 1, 0]], np.uint8)&lt;/span&gt;
+&lt;span class="k"&gt;[/code]&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;and the function &lt;code&gt;np.median&lt;/code&gt; on a 2D image produces a median filter over a pixel’s immediate neighbors. That is,&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[code lang=python]&lt;/span&gt;
+&lt;span class="na"&gt;import functools&lt;/span&gt;
+&lt;span class="na"&gt;median_filter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;functools.partial(generic_filter,&lt;/span&gt;
+&lt;span class="s"&gt;                                  function=np.median,&lt;/span&gt;
+&lt;span class="s"&gt;                                  footprint=fp)&lt;/span&gt;
+&lt;span class="k"&gt;[/code]&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Here, we don’t want to create an output array, but an output graph. What to do? As it turns out, Python’s pass-by-reference allowed Vighnesh to do this quite easily using the “extra_arguments” keyword to &lt;code&gt;generic_filter&lt;/code&gt;: we can write a filter function that receives the graph and updates it when two distinct values are adjacent! &lt;code&gt;generic_filter&lt;/code&gt; passes all values covered by a structuring element as a flat array, in the array order of the structuring element. So Vighnesh wrote the following function:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[code lang=python]&lt;/span&gt;
+&lt;span class="na"&gt;def _add_edge_filter(values, g):&lt;/span&gt;
+    &lt;span class="na"&gt;"""Add an edge between first element in `values` and&lt;/span&gt;
+    &lt;span class="na"&gt;all other elements of `values` in the graph `g`.&lt;/span&gt;
+    &lt;span class="na"&gt;`values[0]` is expected to be the central value of&lt;/span&gt;
+    &lt;span class="na"&gt;the footprint used.&lt;/span&gt;
+
+    &lt;span class="na"&gt;Parameters&lt;/span&gt;
+    &lt;span class="na"&gt;----------&lt;/span&gt;
+    &lt;span class="na"&gt;values : array&lt;/span&gt;
+        &lt;span class="na"&gt;The array to process.&lt;/span&gt;
+    &lt;span class="na"&gt;g : RAG&lt;/span&gt;
+        &lt;span class="na"&gt;The graph to add edges in.&lt;/span&gt;
+
+    &lt;span class="na"&gt;Returns&lt;/span&gt;
+    &lt;span class="na"&gt;-------&lt;/span&gt;
+    &lt;span class="na"&gt;0.0 : float&lt;/span&gt;
+        &lt;span class="na"&gt;Always returns 0.&lt;/span&gt;
+
+    &lt;span class="na"&gt;"""&lt;/span&gt;
+    &lt;span class="na"&gt;values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;values.astype(int)&lt;/span&gt;
+&lt;span class="s"&gt;    current = values[0]&lt;/span&gt;
+&lt;span class="s"&gt;    for value in values[1:]:&lt;/span&gt;
+&lt;span class="s"&gt;        g.add_edge(current, value)&lt;/span&gt;
+&lt;span class="s"&gt;    return 0.0&lt;/span&gt;
+&lt;span class="k"&gt;[/code]&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Then, using the footprint:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[code lang=python]&lt;/span&gt;
+&lt;span class="na"&gt;fp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;np.array([[0, 0, 0],&lt;/span&gt;
+&lt;span class="s"&gt;               [0, 1, 1],&lt;/span&gt;
+&lt;span class="s"&gt;               [0, 1, 0]], np.uint8)&lt;/span&gt;
+&lt;span class="k"&gt;[/code]&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;(or its n-dimensional analog), this filter is called as follows on &lt;code&gt;labels&lt;/code&gt;, the image containing the region labels:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[code lang=python]&lt;/span&gt;
+&lt;span class="na"&gt;filters.generic_filter(labels,&lt;/span&gt;
+                       &lt;span class="na"&gt;function&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;_add_edge_filter,&lt;/span&gt;
+&lt;span class="s"&gt;                       footprint=fp,&lt;/span&gt;
+&lt;span class="s"&gt;                       mode='nearest',&lt;/span&gt;
+&lt;span class="s"&gt;                       extra_arguments=(g,))&lt;/span&gt;
+&lt;span class="k"&gt;[/code]&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;This is a rather unconventional use of generic_filter, which is normally used for its output array. Note how the return value of the filter function, &lt;code&gt;_add_edge_filter&lt;/code&gt;, is just 0! In our case, the output array contains all 0s, but we use the filter &lt;em&gt;exclusively for its side-effect&lt;/em&gt;: adding an edge to the graph g when there is more than one unique value in the footprint. That’s cool.&lt;/p&gt;
+&lt;p&gt;Continuing, in this first RAG implementation, Vighnesh wanted to segment according to average color, so he further needed to iterate over each pixel/voxel/hypervoxel and keep a running total of the color and the pixel count. He used elements in the graph node dictionary for this and updated them using &lt;code&gt;ndindex&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[code lang=python]&lt;/span&gt;
+&lt;span class="na"&gt;for index in np.ndindex(labels.shape):&lt;/span&gt;
+    &lt;span class="na"&gt;current&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;labels[index]&lt;/span&gt;
+&lt;span class="s"&gt;    g.node[current]['pixel count'] += 1&lt;/span&gt;
+&lt;span class="s"&gt;    g.node[current]['total color'] += image[index]&lt;/span&gt;
+&lt;span class="k"&gt;[/code]&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Thus, together, numpy’s &lt;code&gt;nditer&lt;/code&gt;, &lt;code&gt;ndindex&lt;/code&gt;, and scipy.ndimage’s &lt;code&gt;generic_filter&lt;/code&gt; provide a powerful way to perform a large variety of operations on n-dimensional arrays… Much larger than I’d realised!&lt;/p&gt;
+&lt;p&gt;You can see Vighnesh’s complete pull request &lt;a href="https://github.com/scikit-image/scikit-image/pull/1031"&gt;here&lt;/a&gt; and follow his blog &lt;a href="http://vcansimplify.wordpress.com/"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;If you use NumPy arrays and their massive bag of tricks, please cite the paper below!&lt;/p&gt;
+&lt;p&gt;&lt;span class="Z3988" title="ctx_ver=Z39.88-2004&amp;amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;amp;rft.jtitle=Computing+in+Science+and+Engineering+13%2C+2+%282011%29+22-30&amp;amp;rft_id=info%3Aarxiv%2F1102.1523v1&amp;amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;amp;rft.atitle=The+NumPy+array%3A+a+structure+for+efficient+numerical+computation&amp;amp;rft.issn=&amp;amp;rft.date=2011&amp;amp;rft.volume=&amp;amp;rft.issue=&amp;amp;rft.spage=&amp;amp;rft.epage=&amp;amp;rft.artnum=&amp;amp;rft.au=Stefan+Van+Der+Walt&amp;amp;rft.au=S.+Chris+Colbert&amp;amp;rft.au=Ga%C3%ABl+Varoquaux&amp;amp;rfe_dat=bpr3.included=1;bpr3.tags=Computer+Science+%2F+Engineering%2CSoftware+Engineering"&gt;Stefan Van Der Walt, S. Chris Colbert, &amp;amp; Gaël Varoquaux (2011). The NumPy array: a structure for efficient numerical computation &lt;span style="font-style:italic;"&gt;Computing in Science and Engineering 13, 2 (2011) 22-30&lt;/span&gt; arXiv: &lt;a rev="review" href="http://arxiv.org/abs/1102.1523v1"&gt;1102.1523v1&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Planet SciPy</category><category>programming</category><category>Research Blogging</category><category>structuring element</category><guid>http://ilovesymposia.com/posts/2014/06/24/a-clever-use-of-scipys-ndimage-generic_filter-for-n-dimensional-image-processing/</guid><pubDate>Tue, 24 Jun 2014 01:48:07 GMT</pubDate></item><item><title>Get the best of both worlds with Fiji's Jython interpreter</title><link>http://ilovesymposia.com/posts/2014/02/26/fiji-jython/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;a href="http://fiji.sc"&gt;Fiji is just ImageJ&lt;/a&gt;, with batteries included. It contains plugins to do virtually anything you would want to do to an image. Since my go-to programming language is Python, my favorite feature of Fiji is its language-agnostic API, which supports a plethora of languages, including Java, Javascript, Clojure, and of course Python; 7 languages in all. (Find these under Plugins/Scripting/Script Editor.) Read on to learn more about the ins and outs of using Python to drive Fiji.
+&lt;p&gt;Among the plugin smorgasbord of Fiji is the Bio-Formats importer, which can open any proprietary microscopy file under the sun. (And there’s a lot of them!) Below I will use Jython to open some .lifs, do some processing, and output some .pngs that I can process further using Python/NumPy/scikit-image. (A .lif is a Leica Image File, because there were not enough image file formats before Leica came along.)&lt;/p&gt;
+&lt;p&gt;The first thing to note is that Jython is not Python, and it is certainly not Python 2.7. In fact, the Fiji Jython interpreter implements Python 2.5, which means no &lt;code&gt;argparse&lt;/code&gt;. Not to worry though, as &lt;code&gt;argparse&lt;/code&gt; is implemented in a &lt;a href="https://code.google.com/p/argparse/source/browse/argparse.py"&gt;single, pure Python file&lt;/a&gt; distributed under the Python license. So:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Tip #1: copy argparse.py into your project.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;This way you’ll have access the state of the art in command line argument processing from within the Jython interpreter.&lt;/p&gt;
+&lt;p&gt;To get Fiji to run your code, you simply feed it your source file on the command line. So, let’s try it out with a simple example, &lt;code&gt;echo.py&lt;/code&gt;:
+&lt;/p&gt;&lt;pre&gt;&lt;code class="python"&gt;import argparse
+&lt;p&gt;if &lt;strong&gt;name&lt;/strong&gt; == '&lt;strong&gt;main&lt;/strong&gt;':
+    parser = argparse.ArgumentParser(description=
+                                     "Parrot back your arguments.")
+    parser.add_argument('args', nargs="*", help="The input arguments.")
+    args = parser.parse_args()
+    for arg in args.args:
+        print(arg)&lt;/p&gt;&lt;/code&gt;&lt;/pre&gt;
+Now we can just run this:
+&lt;pre&gt;&lt;code&gt;$ fiji echo.py hello world
+hello
+world&lt;/code&gt;&lt;/pre&gt;
+But sadly, Fiji captures any -h calls, which defeats the purpose of using argparse in the first place!
+&lt;pre&gt;&lt;code&gt;$ fiji echo.py -h
+Usage: /Applications/Fiji.app/Contents/MacOS/fiji-macosx [&amp;lt;Java options&amp;gt;.. --] [&amp;lt;ImageJ options&amp;gt;..] [&amp;lt;files&amp;gt;..]
+&lt;p&gt;Java options are passed to the Java Runtime, ImageJ
+options to ImageJ (or Jython, JRuby, ...).&lt;/p&gt;
+&lt;p&gt;In addition, the following options are supported by ImageJ:
+General options:
+--help, -h
+    show this help
+--dry-run
+    show the command line, but do not run anything
+--debug
+    verbose output&lt;/p&gt;&lt;/code&gt;&lt;/pre&gt;
+(… and so on, the output is quite huge.)
+&lt;p&gt;(Note also that I aliased the Fiji binary, that long path under &lt;code&gt;/Applications&lt;/code&gt;, to a simple &lt;code&gt;fiji&lt;/code&gt; command; I recommend you do the same.)&lt;/p&gt;
+&lt;p&gt;However, we can work around this by calling help using &lt;em&gt;Python&lt;/em&gt; as the interpreter, and only using Fiji to actually run the file:
+&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ python echo.py -h
+usage: echo.py [-h] [args [args ...]]
+&lt;p&gt;Parrot back your arguments.&lt;/p&gt;
+&lt;p&gt;positional arguments:
+  args        The input arguments.&lt;/p&gt;
+&lt;p&gt;optional arguments:
+  -h, --help  show this help message and exit&lt;/p&gt;&lt;/code&gt;&lt;/pre&gt;
+That’s more like it! Now we can start to build something a bit more interesting, for example, something that converts arbitrary image files to png:
+&lt;pre&gt;&lt;code class="python"&gt;import argparse
+from ij import IJ # the IJ class has utility methods for many common tasks.
+&lt;p&gt;def convert_file(fn):
+    """Convert the input file to png format.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gh"&gt;Parameters&lt;/span&gt;
+&lt;span class="gh"&gt;----------&lt;/span&gt;
+fn : string
+    The filename of the image to be converted.
+"""
+imp = IJ.openImage(fn)
+# imp is the common name for an ImagePlus object,
+# ImageJ's base image class
+fnout = fn.rsplit('.', 1)[0] + '.png'
+IJ.saveAs(imp, 'png', fnout)
+&lt;/pre&gt;
+
+
+&lt;p&gt;if &lt;strong&gt;name&lt;/strong&gt; == '&lt;strong&gt;main&lt;/strong&gt;':
+    parser = argparse.ArgumentParser(description="Convert TIFF to PNG.")
+    parser.add_argument('images', nargs='+', help="Input images.")&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;args = parser.parse_args()
+for fn in args.images:
+    convert_file(fn)&lt;span class="nt"&gt;&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Boom, we’re done. But wait, we actually broke the Python interpreter compatibility, since ij is not a Python library!
+&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ python convert2png.py -h
+Traceback (most recent call last):
+  File "convert.py", line 2, in &amp;lt;module&amp;gt;
+    from ij import IJ # the IJ class has utility methods for many common tasks.
+ImportError: No module named ij&lt;/code&gt;&lt;/pre&gt;
+Which brings us to:
+&lt;p&gt;&lt;strong&gt;Tip #2: only import Java API functions within the functions that use them.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;By moving the &lt;code&gt;from ij import IJ&lt;/code&gt; statement into the &lt;code&gt;convert&lt;/code&gt; function, we maintain compatibility with Python, and can continue to use &lt;code&gt;argparse&lt;/code&gt;’s helpful documentation strings.&lt;/p&gt;
+&lt;p&gt;Next, we want to use the Bio-Formats importer, which is class &lt;code&gt;BF&lt;/code&gt; in &lt;code&gt;loci.plugins&lt;/code&gt;. Figuring out the class hierarchy for arbitrary plugins is tricky, but you can find it &lt;a href="http://rsbweb.nih.gov/ij/developer/api/index.html"&gt;here&lt;/a&gt; for core ImageJ (using lovely 1990s-style frames) and &lt;a href="http://ci.openmicroscopy.org/job/BIOFORMATS-5.0-latest/javadoc/index.html"&gt;here&lt;/a&gt; for Bio-Formats, and Curtis Rueden has made &lt;a href="http://javadoc.imagej.net/"&gt;this list&lt;/a&gt; for other common plugins.&lt;/p&gt;
+&lt;p&gt;When you try to open a file with Bio-Formats importer using the Fiji GUI, you get the following dialog:&lt;/p&gt;
+&lt;figure&gt;&lt;img alt="BioFormats import window" src="http://ilovesymposia.files.wordpress.com/2014/02/bioformats-window.png"&gt; &lt;figcaption&gt;BioFormats import window&lt;/figcaption&gt;&lt;/figure&gt;
+
+&lt;p&gt;That’s a lot of options, and we actually want to set some of them. If you look at the &lt;a href="http://ci.openmicroscopy.org/job/BIOFORMATS-5.0-latest/javadoc/loci/plugins/BF.html#openImagePlus(loci.plugins.in.ImporterOptions)"&gt;&lt;code&gt;BF.openImagePlus&lt;/code&gt;&lt;/a&gt; documentation, you can see that this is done through an &lt;code&gt;ImporterOptions&lt;/code&gt; class located in &lt;code&gt;loci.plugins.in&lt;/code&gt;. You’ll notice that “in” is a reserved word in Python, so &lt;code&gt;from loci.plugins.in import ImporterOptions&lt;/code&gt; is not a valid Python statement. Yay! My workaround:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Tip #3: move your Fiji imports to an external file.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;So I have a &lt;code&gt;jython_imports.py&lt;/code&gt; file with just:
+&lt;/p&gt;&lt;pre&gt;&lt;code class="python"&gt;from ij import IJ
+from loci.plugins import BF
+from loci.plugins.in import ImporterOptions&lt;/code&gt;&lt;/pre&gt;
+Then, inside the &lt;code&gt;convert_files()&lt;/code&gt; function, we just do:
+&lt;pre&gt;&lt;code class="python"&gt;from jython_imports import IJ, BF, ImporterOptions&lt;/code&gt;&lt;/pre&gt;
+This way, the main file remains Python-compatible until the convert() function is actually called, regardless of whatever funky and unpythonic stuff is happening in &lt;code&gt;jython_imports.py&lt;/code&gt;.
+&lt;p&gt;Onto the options. If you untick “Open files individually”, it will open up all matching files in a directory, regardless of your input filename! Not good. So now we play a pattern-matching game in which we match the option description in the above dialog with the &lt;a href="http://ci.openmicroscopy.org/job/BIOFORMATS-5.0-latest/javadoc/loci/plugins/in/ImporterOptions.html"&gt;ImporterOptions API&lt;/a&gt; calls. In this case, we &lt;code&gt;setUngroupFiles(True)&lt;/code&gt;. To specify a filename, we &lt;code&gt;setId(filename)&lt;/code&gt;. Additionally, because we want all of the images in the .lif file, we &lt;code&gt;setOpenAllSeries(True)&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Next, each image in the series is 3D and has three channels, but we are only interested in a summed z-projection of the first channel. There’s a set of ImporterOptions methods tantalizingly named &lt;code&gt;setCBegin&lt;/code&gt;, &lt;code&gt;setCEnd&lt;/code&gt;, and &lt;code&gt;setCStep&lt;/code&gt;, but this is where I found the &lt;a href="http://ci.openmicroscopy.org/job/BIOFORMATS-5.0-latest/javadoc/loci/plugins/in/ImporterOptions.html#setCEnd(int,%20int)"&gt;documentation&lt;/a&gt; sorely lacking. The functions take &lt;code&gt;(int s, int value)&lt;/code&gt; as arguments, but what’s &lt;code&gt;s&lt;/code&gt;??? Are the limits closed or open? Code review is a wonderful thing, and this would not have passed it. To figure things out:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Tip #4: use Fiji’s interactive Jython interpreter to figure things out quickly.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;You can find the Jython interpreter under Plugins/Scripting/Jython Interpreter. It’s no IPython, but it is extremely helpful to answer the questions I had above. My hypothesis was that &lt;code&gt;s&lt;/code&gt; was the series, and that the intervals would be closed. So:
+&lt;/p&gt;&lt;pre&gt;&lt;code class="python"&gt;&amp;gt;&amp;gt;&amp;gt; from loci.plugins import BF
+&amp;gt;&amp;gt;&amp;gt; from loci.plugins.in import ImporterOptions
+&amp;gt;&amp;gt;&amp;gt; opts = ImporterOptions()
+&amp;gt;&amp;gt;&amp;gt; opts.setId("myFile.lif")
+&amp;gt;&amp;gt;&amp;gt; opts.setOpenAllSeries(True)
+&amp;gt;&amp;gt;&amp;gt; opts.setUngroupFiles(True)
+&amp;gt;&amp;gt;&amp;gt; imps = BF.openImagePlus(opts)&lt;/code&gt;&lt;/pre&gt;
+Now we can play around, with one slight annoyance: the interpreter won’t print the output of your last statement, so you have to specify it:
+&lt;pre&gt;&lt;code class="python"&gt;&amp;gt;&amp;gt;&amp;gt; len(imps)
+&amp;gt;&amp;gt;&amp;gt; print(len(imps))
+18&lt;/code&gt;&lt;/pre&gt;
+Which is what I expected, as there are 18 series in my .lif file. The image shape is given by the &lt;code&gt;getDimensions()&lt;/code&gt; method of the ImagePlus class:
+&lt;pre&gt;&lt;code class="python"&gt;&amp;gt;&amp;gt;&amp;gt; print(imps[0].getDimensions())
+array('i', [1024, 1024, 3, 31, 1])
+&lt;p&gt;&amp;gt;&amp;gt;&amp;gt; print(imps[1].getDimensions())
+array('i', [1024, 1024, 3, 34, 1])&lt;/p&gt;&lt;/code&gt;&lt;/pre&gt;
+That’s (x, y, channels, z, time).
+&lt;p&gt;Now, let’s try the same thing with &lt;code&gt;setCEnd&lt;/code&gt;, assuming closed interval:
+&lt;/p&gt;&lt;pre&gt;&lt;code class="python"&gt;&amp;gt;&amp;gt;&amp;gt; opts.setCEnd(0, 0) ## only read channels up to 0 for series 0?
+&amp;gt;&amp;gt;&amp;gt; opts.setCEnd(2, 0) ## only read channels up to 0 for series 2?
+&amp;gt;&amp;gt;&amp;gt; imps = BF.openImagePlus(opts)
+&amp;gt;&amp;gt;&amp;gt; print(imps[0].getDimensions())
+array('i', [1024, 1024, 1, 31, 1])
+&lt;p&gt;&amp;gt;&amp;gt;&amp;gt; print(imps[1].getDimensions())
+array('i', [1024, 1024, 3, 34, 1])&lt;/p&gt;
+&lt;p&gt;&amp;gt;&amp;gt;&amp;gt; print(imps[2].getDimensions())
+array('i', [1024, 1024, 1, 30, 1])&lt;/p&gt;&lt;/code&gt;&lt;/pre&gt;
+Nothing there to disprove my hypothesis! So we move on to the final step, which is to z-project the stack by summing the intensity over all z values. This is normally accessed via Image/Stacks/Z Project in the Fiji GUI, and I found the corresponding &lt;code&gt;ij.plugin.ZProjector&lt;/code&gt; class by searching for &lt;a href="http://rsbweb.nih.gov/ij/developer/api/ij/plugin/ZProjector.html"&gt;“proj” in the ImageJ documentation&lt;/a&gt;. A &lt;code&gt;ZProjector&lt;/code&gt; object has a &lt;code&gt;setMethod&lt;/code&gt; method that usefully takes an int as an argument, with no explanation in its docstring as to which int translates to which method (sum, average, max, etc.). A little more digging in the &lt;a href="http://rsb.info.nih.gov/ij/developer/source/ij/plugin/ZProjector.java.html"&gt;source code&lt;/a&gt; reveals some class static variables, &lt;code&gt;AVG_METHOD&lt;/code&gt;, &lt;code&gt;MAX_METHOD&lt;/code&gt;, and so on.
+&lt;p&gt;&lt;strong&gt;Tip #5: don’t be afraid to look at the source code. It’s one of the main advantages of working in open-source.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;So:
+&lt;/p&gt;&lt;pre&gt;&lt;code class="python"&gt;&amp;gt;&amp;gt;&amp;gt; from ij.plugin import ZProjector
+&amp;gt;&amp;gt;&amp;gt; proj = ZProjector()
+&amp;gt;&amp;gt;&amp;gt; proj.setMethod(ZProjector.SUM_METHOD)
+&amp;gt;&amp;gt;&amp;gt; proj.setImage(imps[0])
+&amp;gt;&amp;gt;&amp;gt; proj.doProjection()
+&amp;gt;&amp;gt;&amp;gt; impout = proj.getProjection()
+&amp;gt;&amp;gt;&amp;gt; print(impout.getDimensions())
+array('i', [1024, 1024, 1, 1, 1])&lt;/code&gt;&lt;/pre&gt;
+The output is actually a float-typed image, which will get rescaled to [0, 255] uint8 on save if we don’t fix it. So, to wrap up, we convert the image to 16 bits (making sure to &lt;a href="https://groups.google.com/d/msg/fiji-users/HfuHj0QBo40/CR9s3MQ5vUsJ"&gt;turn off scaling&lt;/a&gt;), use the series title to generate a unique filename, and save as a PNG:
+&lt;pre&gt;&lt;code class="python"&gt;&amp;gt;&amp;gt;&amp;gt; from ij.process import ImageConverter
+&amp;gt;&amp;gt;&amp;gt; ImageConverter.setDoScaling(False)
+&amp;gt;&amp;gt;&amp;gt; conv = ImageConverter(impout)
+&amp;gt;&amp;gt;&amp;gt; conv.convertToGray16()
+&amp;gt;&amp;gt;&amp;gt; title = imps[0].getTitle().rsplit(" ", 1)[-1]
+&amp;gt;&amp;gt;&amp;gt; IJ.saveAs(impout, 'png', "myFile-" + title + ".png")&lt;/code&gt;&lt;/pre&gt;
+You can see the final result of my sleuthing in &lt;a href="https://github.com/jni/lesion/blob/6f77cccd1e0f3ddf92ce35a7040ada5328fd90ff/lesion/lif2png.py"&gt;lif2png.py&lt;/a&gt; and &lt;a href="https://github.com/jni/lesion/blob/6f77cccd1e0f3ddf92ce35a7040ada5328fd90ff/lesion/jython_imports.py"&gt;jython_imports.py&lt;/a&gt;. If you would do something differently, pull requests are always welcome.
+&lt;p&gt;Before I sign off, let me recap my tips:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;copy argparse.py into your project;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;only import Java API functions within the functions that use them;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;move your Fiji imports to an external file;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;use Fiji’s interactive Jython interpreter to figure things out quickly; and&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;don’t be afraid to look at the source code.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;And let me add a few final comments: once I started digging into all of Fiji’s plugins, I found documentation of very variable quality, and worse, virtually zero consistency between the interfaces to each plugin. Some work on “the currently active image”, some take an &lt;code&gt;ImagePlus&lt;/code&gt; instance as input, and others still a filename or a directory name. Outputs are equally variable. This has been a huge pain when trying to work with these plugins.&lt;/p&gt;
+&lt;p&gt;But, on the flipside, this is the most complete collection of image processing functions anywhere. Along with the seamless access to all those functions from Jython and other languages, that makes Fiji very worthy of your attention.
+&lt;/p&gt;&lt;h4 id="acknowledgements"&gt;Acknowledgements&lt;/h4&gt;
+This post was possible thanks to the help of &lt;a href="http://albert.rierol.net/"&gt;Albert Cardona&lt;/a&gt;, &lt;a href="http://loci.wisc.edu/people/johannes-schindelin"&gt;Johannes Schindelin&lt;/a&gt;, &lt;a href="http://loci.wisc.edu/people/wayne-rasband"&gt;Wayne Rasband&lt;/a&gt;, and &lt;a href="http://lammertlab.org/Jan_Eglinger"&gt;Jan Eglinger&lt;/a&gt;, who restlessly respond to (it seems) every query on the &lt;a href="http://imagej.1557.x6.nabble.com/"&gt;ImageJ mailing list&lt;/a&gt;. Thanks!
+&lt;h4 id="reference"&gt;References&lt;/h4&gt;
+&lt;p&gt;&lt;span class="Z3988" title="ctx_ver=Z39.88-2004&amp;amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;amp;rft.jtitle=Nature+methods&amp;amp;rft_id=info%3Apmid%2F22743772&amp;amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;amp;rft.atitle=Fiji%3A+an+open-source+platform+for+biological-image+analysis.&amp;amp;rft.issn=1548-7091&amp;amp;rft.date=2012&amp;amp;rft.volume=9&amp;amp;rft.issue=7&amp;amp;rft.spage=676&amp;amp;rft.epage=82&amp;amp;rft.artnum=&amp;amp;rft.au=Schindelin+J&amp;amp;rft.au=Arganda-Carreras+I&amp;amp;rft.au=Frise+E&amp;amp;rft.au=Kaynig+V&amp;amp;rft.au=Longair+M&amp;amp;rft.au=Pietzsch+T&amp;amp;rft.au=Preibisch+S&amp;amp;rft.au=Rueden+C&amp;amp;rft.au=Saalfeld+S&amp;amp;rft.au=Schmid+B&amp;amp;rft.au=Tinevez+JY&amp;amp;rft.au=White+DJ&amp;amp;rft.au=Hartenstein+V&amp;amp;rft.au=Eliceiri+K&amp;amp;rft.au=Tomancak+P&amp;amp;rft.au=Cardona+A&amp;amp;rfe_dat=bpr3.included=1;bpr3.tags=Biology%2CComputer+Science+%2F+Engineering%2CComputational+Biology%2C+Bioinformatics"&gt;Schindelin J, Arganda-Carreras I, Frise E, Kaynig V, Longair M, Pietzsch T, Preibisch S, Rueden C, Saalfeld S, Schmid B, Tinevez JY, White DJ, Hartenstein V, Eliceiri K, Tomancak P, &amp;amp; Cardona A (2012). Fiji: an open-source platform for biological-image analysis. &lt;span style="font-style:italic;"&gt;Nature methods, 9&lt;/span&gt; (7), 676-82 PMID: &lt;a rev="review" href="http://www.ncbi.nlm.nih.gov/pubmed/22743772"&gt;22743772&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class="Z3988" title="ctx_ver=Z39.88-2004&amp;amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;amp;rft.jtitle=The+Journal+of+cell+biology&amp;amp;rft_id=info%3Apmid%2F20513764&amp;amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;amp;rft.atitle=Metadata+matters%3A+access+to+image+data+in+the+real+world.&amp;amp;rft.issn=0021-9525&amp;amp;rft.date=2010&amp;amp;rft.volume=189&amp;amp;rft.issue=5&amp;amp;rft.spage=777&amp;amp;rft.epage=82&amp;amp;rft.artnum=&amp;amp;rft.au=Linkert+M&amp;amp;rft.au=Rueden+CT&amp;amp;rft.au=Allan+C&amp;amp;rft.au=Burel+JM&amp;amp;rft.au=Moore+W&amp;amp;rft.au=Patterson+A&amp;amp;rft.au=Loranger+B&amp;amp;rft.au=Moore+J&amp;amp;rft.au=Neves+C&amp;amp;rft.au=Macdonald+D&amp;amp;rft.au=Tarkowska+A&amp;amp;rft.au=Sticco+C&amp;amp;rft.au=Hill+E&amp;amp;rft.au=Rossner+M&amp;amp;rft.au=Eliceiri+KW&amp;amp;rft.au=Swedlow+JR&amp;amp;rfe_dat=bpr3.included=1;bpr3.tags=Biology%2CComputer+Science+%2F+Engineering%2CComputational+Biology%2C+Bioinformatics"&gt;Linkert M, Rueden CT, Allan C, Burel JM, Moore W, Patterson A, Loranger B, Moore J, Neves C, Macdonald D, Tarkowska A, Sticco C, Hill E, Rossner M, Eliceiri KW, &amp;amp; Swedlow JR (2010). Metadata matters: access to image data in the real world. &lt;span style="font-style:italic;"&gt;The Journal of cell biology, 189&lt;/span&gt; (5), 777-82 PMID: &lt;a rev="review" href="http://www.ncbi.nlm.nih.gov/pubmed/20513764"&gt;20513764&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description><category>Planet SciPy</category><category>programming</category><category>Research Blogging</category><category>software</category><guid>http://ilovesymposia.com/posts/2014/02/26/fiji-jython/</guid><pubDate>Wed, 26 Feb 2014 01:21:38 GMT</pubDate></item><item><title>Why PLOS ONE is no longer my default journal</title><link>http://ilovesymposia.com/posts/2013/10/04/why-plos-one-is-no-longer-my-default-journal/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;Time-to-publication at the world's biggest scientific journal has grown dramatically, but the nail in the coffin was its poor production policies.&lt;/p&gt;
+&lt;p&gt;When PLOS ONE was announced in 2006, its charter immediately resonated with me. This would be the first journal where only scientific accuracy mattered. Judgments of "impact" and "interest" would be left to posterity, which is the right strategy when publishing is cheap and searching and filtering are easy. The whole endeavour would be a huge boon to "in-between" scientists straddling established fields — such as bioinformaticians.&lt;/p&gt;
+&lt;p&gt;My first first-author paper, &lt;a href="http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0008898"&gt;Joint Genome-Wide Profiling of miRNA and mRNA Expression in Alzheimer's Disease Cortex Reveals Altered miRNA Regulation&lt;/a&gt;, went through a fairly standard &lt;a href="http://www.frontiersin.org/computational_neuroscience/10.3389/fncom.2011.00055/full"&gt;journal loop&lt;/a&gt;. We first submitted it to Genome Biology, which (editorially) deemed it uninteresting to a sufficiently broad readership; then to RNA, which (editorially) decided that our sample size was too small; and finally to PLOS ONE, where it went out to review. After a single revision loop, it was accepted for publication. It's been cited more than 15 times a year, which is modest but above the Journal Impact Factor for Genome Biology — which means that the editors made a bad call rejecting it outright. (I'm not bitter!)&lt;/p&gt;
+&lt;p&gt;Overall, it was a very positive first experience at PLOS. Time to acceptance was under 3 months, time to publication under 4. The reviewers were no less harsh than in my previous experiences, so I felt (and still feel) that the reputation of PLOS ONE as a "junk" journal was (is) highly undeserved. (&lt;em&gt;&lt;strong&gt;Update:&lt;/strong&gt; There's been a big hullabaloo about a recent &lt;a href="http://www.sciencemag.org/content/342/6154/60.full"&gt;sting&lt;/a&gt; targeting open access journals with a fake paper. PLOS ONE came away unscathed. See also the &lt;a href="http://www.michaeleisen.org/blog/?p=1439"&gt;take of Mike Eisen&lt;/a&gt;, co-founder of PLOS.&lt;/em&gt;) And the number of citations certainly vindicated PLOS ONE's approach of ignoring apparent impact.&lt;/p&gt;
+&lt;p&gt;So, when looking for a home for my &lt;a href="http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0071715"&gt;equally-awkward postdoc paper&lt;/a&gt; (not quite computer vision, not quite neuroscience), PLOS ONE was a natural first choice.&lt;/p&gt;
+&lt;p&gt;The first thing to go wrong was the time to publication, about 6 months. Still better than many top-tier journals, but no longer a crushing advantage. And it's not just me: there's been plenty of discussion about time-to-publication &lt;a href="http://nbviewer.ipython.org/urls/gist.github.com/waltherg/6211587/raw/88dc1877ff9328898f09dc6a8f59973a9f32691f/plos_one.json"&gt;steadily increasing&lt;/a&gt; at PLOS ONE. But I was not too worried about the publication time, since I'd put my paper up on the &lt;a href="http://arxiv.org/abs/1303.6163"&gt;arXiv&lt;/a&gt; (and revised it at each round of peer-review, so you can see the revision history there — but not on PLOS ONE).&lt;/p&gt;
+&lt;p&gt;But, after multiple rounds of review, the time came for production, at which point they messed up two things: they did not include my present address; and they messed up Figure 1, which is supposed to be a small, single-column, illustrative figure, and which they made page-width. The effect is almost comical, and my first impression seeing page 2 would be to think that the authors are trying to mask their incompetence with giant pictures. (We're not, I swear!)&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://ilovesymposia.files.wordpress.com/2013/10/fig1.png"&gt;&lt;img class="size-full wp-image-250" alt="Figure 1 of my paper on arXiv (left) and PLOS ONE (right)" src="http://ilovesymposia.files.wordpress.com/2013/10/fig1.png" width="604" height="244"&gt;&lt;/a&gt; Figure 1 of our paper on arXiv (left) and PLOS ONE (right)&lt;/p&gt;
+&lt;p&gt;Both of these mistakes could have been avoided if PLOS ONE did not have a policy of &lt;em&gt;not letting you see the camera-ready pdf before it is published&lt;/em&gt;, and of &lt;em&gt;not allowing corrections to papers unless they are technical or scientific, regardless of fault&lt;/em&gt;. Not to mention they could have, you know, actually looked at the dimensions embedded in the submitted TIFFs. With a $1,300 publication fee, PLOS could afford to take a little bit of extra care with production. Both of the above policies are utterly unnecessary — the added cost of sending authors a production proof is close to nil, and keeping track of revisions on online publications is also trivial (see the 22 year old arXiv for an example).&lt;/p&gt;
+&lt;p&gt;We scientists live and die by our papers. We don't want the culmination of years of work to be marred by a silly, easily-fixed formatting error, ossified by an unwieldy bureaucracy. I've been an avid promoter of PLOS (and PLOS ONE in particular) over the past few years, but I'm sad to say that's not where my next paper will end up.&lt;/p&gt;
+&lt;p&gt;Ultimately, PLOS ONE's model, groundbreaking though it was, is already being supplanted by newcomers. PeerJ offers everything PLOS ONE does at a fraction of the cost, and further includes a preprint service and &lt;a href="http://svpow.com/2013/02/12/peerj-launches-today-and-were-in-it/"&gt;open peer-review&lt;/a&gt;. Ditto for F1000 Research, which in addition offers unlimited revisions (a topic close to my heart ;). And both use the excellent &lt;a href="http://www.mathjax.org/"&gt;MathJAX&lt;/a&gt; to render mathematical formulas, unlike PLOS's archaic use of embedded images. They get my vote for the journals of the future.&lt;/p&gt;
+&lt;p&gt;[Note: the views expressed herein are mine alone — no co-authors were &lt;del&gt;harmed&lt;/del&gt; consulted in the writing of this blog post.]&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;References&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class="Z3988" title="ctx_ver=Z39.88-2004&amp;amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;amp;rft.jtitle=PloS+one&amp;amp;rft_id=info%3Apmid%2F20126538&amp;amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;amp;rft.atitle=Joint+genome-wide+profiling+of+miRNA+and+mRNA+expression+in+Alzheimer%27s+disease+cortex+reveals+altered+miRNA+regulation.&amp;amp;rft.issn=&amp;amp;rft.date=2010&amp;amp;rft.volume=5&amp;amp;rft.issue=2&amp;amp;rft.spage=&amp;amp;rft.epage=&amp;amp;rft.artnum=&amp;amp;rft.au=Nunez-Iglesias+J&amp;amp;rft.au=Liu+CC&amp;amp;rft.au=Morgan+TE&amp;amp;rft.au=Finch+CE&amp;amp;rft.au=Zhou+XJ&amp;amp;rfe_dat=bpr3.included=1;bpr3.tags=Biology%2CNeuroscience%2CGenetics%2C+Computational+Biology%2C+Bioinformatics%2C+Genetics"&gt;Nunez-Iglesias J, Liu CC, Morgan TE, Finch CE, &amp;amp; Zhou XJ (2010). Joint genome-wide profiling of miRNA and mRNA expression in Alzheimer's disease cortex reveals altered miRNA regulation. &lt;span style="font-style:italic;"&gt;PloS one, 5&lt;/span&gt; (2) PMID: &lt;a rev="review" href="http://www.ncbi.nlm.nih.gov/pubmed/20126538"&gt;20126538&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class="Z3988" title="ctx_ver=Z39.88-2004&amp;amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;amp;rft.jtitle=Frontiers+in+computational+neuroscience&amp;amp;rft_id=info%3Apmid%2F22164143&amp;amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;amp;rft.atitle=Toward+a+new+model+of+scientific+publishing%3A+discussion+and+a+proposal.&amp;amp;rft.issn=&amp;amp;rft.date=2011&amp;amp;rft.volume=5&amp;amp;rft.issue=&amp;amp;rft.spage=55&amp;amp;rft.epage=&amp;amp;rft.artnum=&amp;amp;rft.au=Kravitz+DJ&amp;amp;rft.au=Baker+CI&amp;amp;rfe_dat=bpr3.included=1;bpr3.tags=Biology%2CResearch+%2F+Scholarship%2CNeuroscience%2CComputational+Neuroscience%2C+Publishing"&gt;Kravitz DJ, &amp;amp; Baker CI (2011). Toward a new model of scientific publishing: discussion and a proposal. &lt;span style="font-style:italic;"&gt;Frontiers in computational neuroscience, 5&lt;/span&gt; PMID: &lt;a rev="review" href="http://www.ncbi.nlm.nih.gov/pubmed/22164143"&gt;22164143&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class="Z3988" title="ctx_ver=Z39.88-2004&amp;amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;amp;rft.jtitle=arXiv&amp;amp;rft_id=info%3Aarxiv%2F1303.6163v3&amp;amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;amp;rft.atitle=Machine+learning+of+hierarchical+clustering+to+segment+2D+and+3D+images&amp;amp;rft.issn=&amp;amp;rft.date=2013&amp;amp;rft.volume=&amp;amp;rft.issue=&amp;amp;rft.spage=&amp;amp;rft.epage=&amp;amp;rft.artnum=&amp;amp;rft.au=Juan+Nunez-Iglesias&amp;amp;rft.au=Ryan+Kennedy&amp;amp;rft.au=Toufiq+Parag&amp;amp;rft.au=Jianbo+Shi&amp;amp;rft.au=Dmitri+B.+Chklovskii&amp;amp;rfe_dat=bpr3.included=1;bpr3.tags=Biology%2CComputer+Science+%2F+Engineering%2CNeuroscience%2CGenetics%2C+Computational+Biology%2C+Algorithms"&gt;Juan Nunez-Iglesias, Ryan Kennedy, Toufiq Parag, Jianbo Shi, &amp;amp; Dmitri B. Chklovskii (2013). Machine learning of hierarchical clustering to segment 2D and 3D images &lt;span style="font-style:italic;"&gt;arXiv&lt;/span&gt; arXiv: &lt;a rev="review" href="http://arxiv.org/abs/1303.6163v3"&gt;1303.6163v3&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class="Z3988" title="ctx_ver=Z39.88-2004&amp;amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;amp;rft.jtitle=PloS+one&amp;amp;rft_id=info%3Apmid%2F23977123&amp;amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;amp;rft.atitle=Machine+Learning+of+Hierarchical+Clustering+to+Segment+2D+and+3D+Images.&amp;amp;rft.issn=&amp;amp;rft.date=2013&amp;amp;rft.volume=8&amp;amp;rft.issue=8&amp;amp;rft.spage=&amp;amp;rft.epage=&amp;amp;rft.artnum=&amp;amp;rft.au=Nunez-Iglesias+J&amp;amp;rft.au=Kennedy+R&amp;amp;rft.au=Parag+T&amp;amp;rft.au=Shi+J&amp;amp;rft.au=Chklovskii+DB&amp;amp;rfe_dat=bpr3.included=1;bpr3.tags=Biology%2CComputer+Science+%2F+Engineering%2CNeuroscience%2CComputational+Biology%2C+Algorithms%2C+Artificial+Intelligence"&gt;Nunez-Iglesias J, Kennedy R, Parag T, Shi J, &amp;amp; Chklovskii DB (2013). Machine Learning of Hierarchical Clustering to Segment 2D and 3D Images. &lt;span style="font-style:italic;"&gt;PloS one, 8&lt;/span&gt; (8) PMID: &lt;a rev="review" href="http://www.ncbi.nlm.nih.gov/pubmed/23977123"&gt;23977123&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;&lt;/div&gt;</description><category>open access</category><category>plos</category><category>Research Blogging</category><category>science publishing</category><guid>http://ilovesymposia.com/posts/2013/10/04/why-plos-one-is-no-longer-my-default-journal/</guid><pubDate>Fri, 04 Oct 2013 05:13:24 GMT</pubDate></item><item><title>Randomise your samples!</title><link>http://ilovesymposia.com/posts/2008/12/18/randomise-your-samples/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;Hyuna Yang and colleagues seem to have at least part of the answer. They had five different research centers analyse the exact same RNA samples, and collected the raw fluorescence values—before normalisation or any other kind of analysis. &lt;/p&gt;
+&lt;p&gt;Hyuna Yang and colleagues seem to have at least part of the answer. They got five different groups to analyse the exact same RNA samples, and got back the raw fluorescence values—before normalisation or any other kind of analysis. 
+.. has_math: no
+.. status: published
+.. wp-status: publish
+--&amp;gt;&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;&lt;span&gt;&lt;a href="http://www.researchblogging.org"&gt;&lt;img class="alignleft" src="http://www.researchblogging.org/public/citation_icons/rb2_large_gray.png" alt="ResearchBlogging.org" width="70" height="85"&gt;&lt;/a&gt;&lt;/span&gt;Microarrays certainly &lt;a href="http://reproducibleresearch.org/blog/2008/12/10/three-reasons-to-distrust-microarray-results/"&gt;get a lot of flak&lt;/a&gt; for being noisy sources of data. It's certainly a valid concern, since a single microarray usually measures the expression levels of tens of thousands of genes, and only a few biological samples are examined. There's no hope of accurately estimating the levels of that many variables with so few samples. Eric Blalock and his colleagues, however, &lt;a href="http://dx.doi.org/10.1016/j.arr.2005.06.006"&gt;made a compelling case in 2005&lt;/a&gt; that the fault lies not with the technology itself, but with the statistical inferences drawn from the generated data. How then to reconcile the wild variability between published microarray results from different labs with the apparent validity of the technology?
+&lt;p&gt;Hyuna Yang and colleagues seem to have at least part of the answer. They had five different research centers analyse the exact same RNA samples, and collected the raw fluorescence values—before normalisation or any other kind of analysis. After a long (and, dare I say, tedious) analysis, they actually found that batch processing effects had a significant effect on the list of affected genes detected. The authors do a good job of explaining what batch effects are, so I'll open the floor to them:&lt;!--more--&gt;
+&lt;/p&gt;&lt;blockquote&gt;Due to personnel and equipment constraints, all samples may not be processed at one time. For instance, one fluidics station used for the wash and staining step, is able to process only up to four samples [at a time].&lt;/blockquote&gt;
+Because of this, some samples are of necessity processed at different times. If the experimenters are not careful when deciding how to group the samples for processing, this can result in confounding factors:
+&lt;blockquote&gt;Both centers 2 and 3 stored male arrays at 4 degrees while female samples were washed and stained. These centers have the longest lists of differentially expressed genes between sexes.&lt;/blockquote&gt;
+Similarly, centers 4 and 5 grouped samples according to mouse strain, and it showed in their long lists of genes differentially expressed between strains. What's happening is that the list of genes actually affected by a particular biological condition (sex or strain) is being contaminated by genes affected by sample processing order, a factor that, I think you'll agree, is extremely uninteresting from a biological perspective. This is very bad news for whoever wants to analyse the data after the fact (including &lt;a href="http://ilovesymposia.wordpress.com/about-the-author/"&gt;your humble correspondent&lt;/a&gt;, actually!). The authors conclude that the batch effect "cannot be removed from the data without compromising the biological signal."
+&lt;p&gt;The discussion section of the paper is required reading for anyone who will be designing and running microarray experiments in the future, or any kind of experiment, for that matter. The gist of it is this: processing in batches is inevitable, but confounding batches and biological factors is not! When deciding in what order to process your samples, assign them &lt;em&gt;randomly&lt;/em&gt; to batches, not systematically (as we are all wont to do). (&lt;a href="http://en.wikipedia.org/wiki/Stratified_sampling"&gt;Sample stratification&lt;/a&gt; would also work, though the authors don't mention it.)&lt;/p&gt;
+&lt;p&gt;So, finally, what should we think about published microarray results? I'd have to agree with critics that single experiments found in the literature to date are not trustworthy. Most published microarray studies, however, follow up with targeted experiments. And one hopes that future microarray experiments (or &lt;a href="http://nar.oxfordjournals.org/cgi/content/full/36/21/e141"&gt;whichever expression technology replaces them&lt;/a&gt;) will take heed of the recommendations of Yang &lt;em&gt;et al&lt;/em&gt;'s PLoS ONE paper. That would certainly go a long way to improving the reproducibility and trustworthiness of genome-wide expression studies.&lt;/p&gt;
+&lt;p&gt;[ This post was part of the PLoS ONE @ Two synchroblogging celebration! ]&lt;/p&gt;
+&lt;p&gt;&lt;span class="Z3988" title="ctx_ver=Z39.88-2004&amp;amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;amp;rft.jtitle=PLoS+ONE&amp;amp;rft_id=info%3Adoi%2F10.1371%2Fjournal.pone.0003724&amp;amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;amp;rft.atitle=Randomization+in+Laboratory+Procedure+Is+Key+to+Obtaining+Reproducible+Microarray+Results&amp;amp;rft.issn=1932-6203&amp;amp;rft.date=2008&amp;amp;rft.volume=3&amp;amp;rft.issue=11&amp;amp;rft.spage=0&amp;amp;rft.epage=0&amp;amp;rft.artnum=http%3A%2F%2Fdx.plos.org%2F10.1371%2Fjournal.pone.0003724&amp;amp;rft.au=Hyuna+Yang&amp;amp;rft.au=Christina+A.+Harrington&amp;amp;rft.au=Kristina+Vartanian&amp;amp;rft.au=Christopher+D.+Coldren&amp;amp;rft.au=Rob+Hall&amp;amp;rft.au=Gary+A.+Churchill&amp;amp;rfe_dat=bpr3.included=1;bpr3.tags=Biology%2CGenetics%2C+Computational+Biology"&gt;Hyuna Yang, Christina A. Harrington, Kristina Vartanian, Christopher D. Coldren, Rob Hall, Gary A. Churchill (2008). Randomization in Laboratory Procedure Is Key to Obtaining Reproducible Microarray Results &lt;span&gt;PLoS ONE, 3&lt;/span&gt; (11) DOI: &lt;a rev="review" href="http://dx.doi.org/10.1371/journal.pone.0003724"&gt;10.1371/journal.pone.0003724&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class="Z3988" title="ctx_ver=Z39.88-2004&amp;amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;amp;rft.jtitle=Ageing+Research+Reviews&amp;amp;rft_id=info%3Adoi%2F10.1016%2Fj.arr.2005.06.006&amp;amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;amp;rft.atitle=Harnessing+the+power+of+gene+microarrays+for+the+study+of+brain+aging+and+Alzheimer%27s+disease%3A+Statistical+reliability+and+functional+correlation&amp;amp;rft.issn=15681637&amp;amp;rft.date=2005&amp;amp;rft.volume=&amp;amp;rft.issue=&amp;amp;rft.spage=0&amp;amp;rft.epage=0&amp;amp;rft.artnum=http%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS1568163705000449&amp;amp;rft.au=E+BLALOCK&amp;amp;rft.au=K+CHEN&amp;amp;rft.au=A+STROMBERG&amp;amp;rft.au=C+NORRIS&amp;amp;rft.au=I+KADISH&amp;amp;rft.au=S+KRANER&amp;amp;rft.au=N+PORTER&amp;amp;rft.au=P+LANDFIELD&amp;amp;rfe_dat=bpr3.included=1;bpr3.tags=Biology%2CMicroarrays"&gt;E BLALOCK, K CHEN, A STROMBERG, C NORRIS, I KADISH, S KRANER, N PORTER, P LANDFIELD (2005). Harnessing the power of gene microarrays for the study of brain aging and Alzheimer's disease: Statistical reliability and functional correlation &lt;span&gt;Ageing Research Reviews&lt;/span&gt; DOI: &lt;a rev="review" href="http://dx.doi.org/10.1016/j.arr.2005.06.006"&gt;10.1016/j.arr.2005.06.006&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;&lt;/div&gt;</description><category>biology</category><category>biotechnology</category><category>experimental design</category><category>Research Blogging</category><category>statistics</category><guid>http://ilovesymposia.com/posts/2008/12/18/randomise-your-samples/</guid><pubDate>Thu, 18 Dec 2008 22:49:11 GMT</pubDate></item></channel></rss>

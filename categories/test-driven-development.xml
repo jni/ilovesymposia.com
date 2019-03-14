@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>I Love Symposia! (Posts about test-driven development)</title><link>http://ilovesymposia.com/</link><description></description><atom:link href="http://ilovesymposia.com/categories/test-driven-development.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><copyright>Contents © 2019 &lt;a href="mailto:jni.soma@gmail.com"&gt;Juan Nunez-Iglesias&lt;/a&gt; </copyright><lastBuildDate>Thu, 14 Mar 2019 02:09:40 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Continuous integration in Python, 7: some helper tools and final thoughts</title><link>http://ilovesymposia.com/posts/2014/10/27/continuous-integration-in-python-7-some-helper-tools-and-final-thoughts/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;Almost everything I know about good Python development I've learned from &lt;a href="https://github.com/stefanv"&gt;Stéfan van der Walt&lt;/a&gt;, &lt;a href="https://github.com/tonysyu"&gt;Tony Yu&lt;/a&gt;, and the rest of the &lt;a href="https://github.com/scikit-image/scikit-image/graphs/contributors"&gt;scikit-image team&lt;/a&gt;. But a few weeks ago, I was trying to emulate the scikit-image CI process for my own project: &lt;a href="https://github.com/jni/cellom2tif"&gt;cellom2tif&lt;/a&gt;, a tool to liberate images from a &lt;a href="http://www.openmicroscopy.org/site/support/bio-formats5/formats/cellomics.html"&gt;rather useless&lt;/a&gt; proprietary format. (I consider this parenthetical comment sufficient fanfare to announce the &lt;a href="https://pypi.python.org/pypi/cellom2tif/0.2.0"&gt;0.2 release!&lt;/a&gt;) As I started copying and editing config files, I found that even from a complete template, getting started was not very straightforward. First, scikit-image has much more complicated requirements, so that a lot of the &lt;code&gt;.travis.yml&lt;/code&gt; file was just noise for my purposes. And second, as detailed in the previous posts, a lot of the steps are not found or recorded anywhere in the repository, but rather must be navigated to on the webpages of GitHub, Travis, and Coveralls. I therefore decided to write this series as both a notetaking exercise and a guide for future CI novices. (Such as future me.)
+.. has_math: no
+.. status: published
+.. wp-status: publish
+--&amp;gt;&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;&lt;p&gt;It's time to draw my "continuous integration in Python" series to a close. This final post ties all six previous posts together and is the preferred write-up to share more widely and on which to provide feedback.&lt;/p&gt;
+&lt;p&gt;Almost everything I know about good Python development I've learned from &lt;a href="https://github.com/stefanv"&gt;Stéfan van der Walt&lt;/a&gt;, &lt;a href="https://github.com/tonysyu"&gt;Tony Yu&lt;/a&gt;, and the rest of the &lt;a href="https://github.com/scikit-image/scikit-image/graphs/contributors"&gt;scikit-image team&lt;/a&gt;. But a few weeks ago, I was trying to emulate the scikit-image CI process for my own project: &lt;a href="https://github.com/jni/cellom2tif"&gt;cellom2tif&lt;/a&gt;, a tool to liberate images from a &lt;a href="http://www.openmicroscopy.org/site/support/bio-formats5/formats/cellomics.html"&gt;rather useless&lt;/a&gt; proprietary format. (I consider this parenthetical comment sufficient fanfare to announce the &lt;a href="https://pypi.python.org/pypi/cellom2tif/0.2.0"&gt;0.2 release!&lt;/a&gt;) As I started copying and editing config files, I found that even from a complete template, getting started was not very straightforward. First, scikit-image has much more complicated requirements, so that a lot of the &lt;code&gt;.travis.yml&lt;/code&gt; file was just noise for my purposes. And second, as detailed in the previous posts, a lot of the steps are not found or recorded anywhere in the repository, but rather must be navigated to on the webpages of GitHub, Travis, and Coveralls. I therefore decided to write this series as both a notetaking exercise and a guide for future CI novices. (Such as future me.)&lt;/p&gt;
+&lt;p&gt;To recap, here are my six steps to doing continuous integration in Python with pytest, Travis, and Coveralls:&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/"&gt;Write tests&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/02/continuous-integration-1-test-coverage/"&gt;Measure test coverage&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/13/continuous-integration-in-python-3-set-up-your-test-configuration-files/"&gt;Set up config files&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/"&gt;Turn on Travis-CI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/15/continuous-integration-in-python-5-report-test-coverage-using-coveralls/"&gt;Turn on Coveralls&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/17/continuous-integration-in-python-6-show-off-your-work/"&gt;Badge your repo&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If you do all of the above at the beginning of your projects, you'll be in a really good place one, two, five years down the line, when many academic projects grow far beyond their original scope in unpredictable ways and end up with much broken code. (See this &lt;a href="http://www.nature.com/news/2010/101013/full/467775a.html"&gt;wonderful editorial&lt;/a&gt; by Zeeya Merali for much more on this topic.)&lt;/p&gt;
+&lt;h3&gt;Reducing the boilerplate with PyScaffold&lt;/h3&gt;
+
+&lt;p&gt;But it's a lot of stuff to do for every little project. I was about to make myself some minimal &lt;code&gt;setup.cfg&lt;/code&gt; and &lt;code&gt;.travis.yml&lt;/code&gt; template files so that I could have these ready for all new projects, when I remembered &lt;a href="http://pyscaffold.readthedocs.org/en/latest/index.html"&gt;PyScaffold&lt;/a&gt;, which sets up a Python project's basic structure automatically (&lt;code&gt;setup.py&lt;/code&gt;, &lt;code&gt;package_name/&lt;strong&gt;init&lt;/strong&gt;.py&lt;/code&gt;, etc.). Sure enough, PyScaffold has a &lt;a href="http://pyscaffold.readthedocs.org/en/latest/features.html#unittest-coverage"&gt;&lt;code&gt;--with-travis&lt;/code&gt; option&lt;/a&gt; that implements &lt;em&gt;all&lt;/em&gt; my recommendations, including pytest, Travis, and Coveralls. If you set up your projects with PyScaffold, you'll just have to turn on Travis-CI on your GitHub repo admin and Coveralls on coveralls.io, and you'll be good to go.&lt;/p&gt;
+&lt;h3&gt;When Travises attack&lt;/h3&gt;
+
+&lt;p&gt;I've made a fuss about how wonderful Travis-CI is, but it breaks more often than I'd like. You'll make some changes locally, and ensure that the tests pass, but when you push them to GitHub, Travis fails. This can happen for various reasons:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;your environment is different (e.g. NumPy versions differ between your local build and Travis's VMs).&lt;/li&gt;
+&lt;li&gt;you're testing a function that depends on random number generation and have failed to set the seed.&lt;/li&gt;
+&lt;li&gt;you depend on some web resource that was temporarily unavailable when you pushed.&lt;/li&gt;
+&lt;li&gt;Travis has updated its VMs in some incompatible way.&lt;/li&gt;
+&lt;li&gt;you have more memory/CPUs locally than Travis allows.&lt;/li&gt;
+&lt;li&gt;some other, not-yet-understood-by-me reason.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Of these, the first three are acceptable. You can use &lt;a href="http://conda.pydata.org/docs/"&gt;conda&lt;/a&gt; to match your environments both locally and on Travis, and you should &lt;a href="http://blog.amvtek.com/posts/2014/Jun/20/making-good-use-of-random-in-your-python-unit-tests/"&gt;always set the seed&lt;/a&gt; for randomised tests. For network errors, Travis provides a special function, &lt;a href="http://blog.travis-ci.com/2013-05-20-network-timeouts-build-retries/"&gt;&lt;code&gt;travis_retry&lt;/code&gt;&lt;/a&gt;, that you can prefix your commands with.&lt;/p&gt;
+&lt;p&gt;Travis VM updates should theoretically be benign and not cause any problems, but, in recent months, they have been a &lt;a href="https://github.com/scikit-image/scikit-image/pull/1090#issuecomment-50983376"&gt;significant&lt;/a&gt; &lt;a href="https://github.com/scikit-image/scikit-image/pull/1100#issuecomment-53651935"&gt; source&lt;/a&gt; &lt;a href="https://github.com/scikit-image/scikit-image/pull/1189#issuecomment-58500996"&gt;of&lt;/a&gt; &lt;a href="https://github.com/scikit-image/scikit-image/pull/1189#issuecomment-58610095"&gt;pain&lt;/a&gt; for the scikit-image team: every monthly update by Travis broke our builds. That's disappointing, to say the least. For simple builds, you really shouldn't run into this. But for major projects, this is an unnecessary source of instability.&lt;/p&gt;
+&lt;p&gt;Further, Travis VMs don't have unlimited memory and disk space for your builds (naturally), but &lt;a href="https://github.com/scikit-image/scikit-image/pull/1199#issuecomment-59448250"&gt;the limits are not strictly defined&lt;/a&gt; (unnaturally). This means that builds requiring "some" memory or disk space randomly fail. Again, disappointing. Travis could, for example, guarantee some minimal specs that everyone could program against — and request additional space either as special exemptions or at a cost.&lt;/p&gt;
+&lt;p&gt;Finally, there's the weird failures. I don't have any examples on hand but I'll just note that sometimes Travis builds fail, where your local copy works fine every single time. Sometimes &lt;a href="http://stackoverflow.com/a/21727193"&gt;rebuilding&lt;/a&gt; fixes things, and other times you have to change some subtle but apparently inconsequential thing before the build is fixed. These would be mitigated if Travis allowed you to clone their VM images so you could run them on a local VM or on your own EC2 allocation.&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://ilovesymposia.com/2014/10/screen-shot-2014-10-27-at-7-57-36-pm.png"&gt;&lt;img src="https://ilovesymposia.files.wordpress.com/2014/10/screen-shot-2014-10-27-at-7-57-36-pm.png?w=450" alt="Heisenbug" width="450" height="84" class="size-large wp-image-597"&gt;&lt;/a&gt; A too-common Travis occurrence: randomly failing tests&lt;/p&gt;
+&lt;p&gt;In all though, Travis is a fantastic resource, and you shouldn't let my caveats stop you from using it. They are just something to keep in mind before you pull &lt;em&gt;all&lt;/em&gt; your hair out.&lt;/p&gt;
+&lt;h3&gt;The missing test: performance benchmarks&lt;/h3&gt;
+
+&lt;p&gt;Testing helps you maintain the correctness of your code. However, as Michael Droettboom &lt;a href="https://www.youtube.com/watch?v=OsxJ5O6h8s0"&gt;eloquently argued&lt;/a&gt; at SciPy 2014, all projects are prone to feature creep, which can progressively slow code down. &lt;a href="https://spacetelescope.github.io/asv/"&gt;Airspeed Velocity&lt;/a&gt; is to benchmarks what pytest is to unit tests, and allows you to monitor your project's speed over time. Unfortunately, benchmarks are a different beast to tests, because you need to keep the testing computer's specs and load constant for each benchmark run. Therefore, a VM-based CI service such as Travis is out of the question.&lt;/p&gt;
+&lt;p&gt;If your project has &lt;em&gt;any&lt;/em&gt; performance component, it may well be worth investing in a dedicated machine only to run benchmarks. The machine could monitor your GitHub repo for changes and PRs, check them out when they come in, run the benchmarks, and report back. I have yet to do this for any of my projects, but will certainly consider this strongly in the future.&lt;/p&gt;
+&lt;h3&gt;Some reservations about GitHub&lt;/h3&gt;
+
+&lt;p&gt;The above tools all work great as part of GitHub's &lt;a href="https://help.github.com/articles/using-pull-requests/"&gt;pull request (PR)&lt;/a&gt; development model. It's a model that is easy to grok, works well with new programmers, and has driven massive growth in the open-source community. Lately, I recommend it with a bit more trepidation than I used to, because it does have a few high-profile detractors, notably Linux and git creator &lt;a href="https://github.com/torvalds/linux/pull/17#issuecomment-5654674"&gt;Linus Torvalds&lt;/a&gt;, and OpenStack developer &lt;a href="https://julien.danjou.info/blog/2013/rant-about-github-pull-request-workflow-implementation"&gt;Julien Danjou&lt;/a&gt;. To paraphrase Julien, there are two core problems with GitHub's chosen workflow, both of which are longstanding and neither of which shows any sign of improving.&lt;/p&gt;
+&lt;p&gt;First, &lt;strong&gt;comments on code diffs are buried by subsequent changes&lt;/strong&gt;, whether the changes are a rebase or they simply change the diff. This makes it very difficult for an outside reviewer to assess what discussion, if any, resulted in the final/latest design of a PR. This could be a fairly trivial fix (colour-code outdated diffs, rather than hiding them), so I would love to see some comments from GitHub as to what is taking so long.&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://ilovesymposia.com/2014/10/screen-shot-2014-10-27-at-5-06-29-pm.png"&gt;&lt;img src="https://ilovesymposia.files.wordpress.com/2014/10/screen-shot-2014-10-27-at-5-06-29-pm.png?w=660" alt="GitHub's hidden PR comments" width="660" height="127" class="size-large wp-image-596"&gt;&lt;/a&gt; Expect to see a lot of these when using pull requests.&lt;/p&gt;
+&lt;p&gt;Second, &lt;strong&gt;bisectability is broken by fixup commits.&lt;/strong&gt; The GitHub development model is not only geared towards small, incremental commits being piled on to a history, but it actively encourages these with their per-commit badging of a user's &lt;a href="https://help.github.com/articles/viewing-contributions-on-your-profile-page/#contributions-calendar"&gt;contribution calendar&lt;/a&gt;. Fixup commits make bug hunting with &lt;a href="http://git-scm.com/docs/git-bisect"&gt;git bisect&lt;/a&gt; more difficult, because some commits will not be able to run a test suite at all. This could be alleviated by considering only commits merging GitHub PRs, whose commit message start with &lt;code&gt;Merge pull request #&lt;/code&gt;, but I don't know how to get git to do this automatically (ideas welcome in the comments).&lt;/p&gt;
+&lt;p&gt;I disagree with Julien that there is "no value in the social hype [GitHub] brings." In fact, GitHub has dramatically improved my coding skills, and no doubt countless others'. For many, it is their first experience with code review. Give credit where it is due: GitHub is driving the current, enormous wave of open-source development. But there is no doubt it needs improvement, and it's sad to see GitHub's developers apparently ignoring their critics. I hope the latter will be loud enough soon that GitHub will have no choice but to take notice.&lt;/p&gt;
+&lt;h3&gt;Final comments&lt;/h3&gt;
+
+&lt;p&gt;This series, including this post, sums up my current thinking on CI in Python. It's surely incomplete: I recently came across a curious "Health: 88%" badge on Mitchell Stanton-Cook's &lt;a href="https://github.com/mscook/BanzaiDB"&gt;BanzaiDB&lt;/a&gt; README. Clicking it took me to the project's &lt;a href="https://landscape.io/github/mscook/BanzaiDB/52"&gt;landscape.io page&lt;/a&gt;, which appears to do for coding style what Travis does for builds/tests and Coveralls does for coverage. How it measures "style" is not yet clear to me, but it might be another good CI tool to keep track of. Nevertheless, since it's taken me a few years to get to this stage in my software development practice, I hope this series will help other scientists get there faster.&lt;/p&gt;
+&lt;p&gt;If any more experienced readers think any of my advice is rubbish, please speak up in the comments! I'll update the post(s) accordingly. CI is a big rabbit hole and I'm still finding my way around.&lt;/p&gt;&lt;/div&gt;</description><category>continuous integration</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>test-driven development</category><guid>http://ilovesymposia.com/posts/2014/10/27/continuous-integration-in-python-7-some-helper-tools-and-final-thoughts/</guid><pubDate>Mon, 27 Oct 2014 07:03:52 GMT</pubDate></item><item><title>Continuous integration in Python, 6: Show off your work</title><link>http://ilovesymposia.com/posts/2014/10/17/continuous-integration-in-python-6-show-off-your-work/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;We're finally ready to wrap up this topic. By now you can:&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/"&gt;Automatically test your code with pytest&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/02/continuous-integration-1-test-coverage/"&gt;Measure your test coverage&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/13/continuous-integration-in-python-3-set-up-your-test-configuration-files/"&gt;Configure your tests&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Use Travis-CI to &lt;a href="http://ilovesymposia.com/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/"&gt;run your tests automatically with each push&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Use Coveralls to &lt;a href="http://ilovesymposia.com/2014/10/15/continuous-integration-in-python-5-report-test-coverage-using-coveralls/"&gt;measure your coverage with each push&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;But, much as exercise is wasted if your bathroom scale doesn't automatically tweet about it, all this effort is for naught if visitors to your GitHub page can't see it!&lt;/p&gt;
+&lt;p&gt;Most high-profile open-source projects these days advertise their CI efforts. Above, I cheekily called this showing off, but it's truly important: anyone who lands on your GitHub page is a potential user or contributor, and if they see evidence that your codebase is stable and well-tested, they are more likely to stick around.&lt;/p&gt;
+&lt;p&gt;Badging your README is easy. (You &lt;em&gt;do&lt;/em&gt; have a README, &lt;a href="http://ilovesymposia.com/posts/2014/10/17/continuous-integration-in-python-6-show-off-your-work/"&gt;don't you?&lt;/a&gt;) In Travis, go to your latest build. Near the top right, click on the "build passing" badge:&lt;/p&gt;
+&lt;p&gt;&lt;img src="http://ilovesymposia.com/2014/10/screen-shot-2014-10-17-at-8-20-00-pm.png" alt="Travis-CI badge"&gt;&lt;/p&gt;
+&lt;p&gt;You'll get an overlay, with a pull-down menu for all the different options for getting the badge. You can grab the image URL, or you can directly grab the Markdown to put into your markdown-formatted README, or a bunch of other options, including RST:&lt;/p&gt;
+&lt;p&gt;&lt;img src="http://ilovesymposia.com/2014/10/screen-shot-2014-10-17-at-8-27-05-pm.png" alt="Travis-CI badge URLs"&gt;&lt;/p&gt;
+&lt;p&gt;Just copy and paste the appropriate code and add it to your README file wherever you please.&lt;/p&gt;
+&lt;p&gt;Meanwhile, on your repository's Coveralls page, on the right-hand side, you will find another pull-down menu with the appropriate URLs:&lt;/p&gt;
+&lt;p&gt;&lt;img src="http://ilovesymposia.com/2014/10/screen-shot-2014-10-17-at-8-28-24-pm.png" alt="Coveralls badge URLs"&gt;&lt;/p&gt;
+&lt;p&gt;Again, just grab whichever URL is appropriate for your needs (I prefer Markdown-formatted READMEs), and add it to your README, usually next to the Travis badge.&lt;/p&gt;
+&lt;p&gt;And you're done! You've got &lt;a href="http://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/"&gt;automated tests&lt;/a&gt;, &lt;a href="http://ilovesymposia.com/2014/10/02/continuous-integration-1-test-coverage/"&gt;tons of test coverage&lt;/a&gt;, you're running everything correctly thanks to &lt;a href="http://ilovesymposia.com/2014/10/13/continuous-integration-in-python-3-set-up-your-test-configuration-files/"&gt;configuration files&lt;/a&gt;, and all this is getting run on demand thanks to &lt;a href="http://ilovesymposia.com/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/"&gt;Travis&lt;/a&gt; and &lt;a href="http://ilovesymposia.com/2014/10/15/continuous-integration-in-python-5-report-test-coverage-using-coveralls/"&gt;Coveralls&lt;/a&gt;. And thanks to badging, the whole world knows about it:&lt;/p&gt;
+&lt;p&gt;&lt;img src="http://ilovesymposia.com/2014/10/screen-shot-2014-10-18-at-12-33-37-am.png" alt="Readme badges"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Update:&lt;/strong&gt; &lt;a href="https://ilovesymposia.com/2014/10/27/continuous-integration-in-python-7-some-helper-tools-and-final-thoughts/"&gt;Volume 7: Some final thoughts, tips, and tools.&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>continuous integration</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>test-driven development</category><guid>http://ilovesymposia.com/posts/2014/10/17/continuous-integration-in-python-6-show-off-your-work/</guid><pubDate>Fri, 17 Oct 2014 06:37:37 GMT</pubDate></item><item><title>Continuous integration in Python, 5: report test coverage using Coveralls</title><link>http://ilovesymposia.com/posts/2014/10/15/continuous-integration-in-python-5-report-test-coverage-using-coveralls/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;In this series of posts, we've covered:&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/"&gt;Automated testing with pytest&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/02/continuous-integration-1-test-coverage/"&gt;Measuring test coverage&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/13/continuous-integration-in-python-3-set-up-your-test-configuration-files/"&gt;Setting up test configuration files&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Using Travis-CI to &lt;a href="http://ilovesymposia.com/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/"&gt;run your tests automatically with each push&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Today I will show you how to continuously check your test coverage using &lt;a href="https://coveralls.io"&gt;Coveralls&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Travis runs whatever commands you tell it to run in your &lt;code&gt;.travis.yml&lt;/code&gt; file. Normally, that's just installing your program and its requirements, and running your tests. If you wanted instead to launch some nuclear missiles, you could do that. (Assuming you were happy to put the launch keys in a public git repository... =P)&lt;/p&gt;
+&lt;p&gt;The &lt;a href="https://coveralls.io"&gt;Coveralls&lt;/a&gt; service, once again free for open-source repositories, takes advantage of this: you just need to install an extra piece of software from PyPI, and run it after your tests have passed. Do so by adding the line &lt;code&gt;pip install coveralls&lt;/code&gt; to your &lt;code&gt;before_install&lt;/code&gt; section, and just the &lt;code&gt;coveralls&lt;/code&gt; command to a new &lt;code&gt;after_success&lt;/code&gt; section:&lt;/p&gt;
+&lt;p&gt;```https://coveralls.io
+; then
+          coveralls;
+      fi&lt;/p&gt;
+&lt;p&gt;```&lt;/p&gt;
+&lt;p&gt;This is the approach taken by the scikit-image project.)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Update:&lt;/strong&gt; &lt;a href="http://ilovesymposia.com/2014/10/17/continuous-integration-in-python-6-show-off-your-work/"&gt;Volume 6: Badge your repo to show off your work&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>continuous integration</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>test-driven development</category><guid>http://ilovesymposia.com/posts/2014/10/15/continuous-integration-in-python-5-report-test-coverage-using-coveralls/</guid><pubDate>Wed, 15 Oct 2014 23:11:19 GMT</pubDate></item><item><title>Continuous integration in Python, 4: set up Travis-CI</title><link>http://ilovesymposia.com/posts/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/"&gt;Automated testing with pytest&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/02/continuous-integration-1-test-coverage/"&gt;Measuring test coverage&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/13/continuous-integration-in-python-3-set-up-your-test-configuration-files/"&gt;Setting up test configuration files&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Introduction to Travis-CI&lt;/h3&gt;
+&lt;p&gt;Once you've set up your tests locally, it does you no good if you don't remember to run them! &lt;a href="http://travis-ci.org/"&gt;Travis-CI&lt;/a&gt; makes this seamless, because it will check out your code and run you tests for &lt;em&gt;each and every commit you push to GitHub!&lt;/em&gt; (This is even more important when you are receiving pull requests on GitHub: the tests will be run online, without you having to individually check out each PR and run the tests on your machine!)
+.. has_math: no
+.. status: published
+.. wp-status: publish
+--&amp;gt;&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;&lt;p&gt;This is the fourth post in my Continuous integration (CI) in Python series, and the one that puts the "continuous" in CI! For the introductory three posts, see:&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/"&gt;Automated testing with pytest&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/02/continuous-integration-1-test-coverage/"&gt;Measuring test coverage&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/13/continuous-integration-in-python-3-set-up-your-test-configuration-files/"&gt;Setting up test configuration files&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Introduction to Travis-CI&lt;/h3&gt;
+
+&lt;p&gt;Once you've set up your tests locally, it does you no good if you don't remember to run them! &lt;a href="http://travis-ci.org/"&gt;Travis-CI&lt;/a&gt; makes this seamless, because it will check out your code and run you tests for &lt;em&gt;each and every commit you push to GitHub!&lt;/em&gt; (This is even more important when you are receiving pull requests on GitHub: the tests will be run online, without you having to individually check out each PR and run the tests on your machine!)&lt;/p&gt;
+&lt;p&gt;This is what continuous integration is all about. Once upon a time, the common practice was to pile on new features on a codebase. Then, come release time, there would be a feature freeze, and some time would be spent cleaning up code and removing bugs. In continuous integration, instead, no new feature is allowed into the codebase until it is bug free, as demonstrated by the test suite.&lt;/p&gt;
+&lt;h3&gt;What to do&lt;/h3&gt;
+
+&lt;p&gt;You need to first add a &lt;code&gt;.travis.yml&lt;/code&gt; file to the root of your project. This tells Travis how to install your program's dependencies, install your program, and run the tests. Here's an example file to run tests and coverage on our &lt;code&gt;maths.py&lt;/code&gt; sample project:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[code lang=text]&lt;/span&gt;
+&lt;span class="na"&gt;language: python&lt;/span&gt;
+&lt;span class="na"&gt;python:&lt;/span&gt;
+    &lt;span class="na"&gt;- "2.7"&lt;/span&gt;
+    &lt;span class="na"&gt;- "3.4"&lt;/span&gt;
+&lt;span class="na"&gt;before_install:&lt;/span&gt;
+    &lt;span class="na"&gt;- pip install pytest pytest-cov&lt;/span&gt;
+&lt;span class="na"&gt;script:&lt;/span&gt;
+    &lt;span class="na"&gt;- py.test&lt;/span&gt;
+&lt;span class="k"&gt;[/code]&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Pretty simple: tell Travis the language of your project, the Python version (you can specify multiple versions, one per line, to test on multiple Python versions!), how to install test dependencies. Finally, the command to run your tests. (This can be anything, not just pytest or another testing framework, as long as a shell exit status of 0 means "success" and anything else means "failure".)&lt;/p&gt;
+&lt;p&gt;You can read more about the syntax and options for your &lt;code&gt;.travis.yml&lt;/code&gt; in the &lt;a href="http://docs.travis-ci.com/user/build-configuration/"&gt;Travis documentation&lt;/a&gt;. There are other sections you can add, such as "virtualenv" to set up Python virtual environments, "install" to add compilation and other installation steps for your library, before testing, and "after_success" to enable e.g. custom notifications. (We will use this last one in the next post.)&lt;/p&gt;
+&lt;p&gt;Once you have created &lt;code&gt;.travis.yml&lt;/code&gt; for your project, you need to turn it on for your repo. &lt;strike&gt;This is, currently, a fairly painful process, and I can't wait for the day that it's enabled by default on GitHub.&lt;/strike&gt; [&lt;strong&gt;Update: see below&lt;/strong&gt;] In the meantime though:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strike&gt;Go to your project &lt;a href="http://ilovesymposia.com/2014/10/skitch-3.png"&gt;settings&lt;/a&gt; page on GitHub.&lt;/strike&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strike&gt;Click on &lt;a href="http://ilovesymposia.com/2014/10/skitch-2.png"&gt;webhooks &amp;amp; services&lt;/a&gt;.&lt;/strike&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strike&gt;Click on &lt;a href="http://ilovesymposia.com/2014/10/skitch.png"&gt;add service&lt;/a&gt;, searching for "Travis".&lt;/strike&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strike&gt;You'll be taken to the GitHub &lt;a href="http://ilovesymposia.com/2014/10/skitch-7.png"&gt;Travis configuration page&lt;/a&gt;. Mine was pre-populated with the Travis token, but you might have to click on the link to your &lt;a href="https://travis-ci.org/profile"&gt;Travis profile&lt;/a&gt;, and click on the "Profile" tab to retrieve your token.&lt;/strike&gt;&lt;/li&gt;
+&lt;li&gt;In the &lt;a href="https://travis-ci.org/profile"&gt;Travis profile page&lt;/a&gt;, in the "Repositories" tab, click &lt;a href="http://ilovesymposia.com/2014/10/skitch-5.png"&gt;Sync now&lt;/a&gt; to get your list of repos, and flick the switch for your current repo.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;i&gt;[&lt;strong&gt;Update 2014-10-28:&lt;/strong&gt; Thanks to &lt;a href="https://twitter.com/hugovk"&gt;@hugovk&lt;/a&gt; for pointing out that the first four points above can be skipped. It turns out that when you first log in to Travis-CI using your GitHub account, you give them write access to your webhooks. So, when you add a repo from their end, they go ahead and add themselves on the GitHub end! Boom. Way easier.]&lt;/i&gt;&lt;/p&gt;
+&lt;p&gt;https://twitter.com/hugovk/status/526798595442618368&lt;/p&gt;
+&lt;p&gt;Voilà! Every push and pull-request to your repository will trigger a job on Travis's servers, building your dependencies and your software, running your tests, and emailing you if anything went wrong! Amazingly, this is completely free for open source projects, so you really have no excuse for not using it!&lt;/p&gt;
+&lt;p&gt;&lt;img src="http://ilovesymposia.com/2014/10/screen-shot-2014-10-15-at-9-55-05-pm.png" alt="Travis build page"&gt;&lt;/p&gt;
+&lt;p&gt;Follow this blog to learn how to continuously check test coverage using &lt;a href="https://coveralls.io"&gt;Coveralls&lt;/a&gt;, coming in the next post!&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Update:&lt;/strong&gt; &lt;a href="http://ilovesymposia.com/2014/10/15/continuous-integration-in-python-5-report-test-coverage-using-coveralls/"&gt;Volume 5: turn on Coveralls&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>continuous integration</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>test-driven development</category><guid>http://ilovesymposia.com/posts/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/</guid><pubDate>Wed, 15 Oct 2014 04:00:59 GMT</pubDate></item><item><title>Continuous integration in Python 3: set up your test configuration files</title><link>http://ilovesymposia.com/posts/2014/10/13/continuous-integration-in-python-3-set-up-your-test-configuration-files/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;This is the third post in my series on continuous integration (CI) in Python. For the first two posts, see &lt;a href="http://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/"&gt;1: automated tests with pytest&lt;/a&gt;, and &lt;a href="http://ilovesymposia.com/2014/10/02/continuous-integration-1-test-coverage/"&gt;2: measuring test coverage&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;By now, you've got a bunch of tests and doctests set up in your project, which you run with the command:&lt;/p&gt;
+&lt;p&gt;```http://en.wikipedia.org/wiki/INI_file&lt;/p&gt;
+&lt;p&gt;omit = *script.py&lt;/p&gt;
+&lt;p&gt;```&lt;/p&gt;
+&lt;p&gt;Once you've done this, you can invoke your tests with a simple, undecorated call to just &lt;code&gt;py.test&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;To find out more about your configuration options, see the pytest &lt;a href="http://pytest.org/latest/customize.html"&gt;basic test configuration&lt;/a&gt; page, and Ned Batchelder's excellent &lt;a href="http://nedbatchelder.com/code/coverage/config.html"&gt;&lt;code&gt;.coveragerc&lt;/code&gt; syntax guide&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;That's it for this entry of my CI series. Follow this blog for the next two entries, setting up Travis CI and Coveralls.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Update:&lt;/strong&gt; &lt;a href="http://ilovesymposia.com/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/"&gt;Volume 4: Set up Travis-CI&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>continuous integration</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>test-driven development</category><guid>http://ilovesymposia.com/posts/2014/10/13/continuous-integration-in-python-3-set-up-your-test-configuration-files/</guid><pubDate>Mon, 13 Oct 2014 19:57:20 GMT</pubDate></item><item><title>Continuous integration in Python, Volume 2: measuring test coverage</title><link>http://ilovesymposia.com/posts/2014/10/02/continuous-integration-1-test-coverage/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;(&lt;strong&gt;Edit&lt;/strong&gt;: I initially thought it would be cute to number from 0. But it turns out it becomes rather obnoxious to relate English (first, second, ...) to 0-indexing. So this was formerly volume 1. But everything else remains the same.)&lt;/p&gt;
+&lt;p&gt;This is the second post in a series about setting up continuous integration for a Python project from scratch. For the first post, see &lt;a href="http://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/"&gt;Automated tests with pytest&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;After you've written some test cases for a tiny project, it's easy to check what code you have automatically tested. For even moderately big projects, you will need tools that automatically check what parts of your code are actually tested. The proportion of lines of code that are run at least once during your tests is called your &lt;em&gt;test coverage&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;For the same reasons that testing is important, measuring coverage is important. Pytest can measure coverage for you with the coverage plugin, found in the &lt;a href="https://pypi.python.org/pypi/pytest-cov"&gt;pytest-cov&lt;/a&gt; package. Once you've installed the extension, a test coverage measurement is just a command-line option away:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[code lang=text]&lt;/span&gt;
+ &lt;span class="na"&gt;~/projects/maths $ py.test --doctest-modules --cov .&lt;/span&gt;
+&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;============================ test session starts ==============================&lt;/span&gt;
+&lt;span class="na"&gt;platform darwin -- Python 2.7.8 -- py-1.4.25 -- pytest-2.6.3&lt;/span&gt;
+&lt;span class="na"&gt;plugins: cov&lt;/span&gt;
+&lt;span class="na"&gt;collected 2 items &lt;/span&gt;
+
+&lt;span class="na"&gt;maths.py .&lt;/span&gt;
+&lt;span class="na"&gt;test_maths.py .&lt;/span&gt;
+&lt;span class="na"&gt;--------------- coverage: platform darwin, python 2.7.8-final-0 ----------------&lt;/span&gt;
+&lt;span class="na"&gt;Name         Stmts   Miss  Cover&lt;/span&gt;
+&lt;span class="na"&gt;--------------------------------&lt;/span&gt;
+&lt;span class="na"&gt;maths            2      0   100%&lt;/span&gt;
+&lt;span class="na"&gt;test_maths       4      0   100%&lt;/span&gt;
+&lt;span class="na"&gt;--------------------------------&lt;/span&gt;
+&lt;span class="na"&gt;TOTAL            6      0   100%&lt;/span&gt;
+
+&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;========================== 2 passed in 0.07 seconds ===========================&lt;/span&gt;
+&lt;span class="k"&gt;[/code]&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;(The &lt;code&gt;--cov&lt;/code&gt; takes a directory as input, which I find obnoxious, given that py.test so naturally defaults to the current directory. But it is what it is.)&lt;/p&gt;
+&lt;p&gt;Now, if I add a function without a test, I'll see my coverage drop:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[code lang=text]&lt;/span&gt;
+&lt;span class="na"&gt;def sqrt(x):&lt;/span&gt;
+    &lt;span class="na"&gt;"""Return the square root of `x`."""&lt;/span&gt;
+    &lt;span class="na"&gt;return x * 0.5&lt;/span&gt;
+&lt;span class="k"&gt;[/code]&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;(The typo is intentional.)&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[code lang=text]&lt;/span&gt;
+&lt;span class="na"&gt;--------------- coverage: platform darwin, python 2.7.8-final-0 ----------------&lt;/span&gt;
+&lt;span class="na"&gt;Name         Stmts   Miss  Cover&lt;/span&gt;
+&lt;span class="na"&gt;--------------------------------&lt;/span&gt;
+&lt;span class="na"&gt;maths            4      1    75%&lt;/span&gt;
+&lt;span class="na"&gt;test_maths       4      0   100%&lt;/span&gt;
+&lt;span class="na"&gt;--------------------------------&lt;/span&gt;
+&lt;span class="na"&gt;TOTAL            8      1    88%&lt;/span&gt;
+&lt;span class="k"&gt;[/code]&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;With one more option, &lt;code&gt;--cov-report term-missing&lt;/code&gt;, I can see which lines I &lt;em&gt;haven't&lt;/em&gt; covered, so I can try to design tests specifically for that code:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[code lang=text]&lt;/span&gt;
+&lt;span class="na"&gt;--------------- coverage: platform darwin, python 2.7.8-final-0 ----------------&lt;/span&gt;
+&lt;span class="na"&gt;Name         Stmts   Miss  Cover   Missing&lt;/span&gt;
+&lt;span class="na"&gt;------------------------------------------&lt;/span&gt;
+&lt;span class="na"&gt;maths            4      1    75%   24&lt;/span&gt;
+&lt;span class="na"&gt;test_maths       4      0   100%   &lt;/span&gt;
+&lt;span class="na"&gt;------------------------------------------&lt;/span&gt;
+&lt;span class="na"&gt;TOTAL            8      1    88%   &lt;/span&gt;
+&lt;span class="k"&gt;[/code]&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Do note that 100% coverage does not ensure correctness. For example, suppose I test my &lt;code&gt;sqrt&lt;/code&gt; function like so:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[code lang=python]&lt;/span&gt;
+&lt;span class="na"&gt;def sqrt(x):&lt;/span&gt;
+    &lt;span class="na"&gt;"""Return the square root of `x`.&lt;/span&gt;
+
+    &lt;span class="na"&gt;Examples&lt;/span&gt;
+    &lt;span class="na"&gt;--------&lt;/span&gt;
+    &lt;span class="na"&gt;&amp;amp;gt;&amp;amp;gt;&amp;amp;gt; sqrt(4.0)&lt;/span&gt;
+    &lt;span class="na"&gt;2.0&lt;/span&gt;
+    &lt;span class="na"&gt;"""&lt;/span&gt;
+    &lt;span class="na"&gt;return x * 0.5&lt;/span&gt;
+&lt;span class="k"&gt;[/code]&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Even though my test is correct, and I now have 100% test coverage, I haven't detected my mistake. Oops!&lt;/p&gt;
+&lt;p&gt;But, keeping that caveat in mind, full test coverage &lt;em&gt;is&lt;/em&gt; a wonderful thing, and if you don't test something, you're guaranteed not to catch errors. Further, my example above is quite contrived, and in most situations full test coverage &lt;em&gt;will&lt;/em&gt; spot most errors.&lt;/p&gt;
+&lt;p&gt;That's it for part 2. Tune in next time to learn how to turn on &lt;a href="https://travis-ci.org"&gt;Travis&lt;/a&gt; continuous integration for your GitHub projects!&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Update:&lt;/strong&gt; &lt;a href="http://ilovesymposia.com/2014/10/13/continuous-integration-in-python-3-set-up-your-test-configuration-files/"&gt;Volume 3: set up config files.&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>continuous integration</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>test-driven development</category><guid>http://ilovesymposia.com/posts/2014/10/02/continuous-integration-1-test-coverage/</guid><pubDate>Thu, 02 Oct 2014 01:04:04 GMT</pubDate></item><item><title>Continuous integration in Python, Volume 1: automated tests with pytest</title><link>http://ilovesymposia.com/posts/2014/10/01/continuous-integration-0-automated-tests-with-pytest/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;Without further ado, here goes the first post: how to set up automated testing for your Python project using &lt;a href="http://pytest.org/latest/"&gt;pytest&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;.. has_math: no
+.. status: published
+.. wp-status: publish
+--&amp;gt;&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;&lt;p&gt;(&lt;strong&gt;Edit&lt;/strong&gt;: I initially thought it would be cute to number from 0. But it turns out it becomes rather obnoxious to relate English (first, second, …) to 0-indexing. So this was formerly volume 0. But everything else remains the same.)&lt;/p&gt;
+&lt;p&gt;I just finished the process of setting up continuous integration &lt;em&gt;from scratch&lt;/em&gt; for one of my projects, &lt;a href="https://github.com/jni/cellom2tif"&gt;cellom2tif&lt;/a&gt;, a simple image file converter/liberator. I thought I would write a blog post about that process, but it has slowly mutated into a hefty document that I thought would work better as a series. I'll cover automated testing, test coverage, and how to get these to run automatically for your project with &lt;a href="https://travis-ci.org"&gt;Travis-CI&lt;/a&gt; and &lt;a href="https://coveralls.io"&gt;Coveralls&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Without further ado, here goes the first post: how to set up automated testing for your Python project using &lt;a href="http://pytest.org/latest/"&gt;pytest&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;&lt;h3&gt;Automated tests, and why you need them&lt;/h3&gt;
+&lt;p&gt;Software engineering is hard, and it's incredibly easy to mess things up, so you should write &lt;em&gt;tests&lt;/em&gt; for all your functions, which ensure that nothing obviously stupid is going wrong. Tests can take a lot of different forms, but here's a really basic example. Suppose this is a function in your file, &lt;code&gt;maths.py&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;```http://ilovesymposia.com/2014/01/09/best-practices-addendum-find-and-follow-the-conventions-of-your-programming-community/&lt;/p&gt;
+&lt;p&gt;~/projects/maths $ py.test --doctest-modules
+============================= test session starts ==============================
+platform darwin -- Python 2.7.8 -- py-1.4.20 -- pytest-2.5.2
+collected 2 items&lt;/p&gt;
+&lt;p&gt;maths.py .
+test_maths.py .&lt;/p&gt;
+&lt;p&gt;=========================== 2 passed in 0.06 seconds ===========================&lt;/p&gt;
+&lt;p&gt;```&lt;/p&gt;
+&lt;h3&gt;Test-driven development&lt;/h3&gt;
+
+&lt;p&gt;That was easy! And yet most people, my past self included, neglect tests, thinking they'll do them eventually, when the software is ready. This is backwards. You've probably heard the phrase "Test-driven development (TDD)"; this is what they're talking about: writing your tests &lt;em&gt;before&lt;/em&gt; you've written the functionality to pass them. It might initially &lt;em&gt;seem&lt;/em&gt; like wasted effort, like you're not making progress in what you actually want to do, which is write your software. But it's not:&lt;/p&gt;
+&lt;p&gt;https://twitter.com/zspencer/status/514447236239859712&lt;/p&gt;
+&lt;p&gt;By spending a bit of extra effort to prevent bugs down the road, you will get to where you want to go faster.&lt;/p&gt;
+&lt;p&gt;That's it for volume 1! Watch out for the next post: ensuring your tests are thorough by measuring &lt;em&gt;test coverage&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Update:&lt;/strong&gt; &lt;a href="http://ilovesymposia.com/2014/10/02/continuous-integration-1-test-coverage/"&gt;Volume 2: measuring test coverage&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>continuous integration</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>test-driven development</category><guid>http://ilovesymposia.com/posts/2014/10/01/continuous-integration-0-automated-tests-with-pytest/</guid><pubDate>Wed, 01 Oct 2014 01:40:41 GMT</pubDate></item></channel></rss>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The cost of a Python function call | I Love Symposia!</title>
+<link href="../../../../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900" rel="stylesheet">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../../../../rss.xml">
+<link rel="canonical" href="http://ilovesymposia.com/posts/2015/12/10/the-cost-of-a-python-function-call/">
+<!--[if lt IE 9]><script src="../../../../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Juan Nunez-Iglesias">
+<link rel="prev" href="../../../10/19/first-yield-from/" title="My first use of Python 3's `yield from`!" type="text/html">
+<link rel="next" href="../../26/why-scientists-should-code-in-the-open/" title="Why scientists should code in the open" type="text/html">
+<meta property="og:site_name" content="I Love Symposia!">
+<meta property="og:title" content="The cost of a Python function call">
+<meta property="og:url" content="http://ilovesymposia.com/posts/2015/12/10/the-cost-of-a-python-function-call/">
+<meta property="og:description" content="I've read in various places that the Python function call overhead is very high. As I was parroting this &quot;fact&quot; to Ed Schofield recently, he asked me what the cost of a function actually was. I had no">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2015-12-10T01:04:00Z">
+<meta property="article:tag" content="Planet SciPy">
+<meta property="article:tag" content="programming">
+<meta property="article:tag" content="Python">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Header and menu bar -->
+<div class="container">
+      <header class="blog-header py-3"><div class="row nbb-header align-items-center">
+          <div class="col-md-3 col-xs-2 col-sm-2" style="width: auto;">
+            <button class="navbar-toggler navbar-light bg-light nbb-navbar-toggler" type="button" data-toggle="collapse" data-target=".bs-nav-collapsible" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse bs-nav-collapsible bootblog4-search-form-holder">
+                
+            </div>
+        </div>
+          <div class="col-md-6 col-xs-10 col-sm-10 bootblog4-brand" style="width: auto;">
+            <a class="navbar-brand blog-header-logo text-dark" href="http://ilovesymposia.com/">
+
+            <span id="blog-title">I Love Symposia!</span>
+        </a>
+          </div>
+            <div class="col-md-3 justify-content-end align-items-center bs-nav-collapsible collapse flex-collapse bootblog4-right-nav">
+            <nav class="navbar navbar-light bg-white"><ul class="navbar-nav bootblog4-right-nav">
+<li class="nav-item">
+    <a href="index.md" id="sourcelink" class="nav-link">Source</a>
+    </li>
+
+
+                    
+            </ul></nav>
+</div>
+    </div>
+</header><nav class="navbar navbar-expand-md navbar-light bg-white static-top"><div class="collapse navbar-collapse bs-nav-collapsible" id="bs-navbar">
+            <ul class="navbar-nav nav-fill d-flex w-100">
+<li class="nav-item">
+<a href="../../../../../archive.html" class="nav-link">Archives</a>
+                </li>
+<li class="nav-item">
+<a href="../../../../../categories/index.html" class="nav-link">Tags</a>
+                </li>
+<li class="nav-item">
+<a href="../../../../../rss.xml" class="nav-link">RSS feed</a>
+
+                
+            </li>
+</ul>
+</div>
+<!-- /.navbar-collapse -->
+</nav>
+</div>
+
+<div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">The cost of a Python function call</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    Juan Nunez-Iglesias
+            </span></p>
+            <p class="dateline">
+            <a href="." rel="bookmark">
+            <time class="published dt-published" datetime="2015-12-10T01:04:00Z" itemprop="datePublished" title="2015-12-10 01:04">2015-12-10 01:04</time></a>
+            </p>
+                <p class="commentline">
+        
+    <a href="#disqus_thread" data-disqus-identifier="cache/posts/2015/12/10/the-cost-of-a-python-function-call.html">Comments</a>
+
+
+            
+        </p>
+<p class="sourceline"><a href="index.md" class="sourcelink">Source</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p></p>
+<p>I've read in various places that the Python function call overhead is very high. As I was parroting this "fact" to <a href="https://twitter.com/edschofield">Ed Schofield</a> recently, he asked me what the cost of a function actually was. I had no idea. This prompted us to do a few quick benchmarks.</p>
+<p>The short version is that it takes about 150ns to call a function in Python (on my laptop). This doesn't sound like a lot, but it means that you can make <em>at most</em> 6.7 million calls per second, two to three orders of magnitude slower than your processor's clock speed.</p>
+<p>If you want your function to do something, such as, oh, I don't know, <em>receive an input argument</em>, this goes up to 350ns, throttling you at 2.8 million calls per second.</p>
+<p></p>
+<h3>Benchmarking function calls</h3>
+<p>I cleaned up Ed's and my initial experiments to make a small <a href="https://github.com/jni/performance-tests/blob/master/function-calls/f.py">module</a> and <a href="https://github.com/jni/performance-tests/blob/master/function-calls/timer.py">timer</a> to measure all these values. You can clone the <a href="https://github.com/jni/performance-tests">repo</a> and run <code>python function-calls/timer.py</code> to check the numbers on your machine.</p>
+<p>The benchmarks are variations of comparing the execution time of:</p>
+<pre class="code literal-block"><span></span><span class="k">[code lang=python]</span>
+<span class="na">for i in range(n):</span>
+    <span class="na">pass</span>
+<span class="k">[/code]</span>
+</pre>
+
+
+<p>and:</p>
+<pre class="code literal-block"><span></span><span class="k">[code lang=python]</span>
+<span class="na">def f():</span>
+    <span class="na">pass</span>
+
+<span class="na">for i in range(n):</span>
+    <span class="na">f()</span>
+<span class="k">[/code]</span>
+</pre>
+
+
+<p>for some suitably large <code>n</code>. As I mentioned above, that comes out to an absolute minimum of 150ns per function call.</p>
+<h3>What this means</h3>
+
+<p>I've been making a fuss over the past year about the excellent Toolz and the way it enables elegant streaming data processing. (See my <a href="https://github.com/jni/streaming-talk">demo repo</a> and my <a href="https://www.youtube.com/watch?v=cMo4fnCbSPc">EuroSciPy talk</a>.) You can read data from a modern SSD at speeds approaching 500MB/s. If you want to stream each byte through Python functions, you'll <em>instantly</em> lose two orders of magnitude of speed. And, the more functions you use, the slower you'll go, which discourages functional programming and modularity — the very things I was trying to promote!</p>
+<p>In the DNA sequence processing I demo in the talk, I get a throughput of about 0.5MB/s. On one hand, this is kind of OK because we are using effectively zero RAM, so we can just let the code run over lunch. On the other, it's starting to bug me that 99% of my processor time is spent on Python function calls, rather than on actual data crunching.</p>
+<p>This is a problem for Python. To work on seriously big data, you need to drop into a library written in C, such as NumPy or Pandas. You need to do this on a high level: any per-byte or per-data-element processing <em>cannot</em> be in Python, if you don't want to waste your processor's cycles. Python's ecosystem is Insanely Great, so this is mostly fine, but it does limit your ability to research or implement cool new methods using Python.</p>
+<p>As an example, the <a href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.filters.generic_filter.html"><code>generic_filter</code></a> function in SciPy's <code>ndimage</code> package has infinitely many cool <a href="http://ilovesymposia.com/2014/06/24/a-clever-use-of-scipys-ndimage-generic_filter-for-n-dimensional-image-processing/">uses</a>, but using it to process a 100MB image (which is small in biology) would take 15 seconds in function call overhead <em>alone</em>. Lest you think this is reasonable, SciPy's greyscale erosion, implemented in C, takes less than 4 seconds on an image that size. A lot of my once-lackadaisical attitude towards Python performance stemmed from not knowing how long things <em>should</em> take. A lot less than they do, it turns out.</p>
+<h3>What to do about it</h3>
+
+<p>As I mentioned, Python's high performance libraries are many and great. Look hard for optimised libraries that already do what you want. Try to express what you want to do as combinations of functions from NumPy, SciPy, Pandas, scikit-image, scikit-learn, and so on. Minimise the amount of time spent in Python. This is advice that you learn early on in scientific Python programming, but I didn't appreciate just how important it is.</p>
+<p>At some point, that approach will fail, and you will want to do something cute and custom with your data points. Reach for <a href="http://cython.readthedocs.org">Cython</a> sooner rather than later. As a primer, I recommend Stefan Behnel's excellent <a href="https://youtu.be/GmxZfZjEjZo">tutorial</a> from EuroSciPy 2015.</p>
+<p>There is also Continuum's <a href="http://numba.pydata.org">Numba</a>, which is sometimes easier to use than Cython. I don't have any experience with it so I can't comment much here. However, I'd consider it a very valuable project to implement <code>generic_filter</code> in Numba.
+In the long-run, these are all workarounds, and I hope that the Python interpreter itself becomes faster, though there are few signs of that happening.</p>
+<p>If you have other ideas on how to get around Python's function call cost, please let me know in the comments!</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../../../../categories/planet-scipy/" rel="tag">Planet SciPy</a></li>
+            <li><a class="tag p-category" href="../../../../../categories/programming/" rel="tag">programming</a></li>
+            <li><a class="tag p-category" href="../../../../../categories/python/" rel="tag">Python</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../../../10/19/first-yield-from/" rel="prev" title="My first use of Python 3's `yield from`!">Previous post</a>
+            </li>
+            <li class="next">
+                <a href="../../26/why-scientists-should-code-in-the-open/" rel="next" title="Why scientists should code in the open">Next post</a>
+            </li>
+        </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
+        
+        
+        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="nikolademo",
+            disqus_url="http://ilovesymposia.com/posts/2015/12/10/the-cost-of-a-python-function-call/",
+        disqus_title="The cost of a Python function call",
+        disqus_identifier="cache/posts/2015/12/10/the-cost-of-a-python-function-call.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section></article><script>var disqus_shortname="nikolademo";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer">
+            Contents © 2019         <a href="mailto:jni.soma@gmail.com">Juan Nunez-Iglesias</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="../../../../../assets/js/all-nocdn.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    </script>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>I Love Symposia! (Posts about software)</title><link>http://ilovesymposia.com/</link><description></description><atom:link href="http://ilovesymposia.com/categories/software.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><copyright>Contents © 2019 &lt;a href="mailto:jni.soma@gmail.com"&gt;Juan Nunez-Iglesias&lt;/a&gt; </copyright><lastBuildDate>Thu, 14 Mar 2019 02:09:39 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>The road to scikit-image 1.0</title><link>http://ilovesymposia.com/posts/2018/07/13/the-road-to-scikit-image-1-0/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;This is the first in a series of posts about the joint scikit-image, scikit-learn, and dask sprint that took place at the Berkeley Insitute of Data Science, May 28-Jun 1, 2018.&lt;/p&gt;
+&lt;p&gt;In addition to the dask and scikit-learn teams, the sprint brought together three core developers of scikit-image (Emmanuelle Gouillart, Stéfan van der Walt, and myself), and two newer contributors, Kira Evans and Mark Harfouche. Since we are rarely in the same timezone, let alone in the same room, we took the opportunity to discuss some high level goals using a framework suggested by Tracy Teal (via Chris Holdgraf): &lt;em&gt;Vision, Mission, Values&lt;/em&gt;. I'll try do Chris's explanation of these ideas justice:&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;&lt;ul&gt;
+&lt;li&gt;Vision: what are we trying to achieve? What is the future that we are trying to bring about?&lt;/li&gt;
+&lt;li&gt;Mission: what are we going to do about it? This is the &lt;em&gt;plan&lt;/em&gt; needed to make the vision a reality.&lt;/li&gt;
+&lt;li&gt;Values: what are we &lt;em&gt;willing&lt;/em&gt; to do, and &lt;em&gt;not&lt;/em&gt; willing to do, to complete our mission?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So, on the basis of this framework, I'd like to review where scikit-image is now, where I think it needs to go, and the ideas that Emma, Stéfan, and I came up with during the sprint to get scikit-image there.&lt;/p&gt;
+&lt;p&gt;I will point out, from the beginning, that one of our values is that we are &lt;em&gt;community-driven&lt;/em&gt;, and this is not a wishy-washy concept. (More below.) Therefore this blog post constitutes only a preliminary document, designed to kick-start an &lt;em&gt;official roadmap&lt;/em&gt; for scikit-image 1.0 with more than a blank canvas. The roadmap will be debated on GitHub and the mailing list, open to discussion by anyone, and when completed will appear on our webpage. &lt;em&gt;This post is not the roadmap.&lt;/em&gt;&lt;/p&gt;
+&lt;h3&gt;Part one: where we are&lt;/h3&gt;
+
+&lt;p&gt;scikit-image is a tremendously successful project that I feel very proud to have been a part of until now. I still cherish the email I got from Stéfan inviting me to join the core team. (Five years ago now!)&lt;/p&gt;
+&lt;p&gt;Like many open source projects, though, we are threatened by our own success, with feature requests and bug reports piling on faster than we can get through them. And, because we grew organically, with no governance model, it is often difficult to resolve thorny questions about API design, what gets included in the library, and how to deprecate old functionality. Discussion usually stalls before any decision is taken, resulting in a process heavily biased towards inaction. Many issues and PRs languish for years, resulting in a double loss for the project: a smaller loss from losing the PR, and a bigger one from losing a potential contributor that understandably has lost interest.&lt;/p&gt;
+&lt;p&gt;Possibly the most impactful decision that we took at the BIDS sprint is that at least three core developers will video once a month to discuss stalled issues and PRs. (The logistics are still being worked out.) We hope that this sustained commitment will move many PRs and issues forward much faster than they have until now.&lt;/p&gt;
+&lt;h3&gt;Part two: where we're going&lt;/h3&gt;
+
+&lt;p&gt;Onto the framework. What are the vision, mission, and values of scikit-image? How will these help guide the decisions that we make daily and in our dev meetings?&lt;/p&gt;
+&lt;h4&gt;Our vision&lt;/h4&gt;
+
+&lt;p&gt;We want scikit-image to be &lt;em&gt;the&lt;/em&gt; reference image processing and analysis library for science in Python. In one sense I think that we are already there, but there are more than enough remaining warts that they might cause the motivated user to go looking elsewhere. The vision, then, is to increase our customer satisfaction fraction in this space to something approaching 1.0.&lt;/p&gt;
+&lt;h4&gt;Our mission&lt;/h4&gt;
+
+&lt;p&gt;How do we get there? Here is our mission:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Our library must be &lt;strong&gt;easily re-usable.&lt;/strong&gt; This means that we will be careful in adding new dependencies, and possibly cull some existing ones, or make them optional. We also want to remove some of the bigger test datasets from our package, which at 24MB is getting rather unwieldy! (By comparison, Python 3.7 is 16MB.) (Props to Josh Warner for noticing this.)&lt;/li&gt;
+&lt;li&gt;It also means providing a &lt;strong&gt;consistent API.&lt;/strong&gt; This means that conceptually identical function arguments, such as images, label images, and arguments defining whether an input image is grayscale, should have the same name across various the library. We've made great strides in this goal thanks to Egor Panfilov and &lt;a href="https://github.com/scikit-image/scikit-image/issues/2538"&gt;Adrian Sieber&lt;/a&gt;, but we still have some way to go.&lt;/li&gt;
+&lt;li&gt;We want to &lt;strong&gt;ensure accuracy&lt;/strong&gt; of our algorithms. This means comprehensive testing, even against external libraries, and engaging experts in relevant fields to audit our code. (Though this of course is a challenge!)&lt;/li&gt;
+&lt;li&gt;Show utmost &lt;strong&gt;care with users' data&lt;/strong&gt;. Not that we haven't cared until now, but there are places in scikit-image where too much responsibility (in my view) rests with the user, with insufficient transparency from our functions for new users to predict what will happen to their data. For example, we are quite liberal with how we deal with input data: it gets rescaled whenever we need to change the type, for example from unsigned 8-bit integers (uint8) to floating point. Although we have &lt;a href="https://github.com/scikit-image/scikit-image/issues/2677#issuecomment-309717979"&gt;good technical reasons&lt;/a&gt; for doing this, and rather &lt;a href="http://scikit-image.org/docs/dev/user_guide/data_types.html"&gt;extensive documentation about it&lt;/a&gt;, these conversions are the source of much user confusion. We are aiming to improve this in &lt;a href="https://github.com/scikit-image/scikit-image/issues/3009"&gt;issue 3009&lt;/a&gt;. Likewise, we don't handle image metadata at all. What is the physical extent of the input image? What is the range and units of the data points in the image? What do the different channels represent? These are all important questions in scientific images, but until now we have completely abdicated responsibility in them and simply ignore any metadata. I don't think this is tenable for a scientific imaging library. We don't have a good answer for how we will do it, but I consider this a must-solve before we can call ourselves 1.0.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Our values&lt;/h4&gt;
+
+&lt;p&gt;Finally, how do we solve the thorny questions of API design, whether to include algorithms, etc? Here are our values:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;We used the word "reference" in our vision. This phrasing is significant. It means that &lt;strong&gt;we value elegant implementations&lt;/strong&gt;, that are &lt;em&gt;easy to understand for newcomers&lt;/em&gt;, over obtaining every last ounce of speed. This value is a useful guide in reviewing pull requests. We will prefer a 20% slowdown when it reduces the lines of code two-fold.&lt;/li&gt;
+&lt;li&gt;We also used the word &lt;em&gt;science&lt;/em&gt; in our vision. This means our aim is to &lt;strong&gt;serve scientific applications&lt;/strong&gt;, and not, for example, image editing in the vein of Photoshop or GIMP. Having said this, we value being part of diverse scientific fields. (One of the first citations of the scikit-image paper was a remote sensing paper, to our delight: none of the core developers work in that field!)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;We are inclusive.&lt;/strong&gt; From my first contributions to the project, I have received patient mentorship from Stéfan, Emmanuelle, Johannes Schönberger, Andy Mueller, and others. (Indeed, I am still learning from fellow contributors, as seen &lt;a href="https://github.com/scikit-image/scikit-image/pull/3031#issuecomment-398961212"&gt;here&lt;/a&gt;, to show just one example.) We will continue to welcome and mentor newcomers to the Scientific Python ecosystem who are making their first contribution.&lt;/li&gt;
+&lt;li&gt;Both of the above points have a corrolary: &lt;strong&gt;we require excellent documentation&lt;/strong&gt;, in the form of usage examples, docstrings documenting the API of each function, and comments explaining tricky parts of the code. This requirement has stalled a few PRs in the past, but this is something that our monthly meetings will specifically address.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;We don't do magic.&lt;/strong&gt; We use NumPy arrays instead of fancy façade objects that mask their complexity. We prefer to educate our users over making decisions on their behalf (through quality documentation, particularly in docstrings).&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;We are community-driven&lt;/strong&gt;, which means that decisions about the API and features will be driven by our users' requirements, and not the whims of the core team. (For example, I would happily &lt;a href="http://toolz.readthedocs.io/en/latest/curry.html"&gt;curry&lt;/a&gt; all of our functions, but that would be confusing to most users, so I suffer in silence. =P)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I hope that the above values are uncontroversial in the scikit-image core team. (I myself used to fall heavily on the pro-magic side, but hard experience with this library has shown me the error of my ways.) I also hope, but more hesitantly, that our much wider community of users will also see these values as, well, valuable.&lt;/p&gt;
+&lt;p&gt;As I mentioned above, I hope this blog post will spawn a discussion involving both the core team and the wider community, and that this discussion can be distilled into a public roadmap for scikit-image.&lt;/p&gt;
+&lt;h3&gt;Part three: scikit-image 1.0&lt;/h3&gt;
+
+&lt;p&gt;I have deliberately left out new features off the mission, except for metadata handling. The library will never be "feature complete". But we &lt;em&gt;can&lt;/em&gt; develop a stable and consistent enough API that adding new features will almost never require breaking it.&lt;/p&gt;
+&lt;p&gt;For completeness, I'll compile my personal pet list of things I will attempt to work on or be particularly excited about other people working on. This is &lt;em&gt;not&lt;/em&gt; part of the roadmap, it's part of my roadmap.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Near-complete support for n-dimensional data. I want 2D-only functions to become the exception in the library, maybe so much so that we are forced to add a &lt;code&gt;_2d&lt;/code&gt; suffix to the function name.&lt;/li&gt;
+&lt;li&gt;Typing support. I never want to move from simple arrays as our base data type, but I want a way to systematically distinguish between plain images, label images, coordinate lists, and other types, in a way that is accessible to automatic tools.&lt;/li&gt;
+&lt;li&gt;Basic image registration functionality.&lt;/li&gt;
+&lt;li&gt;Evaluation algorithms for all parts of the library (such as segmentation, or keypoint matching).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;The human side&lt;/h3&gt;
+
+&lt;p&gt;Along with articulating the way we see the project, another key part of getting to 1.0 is supporting existing maintainers, and onboarding new ones. It is clear that the project is currently straining under the weight of its popularity. While we solve one issue, three more are opened, and two pull requests.&lt;/p&gt;
+&lt;p&gt;In the past, we have been too hesitant to invite new members to the core team, because it is difficult to tell whether a new contributor shares your vision. Our roadmap document is an important step towards rectifying this, because it clarifies where the library is going, and therefore the decision making process when it comes to accepting new contributions, for example.&lt;/p&gt;
+&lt;p&gt;In a followup to this post, I aim to propose a &lt;em&gt;maintainer onboarding document&lt;/em&gt;, in a similar vein, to make sure that new maintainers all share the same process when evaluating new PRs and communicating with contributors. A governance model is also in the works, by which I mean that Stéfan has been wanting to establish one for years and now Emmanuelle and I are onboard with this plan, and I hope others will be too, and now we just need to decide on the damn thing.&lt;/p&gt;
+&lt;p&gt;I hope that all of these changes will allows us to reach the scikit-image 1.0 milestone sooner rather than later, and that everyone reading this is as excited about it as I was while we hashed this plan together.&lt;/p&gt;
+&lt;p&gt;As a reminder, &lt;strong&gt;this is not our final roadmap&lt;/strong&gt;, nor our final &lt;strong&gt;vision/mission statement&lt;/strong&gt;. Please comment on the corresponding &lt;a href="https://github.com/scikit-image/scikit-image/issues/3263"&gt;GitHub issue&lt;/a&gt; for this post if you have thoughts and suggestions! (You can also use the &lt;a href="https://mail.python.org/mailman/listinfo/scikit-image"&gt;mailing list&lt;/a&gt;, and we will soon provide a way to submit anonymous comments, too.) As a community, we will come together to create the library we all want to use and contribute to.&lt;/p&gt;
+&lt;p&gt;As a reminder, everything in this blog is &lt;a href="https://dancohen.org/2013/11/26/cc0-by/"&gt;CC0+BY&lt;/a&gt;, so feel free to reuse any or all of it in your own projects! And I want to thank BIDS, and specifically Nelle Varoquaux at BIDS, for making this discussion possible, among many other things that will be written up in upcoming posts.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Update:&lt;/strong&gt; Anonymous comments are now open at https://pollev.com/juannunezigl611. To summarise, to comment on this proposal you can:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;comment on the &lt;a href="https://github.com/scikit-image/scikit-image/issues/3263"&gt;GitHub issue&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;submit a comment below&lt;/li&gt;
+&lt;li&gt;submit an anonymous comment at https://pollev.com/juannunezigl611&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;&lt;/div&gt;</description><category>image analysis</category><category>open-source</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>software</category><guid>http://ilovesymposia.com/posts/2018/07/13/the-road-to-scikit-image-1-0/</guid><pubDate>Fri, 13 Jul 2018 04:58:35 GMT</pubDate></item><item><title>An update on mixing Java and Python with Fiji</title><link>http://ilovesymposia.com/posts/2014/03/15/an-update-on-mixing-java-and-python-with-fiji/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;Two weeks ago I &lt;a href="http://ilovesymposia.com/2014/02/26/fiji-jython/"&gt;posted&lt;/a&gt; about invoking ImageJ functions from Python using Fiji’s Jython interpreter. A couple of updates on the topic: &lt;/p&gt;
+&lt;p&gt;First, I’ve made a &lt;a href="https://github.com/jni/fiji-python"&gt;repository&lt;/a&gt; with a template project encapsulating my tips from that post. It’s very simple to get a Fiji Jython script working from that template. As an example, &lt;a href="https://github.com/jni/snemi-eval"&gt;here’s&lt;/a&gt; a script to evaluate segmentations using the metric used by the &lt;a href="http://ilovesymposia.com/posts/2014/03/15/an-update-on-mixing-java-and-python-with-fiji/brainiac2.mit.edu/SNEMI3D/"&gt;SNEMI3D segmentation challenge&lt;/a&gt; (a slightly modified version of the adapted Rand error). &lt;/p&gt;
+
+&lt;p&gt;Second, this entire discussion might be rendered obsolete by two incredible projects from the &lt;a href="http://www.cellprofiler.org/"&gt;CellProfiler&lt;/a&gt; team: &lt;a href="https://github.com/CellProfiler/python-javabridge"&gt;Python-Javabridge&lt;/a&gt;, which allows Python to interact seamlessly with Java code, and &lt;a href="https://github.com/CellProfiler/python-bioformats"&gt;Python-Bioformats&lt;/a&gt;, which uses Python-Javabridge to read Bioformats images into Python. I have yet to play with them, but both look like cleaner alternatives to interact with ImageJ than my Jython scripting! At some point I’ll write a post exploring these tools, but if you get to it before me, please mention it in the comments!&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Fiji</category><category>Fiji Jython</category><category>Jython</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>Python-Bioformats</category><category>Python-Javabridge</category><category>software</category><guid>http://ilovesymposia.com/posts/2014/03/15/an-update-on-mixing-java-and-python-with-fiji/</guid><pubDate>Sat, 15 Mar 2014 02:21:06 GMT</pubDate></item><item><title>Get the best of both worlds with Fiji's Jython interpreter</title><link>http://ilovesymposia.com/posts/2014/02/26/fiji-jython/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;a href="http://fiji.sc"&gt;Fiji is just ImageJ&lt;/a&gt;, with batteries included. It contains plugins to do virtually anything you would want to do to an image. Since my go-to programming language is Python, my favorite feature of Fiji is its language-agnostic API, which supports a plethora of languages, including Java, Javascript, Clojure, and of course Python; 7 languages in all. (Find these under Plugins/Scripting/Script Editor.) Read on to learn more about the ins and outs of using Python to drive Fiji.
+&lt;p&gt;Among the plugin smorgasbord of Fiji is the Bio-Formats importer, which can open any proprietary microscopy file under the sun. (And there’s a lot of them!) Below I will use Jython to open some .lifs, do some processing, and output some .pngs that I can process further using Python/NumPy/scikit-image. (A .lif is a Leica Image File, because there were not enough image file formats before Leica came along.)&lt;/p&gt;
+&lt;p&gt;The first thing to note is that Jython is not Python, and it is certainly not Python 2.7. In fact, the Fiji Jython interpreter implements Python 2.5, which means no &lt;code&gt;argparse&lt;/code&gt;. Not to worry though, as &lt;code&gt;argparse&lt;/code&gt; is implemented in a &lt;a href="https://code.google.com/p/argparse/source/browse/argparse.py"&gt;single, pure Python file&lt;/a&gt; distributed under the Python license. So:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Tip #1: copy argparse.py into your project.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;This way you’ll have access the state of the art in command line argument processing from within the Jython interpreter.&lt;/p&gt;
+&lt;p&gt;To get Fiji to run your code, you simply feed it your source file on the command line. So, let’s try it out with a simple example, &lt;code&gt;echo.py&lt;/code&gt;:
+&lt;/p&gt;&lt;pre&gt;&lt;code class="python"&gt;import argparse
+&lt;p&gt;if &lt;strong&gt;name&lt;/strong&gt; == '&lt;strong&gt;main&lt;/strong&gt;':
+    parser = argparse.ArgumentParser(description=
+                                     "Parrot back your arguments.")
+    parser.add_argument('args', nargs="*", help="The input arguments.")
+    args = parser.parse_args()
+    for arg in args.args:
+        print(arg)&lt;/p&gt;&lt;/code&gt;&lt;/pre&gt;
+Now we can just run this:
+&lt;pre&gt;&lt;code&gt;$ fiji echo.py hello world
+hello
+world&lt;/code&gt;&lt;/pre&gt;
+But sadly, Fiji captures any -h calls, which defeats the purpose of using argparse in the first place!
+&lt;pre&gt;&lt;code&gt;$ fiji echo.py -h
+Usage: /Applications/Fiji.app/Contents/MacOS/fiji-macosx [&amp;lt;Java options&amp;gt;.. --] [&amp;lt;ImageJ options&amp;gt;..] [&amp;lt;files&amp;gt;..]
+&lt;p&gt;Java options are passed to the Java Runtime, ImageJ
+options to ImageJ (or Jython, JRuby, ...).&lt;/p&gt;
+&lt;p&gt;In addition, the following options are supported by ImageJ:
+General options:
+--help, -h
+    show this help
+--dry-run
+    show the command line, but do not run anything
+--debug
+    verbose output&lt;/p&gt;&lt;/code&gt;&lt;/pre&gt;
+(… and so on, the output is quite huge.)
+&lt;p&gt;(Note also that I aliased the Fiji binary, that long path under &lt;code&gt;/Applications&lt;/code&gt;, to a simple &lt;code&gt;fiji&lt;/code&gt; command; I recommend you do the same.)&lt;/p&gt;
+&lt;p&gt;However, we can work around this by calling help using &lt;em&gt;Python&lt;/em&gt; as the interpreter, and only using Fiji to actually run the file:
+&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ python echo.py -h
+usage: echo.py [-h] [args [args ...]]
+&lt;p&gt;Parrot back your arguments.&lt;/p&gt;
+&lt;p&gt;positional arguments:
+  args        The input arguments.&lt;/p&gt;
+&lt;p&gt;optional arguments:
+  -h, --help  show this help message and exit&lt;/p&gt;&lt;/code&gt;&lt;/pre&gt;
+That’s more like it! Now we can start to build something a bit more interesting, for example, something that converts arbitrary image files to png:
+&lt;pre&gt;&lt;code class="python"&gt;import argparse
+from ij import IJ # the IJ class has utility methods for many common tasks.
+&lt;p&gt;def convert_file(fn):
+    """Convert the input file to png format.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gh"&gt;Parameters&lt;/span&gt;
+&lt;span class="gh"&gt;----------&lt;/span&gt;
+fn : string
+    The filename of the image to be converted.
+"""
+imp = IJ.openImage(fn)
+# imp is the common name for an ImagePlus object,
+# ImageJ's base image class
+fnout = fn.rsplit('.', 1)[0] + '.png'
+IJ.saveAs(imp, 'png', fnout)
+&lt;/pre&gt;
+
+
+&lt;p&gt;if &lt;strong&gt;name&lt;/strong&gt; == '&lt;strong&gt;main&lt;/strong&gt;':
+    parser = argparse.ArgumentParser(description="Convert TIFF to PNG.")
+    parser.add_argument('images', nargs='+', help="Input images.")&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;args = parser.parse_args()
+for fn in args.images:
+    convert_file(fn)&lt;span class="nt"&gt;&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Boom, we’re done. But wait, we actually broke the Python interpreter compatibility, since ij is not a Python library!
+&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ python convert2png.py -h
+Traceback (most recent call last):
+  File "convert.py", line 2, in &amp;lt;module&amp;gt;
+    from ij import IJ # the IJ class has utility methods for many common tasks.
+ImportError: No module named ij&lt;/code&gt;&lt;/pre&gt;
+Which brings us to:
+&lt;p&gt;&lt;strong&gt;Tip #2: only import Java API functions within the functions that use them.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;By moving the &lt;code&gt;from ij import IJ&lt;/code&gt; statement into the &lt;code&gt;convert&lt;/code&gt; function, we maintain compatibility with Python, and can continue to use &lt;code&gt;argparse&lt;/code&gt;’s helpful documentation strings.&lt;/p&gt;
+&lt;p&gt;Next, we want to use the Bio-Formats importer, which is class &lt;code&gt;BF&lt;/code&gt; in &lt;code&gt;loci.plugins&lt;/code&gt;. Figuring out the class hierarchy for arbitrary plugins is tricky, but you can find it &lt;a href="http://rsbweb.nih.gov/ij/developer/api/index.html"&gt;here&lt;/a&gt; for core ImageJ (using lovely 1990s-style frames) and &lt;a href="http://ci.openmicroscopy.org/job/BIOFORMATS-5.0-latest/javadoc/index.html"&gt;here&lt;/a&gt; for Bio-Formats, and Curtis Rueden has made &lt;a href="http://javadoc.imagej.net/"&gt;this list&lt;/a&gt; for other common plugins.&lt;/p&gt;
+&lt;p&gt;When you try to open a file with Bio-Formats importer using the Fiji GUI, you get the following dialog:&lt;/p&gt;
+&lt;figure&gt;&lt;img alt="BioFormats import window" src="http://ilovesymposia.files.wordpress.com/2014/02/bioformats-window.png"&gt; &lt;figcaption&gt;BioFormats import window&lt;/figcaption&gt;&lt;/figure&gt;
+
+&lt;p&gt;That’s a lot of options, and we actually want to set some of them. If you look at the &lt;a href="http://ci.openmicroscopy.org/job/BIOFORMATS-5.0-latest/javadoc/loci/plugins/BF.html#openImagePlus(loci.plugins.in.ImporterOptions)"&gt;&lt;code&gt;BF.openImagePlus&lt;/code&gt;&lt;/a&gt; documentation, you can see that this is done through an &lt;code&gt;ImporterOptions&lt;/code&gt; class located in &lt;code&gt;loci.plugins.in&lt;/code&gt;. You’ll notice that “in” is a reserved word in Python, so &lt;code&gt;from loci.plugins.in import ImporterOptions&lt;/code&gt; is not a valid Python statement. Yay! My workaround:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Tip #3: move your Fiji imports to an external file.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;So I have a &lt;code&gt;jython_imports.py&lt;/code&gt; file with just:
+&lt;/p&gt;&lt;pre&gt;&lt;code class="python"&gt;from ij import IJ
+from loci.plugins import BF
+from loci.plugins.in import ImporterOptions&lt;/code&gt;&lt;/pre&gt;
+Then, inside the &lt;code&gt;convert_files()&lt;/code&gt; function, we just do:
+&lt;pre&gt;&lt;code class="python"&gt;from jython_imports import IJ, BF, ImporterOptions&lt;/code&gt;&lt;/pre&gt;
+This way, the main file remains Python-compatible until the convert() function is actually called, regardless of whatever funky and unpythonic stuff is happening in &lt;code&gt;jython_imports.py&lt;/code&gt;.
+&lt;p&gt;Onto the options. If you untick “Open files individually”, it will open up all matching files in a directory, regardless of your input filename! Not good. So now we play a pattern-matching game in which we match the option description in the above dialog with the &lt;a href="http://ci.openmicroscopy.org/job/BIOFORMATS-5.0-latest/javadoc/loci/plugins/in/ImporterOptions.html"&gt;ImporterOptions API&lt;/a&gt; calls. In this case, we &lt;code&gt;setUngroupFiles(True)&lt;/code&gt;. To specify a filename, we &lt;code&gt;setId(filename)&lt;/code&gt;. Additionally, because we want all of the images in the .lif file, we &lt;code&gt;setOpenAllSeries(True)&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Next, each image in the series is 3D and has three channels, but we are only interested in a summed z-projection of the first channel. There’s a set of ImporterOptions methods tantalizingly named &lt;code&gt;setCBegin&lt;/code&gt;, &lt;code&gt;setCEnd&lt;/code&gt;, and &lt;code&gt;setCStep&lt;/code&gt;, but this is where I found the &lt;a href="http://ci.openmicroscopy.org/job/BIOFORMATS-5.0-latest/javadoc/loci/plugins/in/ImporterOptions.html#setCEnd(int,%20int)"&gt;documentation&lt;/a&gt; sorely lacking. The functions take &lt;code&gt;(int s, int value)&lt;/code&gt; as arguments, but what’s &lt;code&gt;s&lt;/code&gt;??? Are the limits closed or open? Code review is a wonderful thing, and this would not have passed it. To figure things out:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Tip #4: use Fiji’s interactive Jython interpreter to figure things out quickly.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;You can find the Jython interpreter under Plugins/Scripting/Jython Interpreter. It’s no IPython, but it is extremely helpful to answer the questions I had above. My hypothesis was that &lt;code&gt;s&lt;/code&gt; was the series, and that the intervals would be closed. So:
+&lt;/p&gt;&lt;pre&gt;&lt;code class="python"&gt;&amp;gt;&amp;gt;&amp;gt; from loci.plugins import BF
+&amp;gt;&amp;gt;&amp;gt; from loci.plugins.in import ImporterOptions
+&amp;gt;&amp;gt;&amp;gt; opts = ImporterOptions()
+&amp;gt;&amp;gt;&amp;gt; opts.setId("myFile.lif")
+&amp;gt;&amp;gt;&amp;gt; opts.setOpenAllSeries(True)
+&amp;gt;&amp;gt;&amp;gt; opts.setUngroupFiles(True)
+&amp;gt;&amp;gt;&amp;gt; imps = BF.openImagePlus(opts)&lt;/code&gt;&lt;/pre&gt;
+Now we can play around, with one slight annoyance: the interpreter won’t print the output of your last statement, so you have to specify it:
+&lt;pre&gt;&lt;code class="python"&gt;&amp;gt;&amp;gt;&amp;gt; len(imps)
+&amp;gt;&amp;gt;&amp;gt; print(len(imps))
+18&lt;/code&gt;&lt;/pre&gt;
+Which is what I expected, as there are 18 series in my .lif file. The image shape is given by the &lt;code&gt;getDimensions()&lt;/code&gt; method of the ImagePlus class:
+&lt;pre&gt;&lt;code class="python"&gt;&amp;gt;&amp;gt;&amp;gt; print(imps[0].getDimensions())
+array('i', [1024, 1024, 3, 31, 1])
+&lt;p&gt;&amp;gt;&amp;gt;&amp;gt; print(imps[1].getDimensions())
+array('i', [1024, 1024, 3, 34, 1])&lt;/p&gt;&lt;/code&gt;&lt;/pre&gt;
+That’s (x, y, channels, z, time).
+&lt;p&gt;Now, let’s try the same thing with &lt;code&gt;setCEnd&lt;/code&gt;, assuming closed interval:
+&lt;/p&gt;&lt;pre&gt;&lt;code class="python"&gt;&amp;gt;&amp;gt;&amp;gt; opts.setCEnd(0, 0) ## only read channels up to 0 for series 0?
+&amp;gt;&amp;gt;&amp;gt; opts.setCEnd(2, 0) ## only read channels up to 0 for series 2?
+&amp;gt;&amp;gt;&amp;gt; imps = BF.openImagePlus(opts)
+&amp;gt;&amp;gt;&amp;gt; print(imps[0].getDimensions())
+array('i', [1024, 1024, 1, 31, 1])
+&lt;p&gt;&amp;gt;&amp;gt;&amp;gt; print(imps[1].getDimensions())
+array('i', [1024, 1024, 3, 34, 1])&lt;/p&gt;
+&lt;p&gt;&amp;gt;&amp;gt;&amp;gt; print(imps[2].getDimensions())
+array('i', [1024, 1024, 1, 30, 1])&lt;/p&gt;&lt;/code&gt;&lt;/pre&gt;
+Nothing there to disprove my hypothesis! So we move on to the final step, which is to z-project the stack by summing the intensity over all z values. This is normally accessed via Image/Stacks/Z Project in the Fiji GUI, and I found the corresponding &lt;code&gt;ij.plugin.ZProjector&lt;/code&gt; class by searching for &lt;a href="http://rsbweb.nih.gov/ij/developer/api/ij/plugin/ZProjector.html"&gt;“proj” in the ImageJ documentation&lt;/a&gt;. A &lt;code&gt;ZProjector&lt;/code&gt; object has a &lt;code&gt;setMethod&lt;/code&gt; method that usefully takes an int as an argument, with no explanation in its docstring as to which int translates to which method (sum, average, max, etc.). A little more digging in the &lt;a href="http://rsb.info.nih.gov/ij/developer/source/ij/plugin/ZProjector.java.html"&gt;source code&lt;/a&gt; reveals some class static variables, &lt;code&gt;AVG_METHOD&lt;/code&gt;, &lt;code&gt;MAX_METHOD&lt;/code&gt;, and so on.
+&lt;p&gt;&lt;strong&gt;Tip #5: don’t be afraid to look at the source code. It’s one of the main advantages of working in open-source.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;So:
+&lt;/p&gt;&lt;pre&gt;&lt;code class="python"&gt;&amp;gt;&amp;gt;&amp;gt; from ij.plugin import ZProjector
+&amp;gt;&amp;gt;&amp;gt; proj = ZProjector()
+&amp;gt;&amp;gt;&amp;gt; proj.setMethod(ZProjector.SUM_METHOD)
+&amp;gt;&amp;gt;&amp;gt; proj.setImage(imps[0])
+&amp;gt;&amp;gt;&amp;gt; proj.doProjection()
+&amp;gt;&amp;gt;&amp;gt; impout = proj.getProjection()
+&amp;gt;&amp;gt;&amp;gt; print(impout.getDimensions())
+array('i', [1024, 1024, 1, 1, 1])&lt;/code&gt;&lt;/pre&gt;
+The output is actually a float-typed image, which will get rescaled to [0, 255] uint8 on save if we don’t fix it. So, to wrap up, we convert the image to 16 bits (making sure to &lt;a href="https://groups.google.com/d/msg/fiji-users/HfuHj0QBo40/CR9s3MQ5vUsJ"&gt;turn off scaling&lt;/a&gt;), use the series title to generate a unique filename, and save as a PNG:
+&lt;pre&gt;&lt;code class="python"&gt;&amp;gt;&amp;gt;&amp;gt; from ij.process import ImageConverter
+&amp;gt;&amp;gt;&amp;gt; ImageConverter.setDoScaling(False)
+&amp;gt;&amp;gt;&amp;gt; conv = ImageConverter(impout)
+&amp;gt;&amp;gt;&amp;gt; conv.convertToGray16()
+&amp;gt;&amp;gt;&amp;gt; title = imps[0].getTitle().rsplit(" ", 1)[-1]
+&amp;gt;&amp;gt;&amp;gt; IJ.saveAs(impout, 'png', "myFile-" + title + ".png")&lt;/code&gt;&lt;/pre&gt;
+You can see the final result of my sleuthing in &lt;a href="https://github.com/jni/lesion/blob/6f77cccd1e0f3ddf92ce35a7040ada5328fd90ff/lesion/lif2png.py"&gt;lif2png.py&lt;/a&gt; and &lt;a href="https://github.com/jni/lesion/blob/6f77cccd1e0f3ddf92ce35a7040ada5328fd90ff/lesion/jython_imports.py"&gt;jython_imports.py&lt;/a&gt;. If you would do something differently, pull requests are always welcome.
+&lt;p&gt;Before I sign off, let me recap my tips:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;copy argparse.py into your project;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;only import Java API functions within the functions that use them;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;move your Fiji imports to an external file;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;use Fiji’s interactive Jython interpreter to figure things out quickly; and&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;don’t be afraid to look at the source code.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;And let me add a few final comments: once I started digging into all of Fiji’s plugins, I found documentation of very variable quality, and worse, virtually zero consistency between the interfaces to each plugin. Some work on “the currently active image”, some take an &lt;code&gt;ImagePlus&lt;/code&gt; instance as input, and others still a filename or a directory name. Outputs are equally variable. This has been a huge pain when trying to work with these plugins.&lt;/p&gt;
+&lt;p&gt;But, on the flipside, this is the most complete collection of image processing functions anywhere. Along with the seamless access to all those functions from Jython and other languages, that makes Fiji very worthy of your attention.
+&lt;/p&gt;&lt;h4 id="acknowledgements"&gt;Acknowledgements&lt;/h4&gt;
+This post was possible thanks to the help of &lt;a href="http://albert.rierol.net/"&gt;Albert Cardona&lt;/a&gt;, &lt;a href="http://loci.wisc.edu/people/johannes-schindelin"&gt;Johannes Schindelin&lt;/a&gt;, &lt;a href="http://loci.wisc.edu/people/wayne-rasband"&gt;Wayne Rasband&lt;/a&gt;, and &lt;a href="http://lammertlab.org/Jan_Eglinger"&gt;Jan Eglinger&lt;/a&gt;, who restlessly respond to (it seems) every query on the &lt;a href="http://imagej.1557.x6.nabble.com/"&gt;ImageJ mailing list&lt;/a&gt;. Thanks!
+&lt;h4 id="reference"&gt;References&lt;/h4&gt;
+&lt;p&gt;&lt;span class="Z3988" title="ctx_ver=Z39.88-2004&amp;amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;amp;rft.jtitle=Nature+methods&amp;amp;rft_id=info%3Apmid%2F22743772&amp;amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;amp;rft.atitle=Fiji%3A+an+open-source+platform+for+biological-image+analysis.&amp;amp;rft.issn=1548-7091&amp;amp;rft.date=2012&amp;amp;rft.volume=9&amp;amp;rft.issue=7&amp;amp;rft.spage=676&amp;amp;rft.epage=82&amp;amp;rft.artnum=&amp;amp;rft.au=Schindelin+J&amp;amp;rft.au=Arganda-Carreras+I&amp;amp;rft.au=Frise+E&amp;amp;rft.au=Kaynig+V&amp;amp;rft.au=Longair+M&amp;amp;rft.au=Pietzsch+T&amp;amp;rft.au=Preibisch+S&amp;amp;rft.au=Rueden+C&amp;amp;rft.au=Saalfeld+S&amp;amp;rft.au=Schmid+B&amp;amp;rft.au=Tinevez+JY&amp;amp;rft.au=White+DJ&amp;amp;rft.au=Hartenstein+V&amp;amp;rft.au=Eliceiri+K&amp;amp;rft.au=Tomancak+P&amp;amp;rft.au=Cardona+A&amp;amp;rfe_dat=bpr3.included=1;bpr3.tags=Biology%2CComputer+Science+%2F+Engineering%2CComputational+Biology%2C+Bioinformatics"&gt;Schindelin J, Arganda-Carreras I, Frise E, Kaynig V, Longair M, Pietzsch T, Preibisch S, Rueden C, Saalfeld S, Schmid B, Tinevez JY, White DJ, Hartenstein V, Eliceiri K, Tomancak P, &amp;amp; Cardona A (2012). Fiji: an open-source platform for biological-image analysis. &lt;span style="font-style:italic;"&gt;Nature methods, 9&lt;/span&gt; (7), 676-82 PMID: &lt;a rev="review" href="http://www.ncbi.nlm.nih.gov/pubmed/22743772"&gt;22743772&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class="Z3988" title="ctx_ver=Z39.88-2004&amp;amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;amp;rft.jtitle=The+Journal+of+cell+biology&amp;amp;rft_id=info%3Apmid%2F20513764&amp;amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;amp;rft.atitle=Metadata+matters%3A+access+to+image+data+in+the+real+world.&amp;amp;rft.issn=0021-9525&amp;amp;rft.date=2010&amp;amp;rft.volume=189&amp;amp;rft.issue=5&amp;amp;rft.spage=777&amp;amp;rft.epage=82&amp;amp;rft.artnum=&amp;amp;rft.au=Linkert+M&amp;amp;rft.au=Rueden+CT&amp;amp;rft.au=Allan+C&amp;amp;rft.au=Burel+JM&amp;amp;rft.au=Moore+W&amp;amp;rft.au=Patterson+A&amp;amp;rft.au=Loranger+B&amp;amp;rft.au=Moore+J&amp;amp;rft.au=Neves+C&amp;amp;rft.au=Macdonald+D&amp;amp;rft.au=Tarkowska+A&amp;amp;rft.au=Sticco+C&amp;amp;rft.au=Hill+E&amp;amp;rft.au=Rossner+M&amp;amp;rft.au=Eliceiri+KW&amp;amp;rft.au=Swedlow+JR&amp;amp;rfe_dat=bpr3.included=1;bpr3.tags=Biology%2CComputer+Science+%2F+Engineering%2CComputational+Biology%2C+Bioinformatics"&gt;Linkert M, Rueden CT, Allan C, Burel JM, Moore W, Patterson A, Loranger B, Moore J, Neves C, Macdonald D, Tarkowska A, Sticco C, Hill E, Rossner M, Eliceiri KW, &amp;amp; Swedlow JR (2010). Metadata matters: access to image data in the real world. &lt;span style="font-style:italic;"&gt;The Journal of cell biology, 189&lt;/span&gt; (5), 777-82 PMID: &lt;a rev="review" href="http://www.ncbi.nlm.nih.gov/pubmed/20513764"&gt;20513764&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description><category>Planet SciPy</category><category>programming</category><category>Research Blogging</category><category>software</category><guid>http://ilovesymposia.com/posts/2014/02/26/fiji-jython/</guid><pubDate>Wed, 26 Feb 2014 01:21:38 GMT</pubDate></item><item><title>OSX software watch: use Photosweeper to remove duplicates in your image collection</title><link>http://ilovesymposia.com/posts/2013/10/15/osx-software-watch-use-photosweeper-to-remove-duplicates-in-your-image-collection/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;It's no secret that the photo management problem is a huge mess. As new cameras, software, and online storage and sharing services come and go, our collections end up strewn all over the place, often in duplicate. This eats up precious storage space and makes finding that one photo an exercise in frustration.&lt;/p&gt;&lt;p&gt;Peter Nixey has an excellent post on the &lt;a href="http://peternixey.com/post/49928526270/dear-apple-lets-talk-about-photos"&gt;disappointing&lt;/a&gt; state of affairs (to put it kindly) and an excellent follow-up on how Dropbox could &lt;a href="http://peternixey.com/post/63634127289/how-dropbox-could-beat-apple-in-photos"&gt;fix it&lt;/a&gt;. You should definitely read those.&lt;/p&gt;&lt;p&gt;But, while Apple and/or Dropbox get their act together (I'm not holding my breath), you have to make sense of your photos in your Pictures folder, in your Dropbox Photos folder, in various other Dropbox shared folders, on your Desktop, in your Lightroom, Aperture, and iPhoto collections, and so on. A lot of these might be duplicated because, for example, you were just trying out Lightroom and didn't want to commit to it so you put your pics there but also in Aperture. And by you I mean I.&lt;/p&gt;&lt;p&gt;So, the first step to photo sanity is to get rid of these duplicates. Thankfully, there is an excellent OSX app called &lt;a href="http://photosweeper.com/photosweeper/index.html"&gt;Photosweeper&lt;/a&gt; made for just this purpose. I used it yesterday to clear 34GB of wasted space on my HDD. (I was too excited to take screenshots of the process, unfortunately!)&lt;/p&gt;&lt;p&gt;There's a lot to love about Photosweeper. First, it is happy to look at all the sources I mentioned above, and compare pics across them. Second, it lets you automatically define a priority for which version of a duplicate photo to save. In my case, I told it to keep iPhoto images first (since these are most likely to have ratings, captions, and so on), then Aperture, then whatever's on my HDD somewhere. If a duplicate was found &lt;em&gt;within&lt;/em&gt; iPhoto, it should keep the most recent one.&lt;/p&gt;&lt;p&gt;But, third, what makes Photosweeper truly useful: it won't do a thing without letting you review everything, and it offers a great reviewing interface. It places duplicates side-by-side, marking which photo it will keep and which it will trash. Best of all, this view shows everything you need to make sure you're not deleting a high-res original in favour of the downscaled version you emailed your family: filename, date, resolution, DPI, and file size. Click on each file and the full path (even within an iPhoto or Aperture library) becomes visible. This is in stark contrast to iPhoto's lame "hey, this is a duplicate file" dialog that shows you two downscaled versions of the images with &lt;em&gt;no further information.&lt;/em&gt;&lt;/p&gt;&lt;p&gt;Once you bite the bullet, it does exactly the right thing with every duplicate: iPhoto duplicates get put in the iPhoto Trash, Lightroom duplicates get marked "Rejected" and put in a special "Trash (Photosweeper)" collection, and filesystem duplicates get moved to the OSX Trash. Lesser software might have moved all the iPhoto files to the OSX Trash, leaving the iPhoto library broken.&lt;/p&gt;&lt;p&gt;In all, I was really impressed with Photosweeper. 34GB is nothing to sniff at and getting rid of those duplicates is the first step to consolidating all my files. It does this in a very accountable, safe way. At no point did I get that sinking feeling of "there is no undo."&lt;/p&gt;&lt;p&gt;Finally, I should mention that Photosweeper also has a "photo similarity" mode that finds not only duplicates, but very similar series of photos. This is really good for when you snapped 15 pics of the same thing so that one might turn out ok. But I'm too much of a digital hoarder to take that step!&lt;/p&gt;&lt;p&gt;Photosweeper currently sells for $10 on the Mac App Store.&lt;/p&gt;&lt;/div&gt;</description><category>iphoto</category><category>osx</category><category>photo management</category><category>software</category><category>software review</category><guid>http://ilovesymposia.com/posts/2013/10/15/osx-software-watch-use-photosweeper-to-remove-duplicates-in-your-image-collection/</guid><pubDate>Tue, 15 Oct 2013 23:59:53 GMT</pubDate></item><item><title>h5cat: quickly preview HDF5 file contents from the command-line</title><link>http://ilovesymposia.com/posts/2012/05/09/h5cat-quickly-preview-hdf5-file-contents-from-the-command-line/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;As a first attempt at writing actually useful blog posts, I'll publicise a small Python script I wrote to peek inside HDF5 files when &lt;a href="http://www.hdfgroup.org/hdf-java-html/hdfview/"&gt;HDFView&lt;/a&gt; is overkill. Sometimes you just want to know how many dimensions a stored array has, or its exact path within the HDF hierarchy. &lt;/p&gt;
+&lt;p&gt;The "codebase" is currently tiny enough that it all fits below:&lt;/p&gt;
+&lt;p&gt;```python&lt;/p&gt;
+&lt;p&gt;```&lt;/p&gt;&lt;/div&gt;</description><category>Planet SciPy</category><category>programming</category><category>software</category><guid>http://ilovesymposia.com/posts/2012/05/09/h5cat-quickly-preview-hdf5-file-contents-from-the-command-line/</guid><pubDate>Wed, 09 May 2012 16:29:05 GMT</pubDate></item><item><title>Microsoft Silverlight</title><link>http://ilovesymposia.com/posts/2008/08/21/microsoft-silverlight/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;I have to say that despite the &lt;a href="http://en.wikipedia.org/wiki/Silverlight"&gt;bad press&lt;/a&gt; Silverlight is getting at Wikipedia, I was pretty impressed using it in the &lt;a href="http://www.nbcolympics.com/"&gt;NBC Olympics&lt;/a&gt; site. Four live feeds at once? Yes please. This is what digital television was supposed to bring us, but never did. More important, fast forward, rewind and skip were stunningly responsive, which is more than I can say for Flash-based video. Finally, over my decent but not world-class DSL connection, video quality was fantastic, even at full-screen.&lt;/p&gt;
+&lt;p&gt;Yeah, Silverlight uses proprietary software and eschews open standards. Like Facebook's closed platform and data policies, this bothers me. But like Facebook, Silverlight is simply ahead of the competition. Until the alternatives catch up, you can't blame consumers for sticking to the closed (but superior) platforms.&lt;/p&gt;&lt;/div&gt;</description><category>microsoft</category><category>olympics</category><category>open-source</category><category>proprietary software</category><category>silverlight</category><category>software</category><guid>http://ilovesymposia.com/posts/2008/08/21/microsoft-silverlight/</guid><pubDate>Thu, 21 Aug 2008 01:32:25 GMT</pubDate></item></channel></rss>

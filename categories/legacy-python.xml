@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>I Love Symposia! (Posts about Legacy Python)</title><link>http://ilovesymposia.com/</link><description></description><atom:link href="http://ilovesymposia.com/categories/legacy-python.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><copyright>Contents © 2019 &lt;a href="mailto:jni.soma@gmail.com"&gt;Juan Nunez-Iglesias&lt;/a&gt; </copyright><lastBuildDate>Thu, 14 Mar 2019 02:09:40 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>My first use of Python 3's `yield from`!</title><link>http://ilovesymposia.com/posts/2015/10/19/first-yield-from/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;I never really understood why &lt;code&gt;yield from&lt;/code&gt; was useful. Last weekend, I wanted to use Python 3.5's new &lt;code&gt;os.scandir&lt;/code&gt; to explore a directory (and its subdirectories). Tragically, &lt;code&gt;os.scandir&lt;/code&gt; is &lt;em&gt;not&lt;/em&gt; recursive, and I find &lt;code&gt;os.walk&lt;/code&gt;s 3-tuple values obnoxious.
+Lo and behold, while I was trying to implement a recursive version of &lt;code&gt;scandir&lt;/code&gt;, a &lt;code&gt;yield from&lt;/code&gt; use just popped right out!&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[code lang=python]&lt;/span&gt;
+&lt;span class="na"&gt;import os&lt;/span&gt;
+&lt;span class="na"&gt;def rscandir(path):&lt;/span&gt;
+    &lt;span class="na"&gt;for entry in os.scandir(path):&lt;/span&gt;
+        &lt;span class="na"&gt;yield entry&lt;/span&gt;
+        &lt;span class="na"&gt;if entry.is_dir():&lt;/span&gt;
+            &lt;span class="na"&gt;yield from rscandir(entry.path)&lt;/span&gt;
+&lt;span class="k"&gt;[/code]&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;That's it! I have to admit that reads wonderfully. The Legacy Python (aka Python 2.x) alternative is quite a bit uglier:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[code lang=python]&lt;/span&gt;
+&lt;span class="na"&gt;import os&lt;/span&gt;
+&lt;span class="na"&gt;def rscandir(path):&lt;/span&gt;
+    &lt;span class="na"&gt;for p in os.listdir(path):&lt;/span&gt;
+        &lt;span class="na"&gt;yield p&lt;/span&gt;
+        &lt;span class="na"&gt;if os.path.isdir(p):&lt;/span&gt;
+            &lt;span class="na"&gt;for q in rscandir(p):&lt;/span&gt;
+                &lt;span class="na"&gt;yield q&lt;/span&gt;
+&lt;span class="k"&gt;[/code]&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Yuck. So, yet again: time to move away from Legacy Python! ;)&lt;/p&gt;&lt;/div&gt;</description><category>Legacy Python</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>Python 3</category><guid>http://ilovesymposia.com/posts/2015/10/19/first-yield-from/</guid><pubDate>Mon, 19 Oct 2015 22:19:35 GMT</pubDate></item></channel></rss>

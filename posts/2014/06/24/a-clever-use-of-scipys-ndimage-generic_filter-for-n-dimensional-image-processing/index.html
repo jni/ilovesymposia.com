@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A clever use of SciPy's ndimage.generic_filter for n-dimensional image processing | I Love Symposia!</title>
+<link href="../../../../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900" rel="stylesheet">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../../../../rss.xml">
+<link rel="canonical" href="http://ilovesymposia.com/posts/2014/06/24/a-clever-use-of-scipys-ndimage-generic_filter-for-n-dimensional-image-processing/">
+<!--[if lt IE 9]><script src="../../../../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Juan Nunez-Iglesias">
+<link rel="prev" href="../../18/elsevier-et-als-pricing-douchebaggery-exposed/" title="Elsevier et al's pricing douchebaggery exposed" type="text/html">
+<link rel="next" href="../../../07/17/scipy-2014-recap/" title="SciPy 2014: an extremely useful conference with a diversity problem" type="text/html">
+<meta property="og:site_name" content="I Love Symposia!">
+<meta property="og:title" content="A clever use of SciPy's ndimage.generic_filter for n-dimensional image">
+<meta property="og:url" content="http://ilovesymposia.com/posts/2014/06/24/a-clever-use-of-scipys-ndimage-generic_filter-for-n-dimensional-image-processing/">
+<meta property="og:description" content="Vighnesh is tasked with implementing region adjacency graphs and graph based methods for image segmentation. He initially wrote specific functions for 2D and 3D images, and I suggested that he should ">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2014-06-24T01:48:07Z">
+<meta property="article:tag" content="Planet SciPy">
+<meta property="article:tag" content="programming">
+<meta property="article:tag" content="Research Blogging">
+<meta property="article:tag" content="structuring element">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Header and menu bar -->
+<div class="container">
+      <header class="blog-header py-3"><div class="row nbb-header align-items-center">
+          <div class="col-md-3 col-xs-2 col-sm-2" style="width: auto;">
+            <button class="navbar-toggler navbar-light bg-light nbb-navbar-toggler" type="button" data-toggle="collapse" data-target=".bs-nav-collapsible" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse bs-nav-collapsible bootblog4-search-form-holder">
+                
+            </div>
+        </div>
+          <div class="col-md-6 col-xs-10 col-sm-10 bootblog4-brand" style="width: auto;">
+            <a class="navbar-brand blog-header-logo text-dark" href="http://ilovesymposia.com/">
+
+            <span id="blog-title">I Love Symposia!</span>
+        </a>
+          </div>
+            <div class="col-md-3 justify-content-end align-items-center bs-nav-collapsible collapse flex-collapse bootblog4-right-nav">
+            <nav class="navbar navbar-light bg-white"><ul class="navbar-nav bootblog4-right-nav">
+<li class="nav-item">
+    <a href="index.md" id="sourcelink" class="nav-link">Source</a>
+    </li>
+
+
+                    
+            </ul></nav>
+</div>
+    </div>
+</header><nav class="navbar navbar-expand-md navbar-light bg-white static-top"><div class="collapse navbar-collapse bs-nav-collapsible" id="bs-navbar">
+            <ul class="navbar-nav nav-fill d-flex w-100">
+<li class="nav-item">
+<a href="../../../../../archive.html" class="nav-link">Archives</a>
+                </li>
+<li class="nav-item">
+<a href="../../../../../categories/index.html" class="nav-link">Tags</a>
+                </li>
+<li class="nav-item">
+<a href="../../../../../rss.xml" class="nav-link">RSS feed</a>
+
+                
+            </li>
+</ul>
+</div>
+<!-- /.navbar-collapse -->
+</nav>
+</div>
+
+<div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">A clever use of SciPy's ndimage.generic_filter for n-dimensional image processing</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    Juan Nunez-Iglesias
+            </span></p>
+            <p class="dateline">
+            <a href="." rel="bookmark">
+            <time class="published dt-published" datetime="2014-06-24T01:48:07Z" itemprop="datePublished" title="2014-06-24 01:48">2014-06-24 01:48</time></a>
+            </p>
+                <p class="commentline">
+        
+    <a href="#disqus_thread" data-disqus-identifier="cache/posts/2014/06/24/a-clever-use-of-scipys-ndimage-generic_filter-for-n-dimensional-image-processing.html">Comments</a>
+
+
+            
+        </p>
+<p class="sourceline"><a href="index.md" class="sourcelink">Source</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Vighnesh is <a href="http://www.google-melange.com/gsoc/proposal/public/google/gsoc2014/vighneshbirodkar/5870670537818112">tasked</a> with implementing region adjacency graphs and graph based methods for image segmentation. He initially wrote specific functions for 2D and 3D images, and I suggested that he should merge them: either with n-dimensional code, or, at the very least, by making 2D a special case of 3D. He chose the former, and produced extremely elegant code. Three nested for loops and a large number of neighbour computations were replaced by a function call and a simple loop. Read on to find out how.</p>
+
+<p>.. has_math: no
+.. status: published
+.. wp-status: publish
+--&gt;</p>
+<p></p>
+<p>This year I am privileged to be a mentor in the <a href="https://www.google-melange.com/gsoc/homepage/google/gsoc2014">Google Summer of Code</a> for the <a href="http://scikit-image.org">scikit-image</a> project, as part of the Python Software Foundation organisation. Our student, <a href="https://github.com/vighneshbirodkar">Vighnesh Birodkar</a>, recently came up with a clever use of SciPy’s <a href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.filters.generic_filter.html"><code>ndimage.generic_filter</code></a> that is certainly worth sharing widely.</p>
+<p>Vighnesh is <a href="http://www.google-melange.com/gsoc/proposal/public/google/gsoc2014/vighneshbirodkar/5870670537818112">tasked</a> with implementing region adjacency graphs and graph based methods for image segmentation. He initially wrote specific functions for 2D and 3D images, and I suggested that he should merge them: either with n-dimensional code, or, at the very least, by making 2D a special case of 3D. He chose the former, and produced extremely elegant code. Three nested for loops and a large number of neighbour computations were replaced by a function call and a simple loop. Read on to find out how.</p>
+<p>Iterating over an array of unknown dimension is not trivial a priori, but thankfully, someone else has already solved that problem: NumPy’s <a href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.nditer.html"><code>nditer</code></a> and <a href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndindex.html"><code>ndindex</code></a> functions allow one to efficiently iterate through every point of an n-dimensional array. However, that still leaves the problem of finding neighbors, to determine which regions are adjacent to each other. Again, this is not trivial to do in nD.</p>
+<p>scipy.ndimage provides a suitable function, <code>generic_filter</code>. Typically, a filter is used to iterate a “selector” (called a structuring element) over an array, compute some function of all the values covered by the structuring element, and replace the central value by the output of the function. For example, using the structuring element:</p>
+<pre class="code literal-block"><span></span><span class="k">[code lang=python]</span>
+<span class="na">fp</span> <span class="o">=</span> <span class="s">np.array([[0, 1, 0],</span>
+<span class="s">               [1, 1, 1],</span>
+<span class="s">               [0, 1, 0]], np.uint8)</span>
+<span class="k">[/code]</span>
+</pre>
+
+
+<p>and the function <code>np.median</code> on a 2D image produces a median filter over a pixel’s immediate neighbors. That is,</p>
+<pre class="code literal-block"><span></span><span class="k">[code lang=python]</span>
+<span class="na">import functools</span>
+<span class="na">median_filter</span> <span class="o">=</span> <span class="s">functools.partial(generic_filter,</span>
+<span class="s">                                  function=np.median,</span>
+<span class="s">                                  footprint=fp)</span>
+<span class="k">[/code]</span>
+</pre>
+
+
+<p>Here, we don’t want to create an output array, but an output graph. What to do? As it turns out, Python’s pass-by-reference allowed Vighnesh to do this quite easily using the “extra_arguments” keyword to <code>generic_filter</code>: we can write a filter function that receives the graph and updates it when two distinct values are adjacent! <code>generic_filter</code> passes all values covered by a structuring element as a flat array, in the array order of the structuring element. So Vighnesh wrote the following function:</p>
+<pre class="code literal-block"><span></span><span class="k">[code lang=python]</span>
+<span class="na">def _add_edge_filter(values, g):</span>
+    <span class="na">"""Add an edge between first element in `values` and</span>
+    <span class="na">all other elements of `values` in the graph `g`.</span>
+    <span class="na">`values[0]` is expected to be the central value of</span>
+    <span class="na">the footprint used.</span>
+
+    <span class="na">Parameters</span>
+    <span class="na">----------</span>
+    <span class="na">values : array</span>
+        <span class="na">The array to process.</span>
+    <span class="na">g : RAG</span>
+        <span class="na">The graph to add edges in.</span>
+
+    <span class="na">Returns</span>
+    <span class="na">-------</span>
+    <span class="na">0.0 : float</span>
+        <span class="na">Always returns 0.</span>
+
+    <span class="na">"""</span>
+    <span class="na">values</span> <span class="o">=</span> <span class="s">values.astype(int)</span>
+<span class="s">    current = values[0]</span>
+<span class="s">    for value in values[1:]:</span>
+<span class="s">        g.add_edge(current, value)</span>
+<span class="s">    return 0.0</span>
+<span class="k">[/code]</span>
+</pre>
+
+
+<p>Then, using the footprint:</p>
+<pre class="code literal-block"><span></span><span class="k">[code lang=python]</span>
+<span class="na">fp</span> <span class="o">=</span> <span class="s">np.array([[0, 0, 0],</span>
+<span class="s">               [0, 1, 1],</span>
+<span class="s">               [0, 1, 0]], np.uint8)</span>
+<span class="k">[/code]</span>
+</pre>
+
+
+<p>(or its n-dimensional analog), this filter is called as follows on <code>labels</code>, the image containing the region labels:</p>
+<pre class="code literal-block"><span></span><span class="k">[code lang=python]</span>
+<span class="na">filters.generic_filter(labels,</span>
+                       <span class="na">function</span><span class="o">=</span><span class="s">_add_edge_filter,</span>
+<span class="s">                       footprint=fp,</span>
+<span class="s">                       mode='nearest',</span>
+<span class="s">                       extra_arguments=(g,))</span>
+<span class="k">[/code]</span>
+</pre>
+
+
+<p>This is a rather unconventional use of generic_filter, which is normally used for its output array. Note how the return value of the filter function, <code>_add_edge_filter</code>, is just 0! In our case, the output array contains all 0s, but we use the filter <em>exclusively for its side-effect</em>: adding an edge to the graph g when there is more than one unique value in the footprint. That’s cool.</p>
+<p>Continuing, in this first RAG implementation, Vighnesh wanted to segment according to average color, so he further needed to iterate over each pixel/voxel/hypervoxel and keep a running total of the color and the pixel count. He used elements in the graph node dictionary for this and updated them using <code>ndindex</code>:</p>
+<pre class="code literal-block"><span></span><span class="k">[code lang=python]</span>
+<span class="na">for index in np.ndindex(labels.shape):</span>
+    <span class="na">current</span> <span class="o">=</span> <span class="s">labels[index]</span>
+<span class="s">    g.node[current]['pixel count'] += 1</span>
+<span class="s">    g.node[current]['total color'] += image[index]</span>
+<span class="k">[/code]</span>
+</pre>
+
+
+<p>Thus, together, numpy’s <code>nditer</code>, <code>ndindex</code>, and scipy.ndimage’s <code>generic_filter</code> provide a powerful way to perform a large variety of operations on n-dimensional arrays… Much larger than I’d realised!</p>
+<p>You can see Vighnesh’s complete pull request <a href="https://github.com/scikit-image/scikit-image/pull/1031">here</a> and follow his blog <a href="http://vcansimplify.wordpress.com/">here</a>.</p>
+<p>If you use NumPy arrays and their massive bag of tricks, please cite the paper below!</p>
+<p><span class="Z3988" title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;rft.jtitle=Computing+in+Science+and+Engineering+13%2C+2+%282011%29+22-30&amp;rft_id=info%3Aarxiv%2F1102.1523v1&amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;rft.atitle=The+NumPy+array%3A+a+structure+for+efficient+numerical+computation&amp;rft.issn=&amp;rft.date=2011&amp;rft.volume=&amp;rft.issue=&amp;rft.spage=&amp;rft.epage=&amp;rft.artnum=&amp;rft.au=Stefan+Van+Der+Walt&amp;rft.au=S.+Chris+Colbert&amp;rft.au=Ga%C3%ABl+Varoquaux&amp;rfe_dat=bpr3.included=1;bpr3.tags=Computer+Science+%2F+Engineering%2CSoftware+Engineering">Stefan Van Der Walt, S. Chris Colbert, &amp; Gaël Varoquaux (2011). The NumPy array: a structure for efficient numerical computation <span style="font-style:italic;">Computing in Science and Engineering 13, 2 (2011) 22-30</span> arXiv: <a rev="review" href="http://arxiv.org/abs/1102.1523v1">1102.1523v1</a></span></p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../../../../categories/planet-scipy/" rel="tag">Planet SciPy</a></li>
+            <li><a class="tag p-category" href="../../../../../categories/programming/" rel="tag">programming</a></li>
+            <li><a class="tag p-category" href="../../../../../categories/research-blogging/" rel="tag">Research Blogging</a></li>
+            <li><a class="tag p-category" href="../../../../../categories/structuring-element/" rel="tag">structuring element</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../../18/elsevier-et-als-pricing-douchebaggery-exposed/" rel="prev" title="Elsevier et al's pricing douchebaggery exposed">Previous post</a>
+            </li>
+            <li class="next">
+                <a href="../../../07/17/scipy-2014-recap/" rel="next" title="SciPy 2014: an extremely useful conference with a diversity problem">Next post</a>
+            </li>
+        </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
+        
+        
+        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="nikolademo",
+            disqus_url="http://ilovesymposia.com/posts/2014/06/24/a-clever-use-of-scipys-ndimage-generic_filter-for-n-dimensional-image-processing/",
+        disqus_title="A clever use of SciPy's ndimage.generic_filter for n-dimensional image processing",
+        disqus_identifier="cache/posts/2014/06/24/a-clever-use-of-scipys-ndimage-generic_filter-for-n-dimensional-image-processing.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section></article><script>var disqus_shortname="nikolademo";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer">
+            Contents © 2019         <a href="mailto:jni.soma@gmail.com">Juan Nunez-Iglesias</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="../../../../../assets/js/all-nocdn.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    </script>
+</body>
+</html>

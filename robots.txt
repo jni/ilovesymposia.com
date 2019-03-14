@@ -1,0 +1,4 @@
+Sitemap: http://ilovesymposia.com/sitemapindex.xml
+
+User-Agent: *
+Host: ilovesymposia.com

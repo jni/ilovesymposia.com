@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>I Love Symposia! (Posts about Workshops)</title><link>http://ilovesymposia.com/</link><description></description><atom:link href="http://ilovesymposia.com/categories/workshops.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><copyright>Contents © 2019 &lt;a href="mailto:jni.soma@gmail.com"&gt;Juan Nunez-Iglesias&lt;/a&gt; </copyright><lastBuildDate>Thu, 14 Mar 2019 02:09:39 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Summer School Announcement: ASPP Asia-Pacific 2018</title><link>http://ilovesymposia.com/posts/2017/10/05/summer-school-announcement-aspp-asia-pacific-2018/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;The Advanced Scientific Programming in Python (ASPP) summer school has had 10 extremely successful iterations in Europe. (You can find past materials, schedules, and student evaluations at &lt;a href="https://python.g-node.org/archives"&gt;https://python.g-node.org/archives&lt;/a&gt;.) Now, thanks to the &lt;a href="https://incf.org"&gt;INCF&lt;/a&gt;, we will be holding its first iteration in Australia, to cater to the Asia Pacific region. (Note: the original ASPP will still take place in Europe next Northern summer; this is a fork of that school.)&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;&lt;h3&gt;Key details&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;The workshop runs &lt;strong&gt;January 14-21&lt;/strong&gt; at the &lt;strong&gt;Melbourne Brain Centre&lt;/strong&gt;, University of Melbourne, Australia&lt;/li&gt;
+&lt;li&gt;topics include: git, contributing to open source software with github, testing, debugging, profiling, advanced NumPy, Cython, data visualisation.&lt;/li&gt;
+&lt;li&gt;hands-on learning using pair programming&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;free to attend&lt;/strong&gt; (but students are responsible for travel, accommodation, and meals)&lt;/li&gt;
+&lt;li&gt;30 student places, to be selected competitively&lt;/li&gt;
+&lt;li&gt;application deadline is &lt;strong&gt;Oct 31, 2017&lt;/strong&gt;, 23:59 UTC.&lt;/li&gt;
+&lt;li&gt;website: https://melbournebioinformatics.org.au/aspp-asia-pacific&lt;/li&gt;
+&lt;li&gt;apply: https://melbournebioinformatics.org.au/aspp-asia-pacific/applications (make sure you read the FAQ on that page)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Background&lt;/h3&gt;
+
+&lt;p&gt;Two-and-a-bit years ago, Tiziano Zito asked me if I could join the faculty at the 2015 ASPP school in Munich (then in its 8th iteration). It turned out to be a fantastic teaching experience, and, more importantly, it was a fantastic experience for the students. Students selected for the school fit a certain profile, neither novice nor advanced. As such, you can be sure that if you participate in the school, you will learn a great deal. We teach tools that will immediately improve your scientific practice. I decided that I wanted to replicate the school in Australia. Now it is finally here!&lt;/p&gt;
+&lt;h3&gt;Course outline&lt;/h3&gt;
+
+&lt;p&gt;Scientists spend increasingly more time writing, maintaining, and debugging software. While techniques for doing this efficiently have evolved, only few scientists have been trained to use them. As a result, instead of doing their research, they spend far too much time writing deficient code and reinventing the wheel. In this course we will present a selection of advanced programming techniques and best practices that are standard in industry, but especially tailored to the needs of a programming scientist. Lectures are devised to be interactive and to give the students enough time to acquire direct hands-on experience with the materials. Students will work in pairs throughout the school and will team up to practice the newly learned skills in a real programming project — an entertaining computer game.&lt;/p&gt;
+&lt;p&gt;We use the Python programming language for the entire course. Python works as a simple programming language for beginners, but more importantly, it also works great in scientific simulations and data analysis. We show how clean language design, ease of extensibility, and the great wealth of open source libraries for scientific computing and data visualization are driving Python to becoming a standard tool for scientists.&lt;/p&gt;
+&lt;h3&gt;Who is eligible?&lt;/h3&gt;
+
+&lt;p&gt;This school is targeted at Master/PhD students and postdocs from all areas of science. Competence in Python or in another language such as Java, C/C++, MATLAB, or Mathematica is absolutely required. Basic knowledge of Python and of a version control system such as git, subversion, mercurial, or bazaar is assumed. Participants without any prior experience with Python and/or git should work through the proposed introductory material &lt;strong&gt;before&lt;/strong&gt; the course.&lt;/p&gt;
+&lt;p&gt;We have strived to get a pool of students that is international and gender-balanced, and have succeeded, with gender parity in the last four schools.&lt;/p&gt;
+&lt;h3&gt;More questions&lt;/h3&gt;
+
+&lt;p&gt;If you have any questions, contact &lt;a href="mailto:aspp@melbournebioinformatics.org.au"&gt;aspp@melbournebioinformatics.org.au&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Please circulate this announcement widely!&lt;/p&gt;
+&lt;p&gt;Thanks,&lt;/p&gt;
+&lt;p&gt;Juan.&lt;/p&gt;&lt;/div&gt;</description><category>conference</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>Scientific Computing</category><category>Workshops</category><guid>http://ilovesymposia.com/posts/2017/10/05/summer-school-announcement-aspp-asia-pacific-2018/</guid><pubDate>Thu, 05 Oct 2017 14:21:30 GMT</pubDate></item></channel></rss>
