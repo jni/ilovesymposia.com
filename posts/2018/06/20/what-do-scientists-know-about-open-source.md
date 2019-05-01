@@ -32,7 +32,7 @@ The most common objection is to my assertion that people won't scoop you by look
 <strong>Update:</strong> I found the source! It's <a href="https://twitter.com/tweetotaler/status/884412302098915329">this tweet</a> by Elizabeth Seiver.
 
 This is a huge gap in culture that won't soon go away, but there are encouraging steps towards narrowing it. For example, PLOS Biology, a leading journal, recently <a href="http://twitter.com/PLOSBiology/status/958346565868978176">announced</a> that they would consider "scooped" studies for publication within six months of the "scooping". That goes some way towards re-aligning incentives towards collaborative and open science.
-olga botvinic
+
 I've come across many collaborations that have started because of open source. I have not heard of someone getting scooped because of open source, but of course that sort of information would be hard to trace and come by. Several people did write to me that they were concerned about very specific groups rifling through their code expressly for the purpose of scooping them. For me it's hard to imagine someone even having that attitude, and my advice is that if you do face such a toxic community, it might be wise to change your chosen field of study.
 
 Nevertheless, I want to emphasise here that open source programming can take many forms, with the zip file attached to the paper being the lowest, coding in the open being the highest, and several other models in between. Any steps you can take towards the higher models will ultimately help you. My preferred mode for code that really does have to be private is to use a private GitHub repository, and <em>just make that repo public once the paper is accepted.</em>
