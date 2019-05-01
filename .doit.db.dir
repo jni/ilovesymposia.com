@@ -322,7 +322,7 @@
 'render_posts:cache/posts/2009/06/12/google-engulfs-more-software.html', (697856, 445)
 'render_taxonomies:output/categories/quicksilver.xml', (698368, 637)
 'render_pages:output/posts/2015/05/04/the-scipy-ecosystem-belongs-to-everyone/index.html', (1505280, 6378)
-'sitemap:output/sitemap.xml', (1870336, 57955)
+'sitemap:output/sitemap.xml', (1870336, 57960)
 'copy_assets:output/assets/js/html5shiv-printshiv.min.js', (763904, 445)
 'redirect:output/2018/06/20/what-do-scientists-know-about-open-source/index.html', (764416, 138)
 'render_posts:cache/posts/2015/10/09/euroscipy-2015-debrief.html', (764928, 427)
