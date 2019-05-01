@@ -1,10 +1,199 @@
 <!DOCTYPE html>
+<html prefix="" lang="en">
 <head>
 <meta charset="utf-8">
-<title>Redirecting...</title>
-<meta name="robots" content="noindex">
-<meta http-equiv="refresh" content="0; url=/posts/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/index.html">
+<meta name="viewport" content="width=device-width">
+<title>Continuous integration in Python, 4: set up Travis-CI | I Love Symposia!</title>
+<link href="../../../../assets/css/all.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../../../rss.xml">
+<link rel="canonical" href="https://ilovesymposia.com/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+    },
+    displayAlign: 'center', // Change this to 'left' if you want left-aligned equations.
+    "HTML-CSS": {
+        styles: {'.MathJax_Display': {"margin": 0}}
+    }
+});
+</script><!--[if lt IE 9]><script src="../../../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Juan Nunez-Iglesias">
+<link rel="prev" href="../../13/continuous-integration-in-python-3-set-up-your-test-configuration-files/" title="Continuous integration in Python 3: set up your test configuration files" type="text/html">
+<link rel="next" href="../continuous-integration-in-python-5-report-test-coverage-using-coveralls/" title="Continuous integration in Python, 5: report test coverage using Coveralls" type="text/html">
+<meta property="og:site_name" content="I Love Symposia!">
+<meta property="og:title" content="Continuous integration in Python, 4: set up Travis-CI">
+<meta property="og:url" content="https://ilovesymposia.com/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/">
+<meta property="og:description" content="Automated testing with pytest
+Measuring test coverage
+Setting up test configuration files
+
+Introduction to Travis-CI
+Once you've set up your tests locally, it does you no good if you don't remember to">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2014-10-15T04:00:59+11:00">
+<meta property="article:tag" content="continuous integration">
+<meta property="article:tag" content="Planet SciPy">
+<meta property="article:tag" content="programming">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="test-driven development">
 </head>
 <body>
-<p>Page moved <a href="/posts/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/index.html">here</a>.</p>
+    <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+            styles, `#sidebar-checkbox` for behavior. -->
+    <input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox"><!-- Toggleable sidebar --><div class="sidebar" id="sidebar">
+        <div class="sidebar-item">
+            <p>A reserved <a href="https://getnikola.com" target="_blank">Nikola</a> theme that places the utmost gravity on content with a hidden drawer. Made by <a href="https://twitter.com/mdo" target="_blank">@mdo</a> for Jekyll,
+            ported to Nikola by <a href="https://twitter.com/ralsina" target="_blank">@ralsina</a>.</p>
+        </div>
+        
+    <nav id="menu" role="navigation" class="sidebar-nav"><a class="sidebar-nav-item" href="../../../../archive.html">Archives</a>
+        <a class="sidebar-nav-item" href="../../../../categories/index.html">Tags</a>
+        <a class="sidebar-nav-item" href="../../../../rss.xml">RSS feed</a>
+    
+    
+    </nav>
+</div>
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          
+    <h3 id="brand" class="masthead-title">
+      <a href="https://ilovesymposia.com/" title="I Love Symposia!" rel="home">I Love Symposia!</a>
+    </h3>
+
+        </div>
+      </div>
+
+      <div class="container content" id="content">
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="post-title p-name entry-title" itemprop="headline name"><a href="." class="u-url">Continuous integration in Python, 4: set up Travis-CI</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">Juan Nunez-Iglesias</span></p>
+            <p class="dateline"><a href="." rel="bookmark"><time class="post-date published dt-published" datetime="2014-10-15T04:00:59+11:00" itemprop="datePublished" title="2014-10-15 04:00">2014-10-15 04:00</time></a></p>
+                <p class="commentline">
+        
+    <a href="#disqus_thread" data-disqus-identifier="cache/posts/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci.html">Comments</a>
+
+
+        </p>
+</div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<ul>
+<li><a href="http://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/">Automated testing with pytest</a></li>
+<li><a href="http://ilovesymposia.com/2014/10/02/continuous-integration-1-test-coverage/">Measuring test coverage</a></li>
+<li><a href="http://ilovesymposia.com/2014/10/13/continuous-integration-in-python-3-set-up-your-test-configuration-files/">Setting up test configuration files</a></li>
+</ul>
+<h3>Introduction to Travis-CI</h3>
+<p>Once you've set up your tests locally, it does you no good if you don't remember to run them! <a href="http://travis-ci.org/">Travis-CI</a> makes this seamless, because it will check out your code and run you tests for <em>each and every commit you push to GitHub!</em> (This is even more important when you are receiving pull requests on GitHub: the tests will be run online, without you having to individually check out each PR and run the tests on your machine!)
+.. has_math: no
+.. status: published
+.. wp-status: publish
+--&gt;</p>
+<p></p>
+<p>This is the fourth post in my Continuous integration (CI) in Python series, and the one that puts the "continuous" in CI! For the introductory three posts, see:</p>
+<p></p>
+<ul>
+<li><a href="http://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/">Automated testing with pytest</a></li>
+<li><a href="http://ilovesymposia.com/2014/10/02/continuous-integration-1-test-coverage/">Measuring test coverage</a></li>
+<li><a href="http://ilovesymposia.com/2014/10/13/continuous-integration-in-python-3-set-up-your-test-configuration-files/">Setting up test configuration files</a></li>
+</ul>
+<h3>Introduction to Travis-CI</h3>
+
+<p>Once you've set up your tests locally, it does you no good if you don't remember to run them! <a href="http://travis-ci.org/">Travis-CI</a> makes this seamless, because it will check out your code and run you tests for <em>each and every commit you push to GitHub!</em> (This is even more important when you are receiving pull requests on GitHub: the tests will be run online, without you having to individually check out each PR and run the tests on your machine!)</p>
+<p>This is what continuous integration is all about. Once upon a time, the common practice was to pile on new features on a codebase. Then, come release time, there would be a feature freeze, and some time would be spent cleaning up code and removing bugs. In continuous integration, instead, no new feature is allowed into the codebase until it is bug free, as demonstrated by the test suite.</p>
+<h3>What to do</h3>
+
+<p>You need to first add a <code>.travis.yml</code> file to the root of your project. This tells Travis how to install your program's dependencies, install your program, and run the tests. Here's an example file to run tests and coverage on our <code>maths.py</code> sample project:</p>
+<pre class="code literal-block"><span></span><span class="k">[code lang=text]</span>
+<span class="na">language: python</span>
+<span class="na">python:</span>
+    <span class="na">- "2.7"</span>
+    <span class="na">- "3.4"</span>
+<span class="na">before_install:</span>
+    <span class="na">- pip install pytest pytest-cov</span>
+<span class="na">script:</span>
+    <span class="na">- py.test</span>
+<span class="k">[/code]</span>
+</pre>
+
+
+<p>Pretty simple: tell Travis the language of your project, the Python version (you can specify multiple versions, one per line, to test on multiple Python versions!), how to install test dependencies. Finally, the command to run your tests. (This can be anything, not just pytest or another testing framework, as long as a shell exit status of 0 means "success" and anything else means "failure".)</p>
+<p>You can read more about the syntax and options for your <code>.travis.yml</code> in the <a href="http://docs.travis-ci.com/user/build-configuration/">Travis documentation</a>. There are other sections you can add, such as "virtualenv" to set up Python virtual environments, "install" to add compilation and other installation steps for your library, before testing, and "after_success" to enable e.g. custom notifications. (We will use this last one in the next post.)</p>
+<p>Once you have created <code>.travis.yml</code> for your project, you need to turn it on for your repo. <strike>This is, currently, a fairly painful process, and I can't wait for the day that it's enabled by default on GitHub.</strike> [<strong>Update: see below</strong>] In the meantime though:</p>
+<ul>
+<li><strike>Go to your project <a href="../../skitch-3.png">settings</a> page on GitHub.</strike></li>
+<li><strike>Click on <a href="../../skitch-2.png">webhooks &amp; services</a>.</strike></li>
+<li><strike>Click on <a href="../../skitch.png">add service</a>, searching for "Travis".</strike></li>
+<li><strike>You'll be taken to the GitHub <a href="../../skitch-7.png">Travis configuration page</a>. Mine was pre-populated with the Travis token, but you might have to click on the link to your <a href="https://travis-ci.org/profile">Travis profile</a>, and click on the "Profile" tab to retrieve your token.</strike></li>
+<li>In the <a href="https://travis-ci.org/profile">Travis profile page</a>, in the "Repositories" tab, click <a href="../../skitch-5.png">Sync now</a> to get your list of repos, and flick the switch for your current repo.</li>
+</ul>
+<p><i>[<strong>Update 2014-10-28:</strong> Thanks to <a href="https://twitter.com/hugovk">@hugovk</a> for pointing out that the first four points above can be skipped. It turns out that when you first log in to Travis-CI using your GitHub account, you give them write access to your webhooks. So, when you add a repo from their end, they go ahead and add themselves on the GitHub end! Boom. Way easier.]</i></p>
+<p>https://twitter.com/hugovk/status/526798595442618368</p>
+<p>Voilà! Every push and pull-request to your repository will trigger a job on Travis's servers, building your dependencies and your software, running your tests, and emailing you if anything went wrong! Amazingly, this is completely free for open source projects, so you really have no excuse for not using it!</p>
+<p><img src="../../screen-shot-2014-10-15-at-9-55-05-pm.png" alt="Travis build page"></p>
+<p>Follow this blog to learn how to continuously check test coverage using <a href="https://coveralls.io">Coveralls</a>, coming in the next post!</p>
+<p><strong>Update:</strong> <a href="http://ilovesymposia.com/2014/10/15/continuous-integration-in-python-5-report-test-coverage-using-coveralls/">Volume 5: turn on Coveralls</a></p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../../../categories/continuous-integration/" rel="tag">continuous integration</a></li>
+            <li><a class="tag p-category" href="../../../../categories/planet-scipy/" rel="tag">Planet SciPy</a></li>
+            <li><a class="tag p-category" href="../../../../categories/programming/" rel="tag">programming</a></li>
+            <li><a class="tag p-category" href="../../../../categories/python/" rel="tag">Python</a></li>
+            <li><a class="tag p-category" href="../../../../categories/test-driven-development/" rel="tag">test-driven development</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../../13/continuous-integration-in-python-3-set-up-your-test-configuration-files/" rel="prev" title="Continuous integration in Python 3: set up your test configuration files">Previous post</a>
+            </li>
+            <li class="next">
+                <a href="../continuous-integration-in-python-5-report-test-coverage-using-coveralls/" rel="next" title="Continuous integration in Python, 5: report test coverage using Coveralls">Next post</a>
+            </li>
+        </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
+        
+        
+        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="nikolademo",
+            disqus_url="https://ilovesymposia.com/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/",
+        disqus_title="Continuous integration in Python, 4: set up Travis-CI",
+        disqus_identifier="cache/posts/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section></article><script>var disqus_shortname="nikolademo";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><footer id="footer"><p>Contents © 2019         <a href="mailto:jni.soma@fastmail.com">Juan Nunez-Iglesias</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
+            
+        </footer>
+</div>
+    </div>
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+    
+    
+    
+            <script src="../../../../assets/js/all-nocdn.js"></script><!-- fancy dates --><script>
+    moment.locale("en");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates -->
 </body>
+</html>

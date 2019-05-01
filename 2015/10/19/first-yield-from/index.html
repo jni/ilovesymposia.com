@@ -1,10 +1,167 @@
 <!DOCTYPE html>
+<html prefix="" lang="en">
 <head>
 <meta charset="utf-8">
-<title>Redirecting...</title>
-<meta name="robots" content="noindex">
-<meta http-equiv="refresh" content="0; url=/posts/2015/10/19/first-yield-from/index.html">
+<meta name="viewport" content="width=device-width">
+<title>My first use of Python 3's `yield from`! | I Love Symposia!</title>
+<link href="../../../../assets/css/all.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../../../rss.xml">
+<link rel="canonical" href="https://ilovesymposia.com/2015/10/19/first-yield-from/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+    },
+    displayAlign: 'center', // Change this to 'left' if you want left-aligned equations.
+    "HTML-CSS": {
+        styles: {'.MathJax_Display': {"margin": 0}}
+    }
+});
+</script><!--[if lt IE 9]><script src="../../../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Juan Nunez-Iglesias">
+<link rel="prev" href="../../09/euroscipy-2015-debrief/" title="EuroSciPy 2015 debrief" type="text/html">
+<link rel="next" href="../../../12/10/the-cost-of-a-python-function-call/" title="The cost of a Python function call" type="text/html">
+<meta property="og:site_name" content="I Love Symposia!">
+<meta property="og:title" content="My first use of Python 3's `yield from`!">
+<meta property="og:url" content="https://ilovesymposia.com/2015/10/19/first-yield-from/">
+<meta property="og:description" content="I never really understood why yield from was useful. Last weekend, I wanted to use Python 3.5's new os.scandir to explore a directory (and its subdirectories). Tragically, os.scandir is not recursive,">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2015-10-19T22:19:35+11:00">
+<meta property="article:tag" content="Legacy Python">
+<meta property="article:tag" content="Planet SciPy">
+<meta property="article:tag" content="programming">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Python 3">
 </head>
 <body>
-<p>Page moved <a href="/posts/2015/10/19/first-yield-from/index.html">here</a>.</p>
+    <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+            styles, `#sidebar-checkbox` for behavior. -->
+    <input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox"><!-- Toggleable sidebar --><div class="sidebar" id="sidebar">
+        <div class="sidebar-item">
+            <p>A reserved <a href="https://getnikola.com" target="_blank">Nikola</a> theme that places the utmost gravity on content with a hidden drawer. Made by <a href="https://twitter.com/mdo" target="_blank">@mdo</a> for Jekyll,
+            ported to Nikola by <a href="https://twitter.com/ralsina" target="_blank">@ralsina</a>.</p>
+        </div>
+        
+    <nav id="menu" role="navigation" class="sidebar-nav"><a class="sidebar-nav-item" href="../../../../archive.html">Archives</a>
+        <a class="sidebar-nav-item" href="../../../../categories/index.html">Tags</a>
+        <a class="sidebar-nav-item" href="../../../../rss.xml">RSS feed</a>
+    
+    
+    </nav>
+</div>
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          
+    <h3 id="brand" class="masthead-title">
+      <a href="https://ilovesymposia.com/" title="I Love Symposia!" rel="home">I Love Symposia!</a>
+    </h3>
+
+        </div>
+      </div>
+
+      <div class="container content" id="content">
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="post-title p-name entry-title" itemprop="headline name"><a href="." class="u-url">My first use of Python 3's `yield from`!</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">Juan Nunez-Iglesias</span></p>
+            <p class="dateline"><a href="." rel="bookmark"><time class="post-date published dt-published" datetime="2015-10-19T22:19:35+11:00" itemprop="datePublished" title="2015-10-19 22:19">2015-10-19 22:19</time></a></p>
+                <p class="commentline">
+        
+    <a href="#disqus_thread" data-disqus-identifier="cache/posts/2015/10/19/first-yield-from.html">Comments</a>
+
+
+        </p>
+</div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p></p>
+<p>I never really understood why <code>yield from</code> was useful. Last weekend, I wanted to use Python 3.5's new <code>os.scandir</code> to explore a directory (and its subdirectories). Tragically, <code>os.scandir</code> is <em>not</em> recursive, and I find <code>os.walk</code>s 3-tuple values obnoxious.
+Lo and behold, while I was trying to implement a recursive version of <code>scandir</code>, a <code>yield from</code> use just popped right out!</p>
+<pre class="code literal-block"><span></span><span class="k">[code lang=python]</span>
+<span class="na">import os</span>
+<span class="na">def rscandir(path):</span>
+    <span class="na">for entry in os.scandir(path):</span>
+        <span class="na">yield entry</span>
+        <span class="na">if entry.is_dir():</span>
+            <span class="na">yield from rscandir(entry.path)</span>
+<span class="k">[/code]</span>
+</pre>
+
+
+<p>That's it! I have to admit that reads wonderfully. The Legacy Python (aka Python 2.x) alternative is quite a bit uglier:</p>
+<pre class="code literal-block"><span></span><span class="k">[code lang=python]</span>
+<span class="na">import os</span>
+<span class="na">def rscandir(path):</span>
+    <span class="na">for p in os.listdir(path):</span>
+        <span class="na">yield p</span>
+        <span class="na">if os.path.isdir(p):</span>
+            <span class="na">for q in rscandir(p):</span>
+                <span class="na">yield q</span>
+<span class="k">[/code]</span>
+</pre>
+
+
+<p>Yuck. So, yet again: time to move away from Legacy Python! ;)</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../../../categories/legacy-python/" rel="tag">Legacy Python</a></li>
+            <li><a class="tag p-category" href="../../../../categories/planet-scipy/" rel="tag">Planet SciPy</a></li>
+            <li><a class="tag p-category" href="../../../../categories/programming/" rel="tag">programming</a></li>
+            <li><a class="tag p-category" href="../../../../categories/python/" rel="tag">Python</a></li>
+            <li><a class="tag p-category" href="../../../../categories/python-3/" rel="tag">Python 3</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../../09/euroscipy-2015-debrief/" rel="prev" title="EuroSciPy 2015 debrief">Previous post</a>
+            </li>
+            <li class="next">
+                <a href="../../../12/10/the-cost-of-a-python-function-call/" rel="next" title="The cost of a Python function call">Next post</a>
+            </li>
+        </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
+        
+        
+        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="nikolademo",
+            disqus_url="https://ilovesymposia.com/2015/10/19/first-yield-from/",
+        disqus_title="My first use of Python 3's `yield from`!",
+        disqus_identifier="cache/posts/2015/10/19/first-yield-from.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section></article><script>var disqus_shortname="nikolademo";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><footer id="footer"><p>Contents © 2019         <a href="mailto:jni.soma@fastmail.com">Juan Nunez-Iglesias</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
+            
+        </footer>
+</div>
+    </div>
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+    
+    
+    
+            <script src="../../../../assets/js/all-nocdn.js"></script><!-- fancy dates --><script>
+    moment.locale("en");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates -->
 </body>
+</html>

@@ -1,10 +1,169 @@
 <!DOCTYPE html>
+<html prefix="" lang="en">
 <head>
 <meta charset="utf-8">
-<title>Redirecting...</title>
-<meta name="robots" content="noindex">
-<meta http-equiv="refresh" content="0; url=/posts/2014/10/17/continuous-integration-in-python-6-show-off-your-work/index.html">
+<meta name="viewport" content="width=device-width">
+<title>Continuous integration in Python, 6: Show off your work | I Love Symposia!</title>
+<link href="../../../../assets/css/all.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../../../rss.xml">
+<link rel="canonical" href="https://ilovesymposia.com/2014/10/17/continuous-integration-in-python-6-show-off-your-work/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+    },
+    displayAlign: 'center', // Change this to 'left' if you want left-aligned equations.
+    "HTML-CSS": {
+        styles: {'.MathJax_Display': {"margin": 0}}
+    }
+});
+</script><!--[if lt IE 9]><script src="../../../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Juan Nunez-Iglesias">
+<link rel="prev" href="../../15/continuous-integration-in-python-5-report-test-coverage-using-coveralls/" title="Continuous integration in Python, 5: report test coverage using Coveralls" type="text/html">
+<link rel="next" href="../../27/continuous-integration-in-python-7-some-helper-tools-and-final-thoughts/" title="Continuous integration in Python, 7: some helper tools and final thoughts" type="text/html">
+<meta property="og:site_name" content="I Love Symposia!">
+<meta property="og:title" content="Continuous integration in Python, 6: Show off your work">
+<meta property="og:url" content="https://ilovesymposia.com/2014/10/17/continuous-integration-in-python-6-show-off-your-work/">
+<meta property="og:description" content="We're finally ready to wrap up this topic. By now you can:
+
+Automatically test your code with pytest
+Measure your test coverage
+Configure your tests
+Use Travis-CI to run your tests automatically with ">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2014-10-17T06:37:37+11:00">
+<meta property="article:tag" content="continuous integration">
+<meta property="article:tag" content="Planet SciPy">
+<meta property="article:tag" content="programming">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="test-driven development">
 </head>
 <body>
-<p>Page moved <a href="/posts/2014/10/17/continuous-integration-in-python-6-show-off-your-work/index.html">here</a>.</p>
+    <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+            styles, `#sidebar-checkbox` for behavior. -->
+    <input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox"><!-- Toggleable sidebar --><div class="sidebar" id="sidebar">
+        <div class="sidebar-item">
+            <p>A reserved <a href="https://getnikola.com" target="_blank">Nikola</a> theme that places the utmost gravity on content with a hidden drawer. Made by <a href="https://twitter.com/mdo" target="_blank">@mdo</a> for Jekyll,
+            ported to Nikola by <a href="https://twitter.com/ralsina" target="_blank">@ralsina</a>.</p>
+        </div>
+        
+    <nav id="menu" role="navigation" class="sidebar-nav"><a class="sidebar-nav-item" href="../../../../archive.html">Archives</a>
+        <a class="sidebar-nav-item" href="../../../../categories/index.html">Tags</a>
+        <a class="sidebar-nav-item" href="../../../../rss.xml">RSS feed</a>
+    
+    
+    </nav>
+</div>
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          
+    <h3 id="brand" class="masthead-title">
+      <a href="https://ilovesymposia.com/" title="I Love Symposia!" rel="home">I Love Symposia!</a>
+    </h3>
+
+        </div>
+      </div>
+
+      <div class="container content" id="content">
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="post-title p-name entry-title" itemprop="headline name"><a href="." class="u-url">Continuous integration in Python, 6: Show off your work</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">Juan Nunez-Iglesias</span></p>
+            <p class="dateline"><a href="." rel="bookmark"><time class="post-date published dt-published" datetime="2014-10-17T06:37:37+11:00" itemprop="datePublished" title="2014-10-17 06:37">2014-10-17 06:37</time></a></p>
+                <p class="commentline">
+        
+    <a href="#disqus_thread" data-disqus-identifier="cache/posts/2014/10/17/continuous-integration-in-python-6-show-off-your-work.html">Comments</a>
+
+
+        </p>
+</div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p></p>
+<p>We're finally ready to wrap up this topic. By now you can:</p>
+<p></p>
+<ul>
+<li><a href="http://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/">Automatically test your code with pytest</a></li>
+<li><a href="http://ilovesymposia.com/2014/10/02/continuous-integration-1-test-coverage/">Measure your test coverage</a></li>
+<li><a href="http://ilovesymposia.com/2014/10/13/continuous-integration-in-python-3-set-up-your-test-configuration-files/">Configure your tests</a></li>
+<li>Use Travis-CI to <a href="http://ilovesymposia.com/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/">run your tests automatically with each push</a>
+</li>
+<li>Use Coveralls to <a href="http://ilovesymposia.com/2014/10/15/continuous-integration-in-python-5-report-test-coverage-using-coveralls/">measure your coverage with each push</a>
+</li>
+</ul>
+<p>But, much as exercise is wasted if your bathroom scale doesn't automatically tweet about it, all this effort is for naught if visitors to your GitHub page can't see it!</p>
+<p>Most high-profile open-source projects these days advertise their CI efforts. Above, I cheekily called this showing off, but it's truly important: anyone who lands on your GitHub page is a potential user or contributor, and if they see evidence that your codebase is stable and well-tested, they are more likely to stick around.</p>
+<p>Badging your README is easy. (You <em>do</em> have a README, <a href=".">don't you?</a>) In Travis, go to your latest build. Near the top right, click on the "build passing" badge:</p>
+<p><img src="../../screen-shot-2014-10-17-at-8-20-00-pm.png" alt="Travis-CI badge"></p>
+<p>You'll get an overlay, with a pull-down menu for all the different options for getting the badge. You can grab the image URL, or you can directly grab the Markdown to put into your markdown-formatted README, or a bunch of other options, including RST:</p>
+<p><img src="../../screen-shot-2014-10-17-at-8-27-05-pm.png" alt="Travis-CI badge URLs"></p>
+<p>Just copy and paste the appropriate code and add it to your README file wherever you please.</p>
+<p>Meanwhile, on your repository's Coveralls page, on the right-hand side, you will find another pull-down menu with the appropriate URLs:</p>
+<p><img src="../../screen-shot-2014-10-17-at-8-28-24-pm.png" alt="Coveralls badge URLs"></p>
+<p>Again, just grab whichever URL is appropriate for your needs (I prefer Markdown-formatted READMEs), and add it to your README, usually next to the Travis badge.</p>
+<p>And you're done! You've got <a href="http://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/">automated tests</a>, <a href="http://ilovesymposia.com/2014/10/02/continuous-integration-1-test-coverage/">tons of test coverage</a>, you're running everything correctly thanks to <a href="http://ilovesymposia.com/2014/10/13/continuous-integration-in-python-3-set-up-your-test-configuration-files/">configuration files</a>, and all this is getting run on demand thanks to <a href="http://ilovesymposia.com/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/">Travis</a> and <a href="http://ilovesymposia.com/2014/10/15/continuous-integration-in-python-5-report-test-coverage-using-coveralls/">Coveralls</a>. And thanks to badging, the whole world knows about it:</p>
+<p><img src="../../screen-shot-2014-10-18-at-12-33-37-am.png" alt="Readme badges"></p>
+<p><strong>Update:</strong> <a href="https://ilovesymposia.com/2014/10/27/continuous-integration-in-python-7-some-helper-tools-and-final-thoughts/">Volume 7: Some final thoughts, tips, and tools.</a></p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../../../categories/continuous-integration/" rel="tag">continuous integration</a></li>
+            <li><a class="tag p-category" href="../../../../categories/planet-scipy/" rel="tag">Planet SciPy</a></li>
+            <li><a class="tag p-category" href="../../../../categories/programming/" rel="tag">programming</a></li>
+            <li><a class="tag p-category" href="../../../../categories/python/" rel="tag">Python</a></li>
+            <li><a class="tag p-category" href="../../../../categories/test-driven-development/" rel="tag">test-driven development</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../../15/continuous-integration-in-python-5-report-test-coverage-using-coveralls/" rel="prev" title="Continuous integration in Python, 5: report test coverage using Coveralls">Previous post</a>
+            </li>
+            <li class="next">
+                <a href="../../27/continuous-integration-in-python-7-some-helper-tools-and-final-thoughts/" rel="next" title="Continuous integration in Python, 7: some helper tools and final thoughts">Next post</a>
+            </li>
+        </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
+        
+        
+        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="nikolademo",
+            disqus_url="https://ilovesymposia.com/2014/10/17/continuous-integration-in-python-6-show-off-your-work/",
+        disqus_title="Continuous integration in Python, 6: Show off your work",
+        disqus_identifier="cache/posts/2014/10/17/continuous-integration-in-python-6-show-off-your-work.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section></article><script>var disqus_shortname="nikolademo";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><footer id="footer"><p>Contents © 2019         <a href="mailto:jni.soma@fastmail.com">Juan Nunez-Iglesias</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
+            
+        </footer>
+</div>
+    </div>
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+    
+    
+    
+            <script src="../../../../assets/js/all-nocdn.js"></script><!-- fancy dates --><script>
+    moment.locale("en");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates -->
 </body>
+</html>
