@@ -1,6 +1,6 @@
 <!--
 .. title: About me
-.. slug: about-the-author
+.. slug: about-me
 .. date: 2008-05-10 22:19:54
 .. tags: 
 .. category: 
@@ -12,21 +12,31 @@
 .. wp-status: publish
 -->
 
-<html><body><img class="alignleft size-medium wp-image-702" src="https://ilovesymposia.files.wordpress.com/2008/05/img_0111.jpg?w=474" alt="img_0111" width="237" height="300">I'm a freelance consultant Research Scientist at Melbourne Bioinformatics at the University of Melbourne, Australia. Prior positions include Research Associate at HHMI Janelia Farm (where I worked with Mitya Chklovskii) and Research Assistant / PhD student at the University of Southern California (where I studied computational biology supervised by Xianghong Jasmine Zhou).
+<html><body><img class="alignleft size-medium wp-image-702" src="https://ilovesymposia.files.wordpress.com/2008/05/img_0111.jpg?w=474" alt="img_0111" width="237" height="300">
 
-I get cold easily. =P
+I'm a bioimage informatics research fellow and CZI imaging software fellow at
+Monash University in Melbourne, Australia. Previously I've been a freelance
+consultant, a research scientist at Melbourne Bioinformatics (University of
+Melbourne), a research associate at the Janelia Research Campus (where I worked
+with Mitya Chklovskii) and PhD student at the University of Southern California
+(where I studied computational biology under by Xianghong Jasmine Zhou).
 
-My principal research interests are neuroscience and image analysis. I am also interested in graph methods in bioinformatics, and in biostatistics.
+Together with my mentor, [Stéfan van der Walt](https://mentat.za.net/), and my
+friend, [Harriet Dashnow](http://harrietdashnow.com/), I co-wrote [Elegant
+SciPy](http://elegant-scipy.org), a book about effective and elegant uses of
+the SciPy (scientific Python) library. If you like it, please
+[buy](https://elegant-scipy.com) a DRM-free digital copy! (Or a
+[hard copy!](https://www.amazon.com/Elegant-SciPy-Art-Scientific-Python/dp/1491922877))
 
 <span style="line-height:1.714285714;font-size:1rem;">I love movies and my four favourites are </span><em style="line-height:1.714285714;font-size:1rem;">American Beauty</em><span style="line-height:1.714285714;font-size:1rem;">, </span><em style="line-height:1.714285714;font-size:1rem;">The Professional</em><span style="line-height:1.714285714;font-size:1rem;">, </span><em style="line-height:1.714285714;font-size:1rem;">Dark City</em>, and <em>Moonrise Kingdom</em><span style="line-height:1.714285714;font-size:1rem;">.</span>
 
 My favourite TV show is <em>Futurama</em>, by miles.
 
-My favourite videogames are The Legend of Zelda: Ocarina of Time (Nintendo64), Portal (PC), and Ninja Gaiden Σ (PS3), although I've been out of the scene for a while.
+My favourite videogames are The Legend of Zelda: Ocarina of Time (Nintendo64), Portal (PC), Ninja Gaiden Σ (PS3), and Super Mario Odyssey (Switch).
 
 I'm an avid skier, climber, and cyclist.
 
-Here are two very nice quotes that are quite close in content but quite separated in time:
+Here are two very nice quotes that are quite close in content but separated in time:
 
 "There, peeping among the cloud-wrack above a dark tor high up in the mountains, Sam saw a white star twinkle for a while. The beauty of it smote his heart, as he looked up out of the forsaken land, and hope returned to him. For like a shaft, clear and cold, the thought pierced him that in the end the Shadow was only a small and passing thing: there was light and high beauty for ever beyond its reach."
 
