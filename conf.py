@@ -293,6 +293,7 @@ COMPILERS = {
     "rest": ('.txt', '.rst'),
     "markdown": ('.md', '.mdown', '.markdown'),
     "html": ('.html', '.htm'),
+    "ipynb": ('.ipynb',),
 }
 
 # Create by default posts in one file format?
