@@ -602,7 +602,9 @@ ATOM_FILENAME_BASE = "feed"
 # relative URL.
 #
 # If you don't need any of these, just set to []
-REDIRECTIONS = []
+REDIRECTIONS = [('about-the-author/index.html', '/pages/about-me/index.html'),
+                ('publications/index.html', '/pages/publications/index.html'),
+                ('about/index.html', '/pages/about/index.html')]
 
 # Presets of commands to execute to deploy. Can be anything, for
 # example, you may use rsync:
