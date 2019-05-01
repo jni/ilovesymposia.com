@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>I Love Symposia! (Posts about Numba)</title><link>https://jni.github.io/ilovesymposia.com/</link><description></description><atom:link href="https://jni.github.io/ilovesymposia.com/categories/numba.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><copyright>Contents © 2019 &lt;a href="mailto:jni.soma@fastmail.com"&gt;Juan Nunez-Iglesias&lt;/a&gt; </copyright><lastBuildDate>Tue, 30 Apr 2019 09:43:14 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Prettier LowLevelCallables with Numba JIT and decorators</title><link>https://jni.github.io/ilovesymposia.com/posts/2017/03/15/prettier-lowlevelcallables-with-numba-jit-and-decorators/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;In my &lt;a href="https://ilovesymposia.com/2017/03/12/scipys-new-lowlevelcallable-is-a-game-changer/"&gt;recent post&lt;/a&gt;, I extolled the virtues of SciPy 0.19's &lt;code&gt;LowLevelCallable&lt;/code&gt;. I did lament, however, that for &lt;code&gt;generic_filter&lt;/code&gt;, the &lt;code&gt;LowLevelCallable&lt;/code&gt; interface is a good deal uglier than the standard function interface. In the latter, you merely need to provide a function that takes the values within a pixel neighbourhood, and outputs a single value — an arbitrary function of the input values. That is a Wholesome and Good filter function, the way God intended.&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>I Love Symposia! (Posts about Numba)</title><link>https://ilovesymposia.com/</link><description></description><atom:link href="https://ilovesymposia.com/categories/numba.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><copyright>Contents © 2019 &lt;a href="mailto:jni.soma@fastmail.com"&gt;Juan Nunez-Iglesias&lt;/a&gt; </copyright><lastBuildDate>Wed, 01 May 2019 00:11:52 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Prettier LowLevelCallables with Numba JIT and decorators</title><link>https://ilovesymposia.com/posts/2017/03/15/prettier-lowlevelcallables-with-numba-jit-and-decorators/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;In my &lt;a href="https://ilovesymposia.com/2017/03/12/scipys-new-lowlevelcallable-is-a-game-changer/"&gt;recent post&lt;/a&gt;, I extolled the virtues of SciPy 0.19's &lt;code&gt;LowLevelCallable&lt;/code&gt;. I did lament, however, that for &lt;code&gt;generic_filter&lt;/code&gt;, the &lt;code&gt;LowLevelCallable&lt;/code&gt; interface is a good deal uglier than the standard function interface. In the latter, you merely need to provide a function that takes the values within a pixel neighbourhood, and outputs a single value — an arbitrary function of the input values. That is a Wholesome and Good filter function, the way God intended.&lt;/p&gt;
 &lt;p&gt;In contrast, a LowLevelCallable takes the following signature:&lt;/p&gt;
 &lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;gt&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;gt&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;gt&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;llc&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;jit_filter_function&lt;/span&gt;
 &lt;/pre&gt;
 
 
-&lt;p&gt;The source code is &lt;a href="https://github.com/jni/llc-tools"&gt;on GitHub&lt;/a&gt;. Currently it only covers &lt;code&gt;ndi.generic_filter&lt;/code&gt;'s signature, and only with Numba, but I hope to gradually expand it to cover all the functions that take &lt;code&gt;LowLevelCallables&lt;/code&gt; in SciPy, as well as support Cython. Pull requests are welcome!&lt;/p&gt;&lt;/div&gt;</description><category>Numba</category><category>open-source</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>SciPy</category><guid>https://jni.github.io/ilovesymposia.com/posts/2017/03/15/prettier-lowlevelcallables-with-numba-jit-and-decorators/</guid><pubDate>Tue, 14 Mar 2017 13:14:49 GMT</pubDate></item><item><title>SciPy's new LowLevelCallable is a game-changer</title><link>https://jni.github.io/ilovesymposia.com/posts/2017/03/12/scipys-new-lowlevelcallable-is-a-game-changer/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;... and combines rather well with that other game-changing library I like, &lt;a href="https://ilovesymposia.com/2016/12/20/numba-in-the-real-world/"&gt;Numba&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The source code is &lt;a href="https://github.com/jni/llc-tools"&gt;on GitHub&lt;/a&gt;. Currently it only covers &lt;code&gt;ndi.generic_filter&lt;/code&gt;'s signature, and only with Numba, but I hope to gradually expand it to cover all the functions that take &lt;code&gt;LowLevelCallables&lt;/code&gt; in SciPy, as well as support Cython. Pull requests are welcome!&lt;/p&gt;&lt;/div&gt;</description><category>Numba</category><category>open-source</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>SciPy</category><guid>https://ilovesymposia.com/posts/2017/03/15/prettier-lowlevelcallables-with-numba-jit-and-decorators/</guid><pubDate>Tue, 14 Mar 2017 13:14:49 GMT</pubDate></item><item><title>SciPy's new LowLevelCallable is a game-changer</title><link>https://ilovesymposia.com/posts/2017/03/12/scipys-new-lowlevelcallable-is-a-game-changer/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;... and combines rather well with that other game-changing library I like, &lt;a href="https://ilovesymposia.com/2016/12/20/numba-in-the-real-world/"&gt;Numba&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;I've &lt;a href="https://ilovesymposia.com/2015/12/10/the-cost-of-a-python-function-call/"&gt;lamented before&lt;/a&gt; that function calls are expensive in Python, and that this severely hampers many functions that &lt;em&gt;should&lt;/em&gt; be insanely useful, such as SciPy's &lt;a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.generic_filter.html#scipy.ndimage.generic_filter"&gt;&lt;code&gt;ndimage.generic_filter&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;To illustrate this, let's look at image &lt;em&gt;erosion&lt;/em&gt;, which is the replacement of each pixel in an image by the minimum of its neighbourhood. &lt;code&gt;ndimage&lt;/code&gt; has a fast C implementation, which serves as a perfect benchmark against the generic version, using a generic filter with &lt;code&gt;min&lt;/code&gt; as the operator. Let's start with a 2048 x 2048 random image:&lt;/p&gt;
 &lt;p&gt;```http://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#types&lt;/p&gt;
@@ -14,7 +14,7 @@
 &lt;p&gt;```&lt;/p&gt;
 &lt;p&gt;That's right: it's even marginally &lt;em&gt;faster&lt;/em&gt; than the pure C version! I almost cried when I ran that.&lt;/p&gt;
 &lt;p&gt;&lt;/p&gt;&lt;hr&gt;
-&lt;p&gt;Higher-order functions, ie functions that take other functions as input, enable powerful, concise, elegant &lt;a href="https://ilovesymposia.com/2014/06/24/a-clever-use-of-scipys-ndimage-generic_filter-for-n-dimensional-image-processing/"&gt;expressions&lt;/a&gt; of various algorithms. Unfortunately, these have been hampered in Python for large-scale data processing because of Python's function call overhead. SciPy's latest update goes a long way towards redressing this.&lt;/p&gt;&lt;/div&gt;</description><category>Numba</category><category>open-source</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>science</category><category>SciPy</category><guid>https://jni.github.io/ilovesymposia.com/posts/2017/03/12/scipys-new-lowlevelcallable-is-a-game-changer/</guid><pubDate>Sun, 12 Mar 2017 03:41:41 GMT</pubDate></item><item><title>Numba in the real world</title><link>https://jni.github.io/ilovesymposia.com/posts/2016/12/20/numba-in-the-real-world/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;p&gt;Higher-order functions, ie functions that take other functions as input, enable powerful, concise, elegant &lt;a href="https://ilovesymposia.com/2014/06/24/a-clever-use-of-scipys-ndimage-generic_filter-for-n-dimensional-image-processing/"&gt;expressions&lt;/a&gt; of various algorithms. Unfortunately, these have been hampered in Python for large-scale data processing because of Python's function call overhead. SciPy's latest update goes a long way towards redressing this.&lt;/p&gt;&lt;/div&gt;</description><category>Numba</category><category>open-source</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>science</category><category>SciPy</category><guid>https://ilovesymposia.com/posts/2017/03/12/scipys-new-lowlevelcallable-is-a-game-changer/</guid><pubDate>Sun, 12 Mar 2017 03:41:41 GMT</pubDate></item><item><title>Numba in the real world</title><link>https://ilovesymposia.com/posts/2016/12/20/numba-in-the-real-world/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;div class="cell border-box-sizing text_cell rendered"&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 Numba is a just-in-time compiler (JIT) for Python code focused on NumPy arrays and scientific Python. I've seen various tutorials around the web and in conferences, but I have yet to see someone use Numba "in the wild". In the past few months, I've been using Numba in my own code, and I recently released my first real package using Numba, &lt;a href="https://pypi.python.org/pypi/skan"&gt;skan&lt;/a&gt;. The short version is that Numba is &lt;em&gt;amazing&lt;/em&gt; and you should strongly consider it to speed up your scientific Python bottlenecks. Read on for the longer version.
@@ -26,7 +26,7 @@ Numba is a just-in-time compiler (JIT) for Python code focused on NumPy arrays a
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h3 id="Part-1:-some-toy-examples"&gt;Part 1: some toy examples&lt;a class="anchor-link" href="https://jni.github.io/ilovesymposia.com/posts/2016/12/20/numba-in-the-real-world/-some-toy-examples"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id="Part-1:-some-toy-examples"&gt;Part 1: some toy examples&lt;a class="anchor-link" href="https://ilovesymposia.com/posts/2016/12/20/numba-in-the-real-world/-some-toy-examples"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -388,7 +388,7 @@ In this context, I decided to use Numba to do something a little less trivial, a
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h3 id="Part-2:-Real-Numba"&gt;Part 2: Real Numba&lt;a class="anchor-link" href="https://jni.github.io/ilovesymposia.com/posts/2016/12/20/numba-in-the-real-world/-Real-Numba"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id="Part-2:-Real-Numba"&gt;Part 2: Real Numba&lt;a class="anchor-link" href="https://ilovesymposia.com/posts/2016/12/20/numba-in-the-real-world/-Real-Numba"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -483,7 +483,7 @@ I'll present below a slightly simplified version of the code present in my libra
 &lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
 
 &lt;div class="output_png output_subarea "&gt;
-&lt;img src="https://jni.github.io/ilovesymposia.com/2016/12/img0.png"&gt;
+&lt;img src="https://ilovesymposia.com/2016/12/img0.png"&gt;
 &lt;/div&gt;
 
 &lt;/div&gt;
@@ -551,7 +551,7 @@ Because NumPy arrays are not dynamically resizable like Python lists, it helps t
 &lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
 
 &lt;div class="output_png output_subarea "&gt;
-&lt;img src="https://jni.github.io/ilovesymposia.com/2016/12/img1.png"&gt;
+&lt;img src="https://ilovesymposia.com/2016/12/img1.png"&gt;
 &lt;/div&gt;
 
 &lt;/div&gt;
@@ -606,7 +606,7 @@ Now, consider the pixel at position (1, 6). It has two neighbours (as indicated 
 &lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
 
 &lt;div class="output_png output_subarea "&gt;
-&lt;img src="https://jni.github.io/ilovesymposia.com/2016/12/img2.png"&gt;
+&lt;img src="https://ilovesymposia.com/2016/12/img2.png"&gt;
 &lt;/div&gt;
 
 &lt;/div&gt;
@@ -925,7 +925,7 @@ As to what to &lt;em&gt;do&lt;/em&gt; with said graph, I'll leave that for anoth
 &lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
 
 &lt;div class="output_png output_subarea "&gt;
-&lt;img src="https://jni.github.io/ilovesymposia.com/2016/12/img3.png"&gt;
+&lt;img src="https://ilovesymposia.com/2016/12/img3.png"&gt;
 &lt;/div&gt;
 
 &lt;/div&gt;
@@ -951,11 +951,11 @@ There's our pixel graph! Obviously, the speedup and n-d support are important fo
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h3 id="Conclusion"&gt;Conclusion&lt;a class="anchor-link" href="https://jni.github.io/ilovesymposia.com/posts/2016/12/20/numba-in-the-real-world/#Conclusion"&gt;¶&lt;/a&gt;&lt;/h3&gt;I hope I've piqued your interest in Numba and encouraged you to use it in your own projects. I think the future of success of Python in science heavily depends on JITs, and Numba is a strong contender to be the default JIT in this field.
+&lt;h3 id="Conclusion"&gt;Conclusion&lt;a class="anchor-link" href="https://ilovesymposia.com/posts/2016/12/20/numba-in-the-real-world/#Conclusion"&gt;¶&lt;/a&gt;&lt;/h3&gt;I hope I've piqued your interest in Numba and encouraged you to use it in your own projects. I think the future of success of Python in science heavily depends on JITs, and Numba is a strong contender to be the default JIT in this field.
 
 &lt;b&gt;&lt;i&gt;Note:&lt;/i&gt;&lt;/b&gt;This post was written using Jupyter Notebook. You can find the source notebook &lt;a href="https://github.com/jni/blog-notebooks/blob/master/complete/Numba%20in%20the%20real%20world.ipynb"&gt;here&lt;/a&gt;.
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Numba</category><category>open-source</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>Scientific Computing</category><category>SciPy</category><guid>https://jni.github.io/ilovesymposia.com/posts/2016/12/20/numba-in-the-real-world/</guid><pubDate>Tue, 20 Dec 2016 10:03:58 GMT</pubDate></item></channel></rss>
+&lt;p&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Numba</category><category>open-source</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>Scientific Computing</category><category>SciPy</category><guid>https://ilovesymposia.com/posts/2016/12/20/numba-in-the-real-world/</guid><pubDate>Tue, 20 Dec 2016 10:03:58 GMT</pubDate></item></channel></rss>
