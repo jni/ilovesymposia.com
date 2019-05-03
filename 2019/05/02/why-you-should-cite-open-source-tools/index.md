@@ -107,3 +107,6 @@ Of course, citations alone will not solve the wider problem that open source
 software is chronically undervalued. I have many thoughts about how open source
 should be supported, especially in science, but I'll expand on that in an
 upcoming post.
+
+**Update:** I'm adding a link to a related post: [What do scientists know about
+open source?](http://ilovesymposia.com/2018/06/20/what-do-scientists-know-about-open-source/)
