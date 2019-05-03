@@ -22,7 +22,7 @@ MathJax.Hub.Config({
         styles: {'.MathJax_Display': {"margin": 0}}
     }
 });
-</script><!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="2018/08/30/summer-school-announcement-2nd-advanced-scientific-programming-in-python-aspp-asia-pacific/" type="text/html">
+</script><!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="2019/05/02/why-you-should-cite-open-source-tools/" type="text/html">
 </head>
 <body>
     <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -66,7 +66,108 @@ MathJax.Hub.Config({
         
 
 <div class="posts">
-    <article class="post h-entry post-text"><header><h1 class="post-title p-name"><a href="2018/08/30/summer-school-announcement-2nd-advanced-scientific-programming-in-python-aspp-asia-pacific/" class="u-url">Summer school announcement: 2nd Advanced Scientific Programming in Python (ASPP) Asia Pacific!</a></h1>
+    <article class="post h-entry post-text"><header><h1 class="post-title p-name"><a href="2019/05/02/why-you-should-cite-open-source-tools/" class="u-url">Why you should cite open source tools</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">Juan Nunez-Iglesias</span></p>
+            <p class="dateline"><a href="2019/05/02/why-you-should-cite-open-source-tools/" rel="bookmark"><time class="post-date published dt-published" datetime="2019-05-02T12:31:30+10:00" title="2019-05-02 12:31">2019-05-02 12:31</time></a></p>
+                <p class="commentline">
+        
+    <a href="2019/05/02/why-you-should-cite-open-source-tools/#disqus_thread" data-disqus-identifier="cache/posts/2019/05/02/why-you-should-cite-open-source-tools.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="e-content entry-content">
+    <div>
+<p>Every now and then, a moment or a sentence in a conversation sticks out at you,
+and lodges itself in the back of your brain for months or even years. In this
+case, the sentence is a tweet, and I fear that the only way to dislodge it is
+to talk about it publicly.</p>
+<p>Last year, I complained on Twitter that a very prominent paper that was getting
+lots of attention used scikit-image, but failed to cite our paper. (Or the
+papers corresponding to many other open source packages.) I continued that
+scientists developing open source software <em>depend</em> on these citations to
+continue their work. (More on this in another post...) One response was that
+surely the developers of the open source scientific Python stack were not
+scientists per se, and that citations were not a priority for them.</p>
+<p>I still sigh internally when I think of it.</p>
+<p>That tweet manifests a pervasive perception that open source scientific
+software is written by God-like figures. These massively experienced software
+developers have easy access to funds for their work, and are at the service of
+all the other scientists, who are their users. I used to share this perception,
+but it is utterly false.</p>
+<p>I certainly hadn't thought about the funding question, but I did think of
+packages like NumPy and SciPy as being written by "pros" (whatever that means),
+whose main job was to produce these amazing libraries.</p>
+<p>My ideas started to change only after I attended the SciPy 2012 conference, and
+I was invited to the scikit-image sprint by its lead author, <a href="https://mentat.za.net/">Stéfan van der
+Walt</a>. I was totally starstruck, and even after meeting
+him I just assumed his job was "open source guru", or somesuch. It is only
+later that I learned that he was a postdoctoral researcher and lecturer in
+applied mathematics at Stellenbosch University, in South Africa. As with other
+academics, his main job was to produce research and to teach. Open source was
+something he produced on the side.</p>
+<p>(Years later, as we were trying to finish the final chapter for
+<a href="http://elegant-scipy.org">Elegant SciPy</a>, Stéfan revamped the build
+infrastructure for our book — the scripts and configuration files that
+converted the Markdown text we were writing to executed code and html. "You
+have poor prioritisation skills, you know?", I taunted. He responded: "Yeah.
+But a lot of the SciPy documentation toolchain exists because of that." And
+yes: the revamped scripts ended up being extremely useful during the editing
+phase with O'Reilly.)</p>
+<p>After the conference I continued to contribute to scikit-image, eventually
+joining the core development team, but throughout the process I continued to
+feel like an <a href="https://en.wikipedia.org/wiki/Impostor_syndrome">impostor</a>,
+someone who had somehow managed to gain entrance to this hallowed and
+otherworldly community despite his inferior skills and knowledge.</p>
+<p>Only after years of interacting with this community did I internalise the fact
+that nearly all of this software stack has been produced by practising
+scientists who took the extra care and effort to ensure that their code was
+robust, well-tested, and easily accessible to all. Despite a recent influx of
+interest and contributions from industry, as far as I can tell, most
+contributions to the SciPy stack still come from practising scientists in
+academia.</p>
+<p>I know this now, but until recently I was suffering from another fallacy: that
+if I knew it, clueless as I was, then surely everybody knew it. That tweet
+disabused me of that notion, and this is why you're reading this. I hope it is
+instructive, and that you'll find it worth sharing widely.</p>
+<p>This idea, that the SciPy stack is made by active scientists, is important
+because it affects how this work can be supported. Sadly, neither university
+hierarchies nor national funding bodies recognise code as valuable output.
+(There are some
+<a href="https://twitter.com/ethanwhite/status/1083008449242378240">exceptions</a>, but
+this remains the norm.) By and large, the only things that count are papers,
+grants, and, to a lesser extent, teaching evaluation scores. </p>
+<p>So, yes, many of the original contributors to the SciPy libraries are now in
+industry. But they were academics at the time that they contributed and were
+driven out because academia did not value their contributions. Academics should
+not have to sacrifice their careers to contribute to open source. Citations to
+software papers are an imperfect solution to this problem (again, more soon),
+but they sure as hell are better than nothing.</p>
+<p>So, if you are a user of open source tools in the Scientific Python stack, I
+have two requests for you:</p>
+<ol>
+<li>When you publish your work, cite every library that you import. Most
+   scientific software has a notice on their homepage or README file pointing
+   to a paper you can cite. By definition, if you've imported a library, you've
+   found it useful, and if you've found it useful, then you probably care about
+   supporting its authors. This is a small way you can contribute to their
+   success.</li>
+<li>You are good enough to contribute. If you have an issue
+   with an open source package you are using, look at the source code. Submit
+   an issue to the project's bug tracker (usually GitHub). And try your hand at
+   fixing it. The software's authors will usually offer guidance on
+   how to do this, and you will improve your own skills as a result. Good
+   software development practices is one of the most transferrable skills you
+   can gain.</li>
+</ol>
+<p>Of course, citations alone will not solve the wider problem that open source
+software is chronically undervalued. I have many thoughts about how open source
+should be supported, especially in science, but I'll expand on that in an
+upcoming post.</p>
+</div>
+    </div>
+    </article><article class="post h-entry post-text"><header><h1 class="post-title p-name"><a href="2018/08/30/summer-school-announcement-2nd-advanced-scientific-programming-in-python-aspp-asia-pacific/" class="u-url">Summer school announcement: 2nd Advanced Scientific Programming in Python (ASPP) Asia Pacific!</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">Juan Nunez-Iglesias</span></p>
             <p class="dateline"><a href="2018/08/30/summer-school-announcement-2nd-advanced-scientific-programming-in-python-aspp-asia-pacific/" rel="bookmark"><time class="post-date published dt-published" datetime="2018-08-30T14:48:05+10:00" title="2018-08-30 14:48">2018-08-30 14:48</time></a></p>
@@ -1444,48 +1545,6 @@ There's our pixel graph! Obviously, the speedup and n-d support are important fo
 <p></p>
 </div>
     </div>
-    </article><article class="post h-entry post-text"><header><h1 class="post-title p-name"><a href="2016/05/02/review-sony-digital-paper/" class="u-url">Review: Sony Digital Paper</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">Juan Nunez-Iglesias</span></p>
-            <p class="dateline"><a href="2016/05/02/review-sony-digital-paper/" rel="bookmark"><time class="post-date published dt-published" datetime="2016-05-02T17:19:47+10:00" title="2016-05-02 17:19">2016-05-02 17:19</time></a></p>
-                <p class="commentline">
-        
-    <a href="2016/05/02/review-sony-digital-paper/#disqus_thread" data-disqus-identifier="cache/posts/2016/05/02/review-sony-digital-paper.html">Comments</a>
-
-
-        </p>
-</div>
-    </header><div class="e-content entry-content">
-    <div>
-<p></p>
-<p>Three years ago I <a href="https://ilovesymposia.com/2013/05/14/apparently-im-the-only-one-excited-about-sonys-new-big-e-ink-tablet/">excitedly posted</a> about Sony's then-new writeable e-paper tablet, called <a href="http://pro.sony.com/bbsc/ssr/show-digitalpaper/resource.solutions.bbsccms-assets-show-digitalpaper-digitalpaper.shtml?PID=I:digitalpaper:digitalpaper">Sony Digital Paper System (DPS-1)</a>.</p>
-<p>Now it is finally mine and I love it.</p>
-<p>Here's what I wrote about it when Sony announced it:</p>
-<p></p>
-<blockquote>
-  the iPad (et al) sucks for some things. Three of those are: (1) taking handwritten notes,  (2) reading (some) pdfs in full-page view, and (3) reading in full daylight. By the sound of it, Sony’s new tablet will excel at all three
-</blockquote>
-<p>Having had it for about a month, I can confidently say that it <em>does</em> indeed excel at those three things, beyond my wildest dreams. Even with the improved competition of the identically-priced iPad Pro (which can now handle points 1 and 2 with aplomb), I still prefer the Sony. Here's why:</p>
-<ul>
-<li>Despite a comparatively low resolution (1200 x 1600), e-ink is simply nicer on the eyes. To see why, look at <a href="http://www.bit-101.com/blog/?p=2722">this old post</a> looking at an original iPad display and a Kindle e-ink display under a microscope. (More modern Retina displays are only marginally better, see <a href="http://prometheus.med.utah.edu/~bwjones/2010/06/apple-retina-display/">here</a>.) Here's a zoomed-in shot of a paper on the DPS-1: <img src="https://ilovesymposia.files.wordpress.com/2016/05/dps1-text-zoom.png?w=450" alt="Like paper" width="450" height="300" class="aligncenter size-medium wp-image-689"> I can barely tell that it's not just a slightly low-res print.</li>
-<li>And of course, for reading outdoors, e-ink is just infinitely better. Try <a href="2016/05/dps-beach.jpg">this</a> on an iPad if you're craving a good cry.</li>
-<li>The Apple Pencil has received glowing reviews, but I've tried it, and it still feels decidedly like sliding on glass. The DPS's stylus and matte screen combine to create friction that feels remarkably like pencil-on-paper.</li>
-<li>In today's distraction-filled digital world, disconnecting is an advantage. This will matter more or less depending on your work discipline, but for me it has been life-changing. The context switch that happens when I start to work on the DPS keeps me focused at a level I hadn't experienced for years. You can certainly use "Do not disturb" on an iPad, but having distracting apps such as email a double-tap away is a definite downside.</li>
-</ul>
-<p>The DPS is one of those rare products that does one thing and one thing only (well, two) really well: read and annotate pdfs, and take handwritten notes. It's simply perfect for academics.</p>
-<p>There's one caveat and it's the software. It is, in a word, amateurish. A few examples:</p>
-<ul>
-<li>Cloud Sync works though WebDAV, a file transfer protocol with limited support from cloud storage providers (of the major players, only Box supports it as of this writing).</li>
-<li>You can screen share with the DPS through a USB cable, which is <em>great</em> for giving pdf presentations, but it's done through a companion Mac OS app distributed as a <em>java archive</em>, which doesn't support full-screen.</li>
-<li>You can make and delete files on the DPS, but you can't move them to other folders.</li>
-<li>And so on.</li>
-</ul>
-<p>The funny thing is that it gets regular software updates, but none attains the level of polish you might expect from a company of Sony's stature. I have a feeling that there's this <em>one</em> engineer in charge of this thing at Sony, and they are just hammering away by themselves, unsupported, but trying their darnedest to make it better all the time.</p>
-<p>In short, I think Sony's development and marketing teams dropped the ball on this one. In its early days you couldn't buy it at retail stores — you actually had to write to Sony to explain why you wanted one! I imagine they wanted to avoid negative press from consumers who didn't know what they were getting into. And even now, retail availability is extremely limited. Just two stores carry it in the US (B&amp;H Photo and CDW). In many countries you can't buy it at all, except shipped from those US stores.</p>
-<p>Sony really needs to put these babies on demo at every university bookshop in the rich world. (At $800 US, I'll admit it's a luxury.) It would sell like hotcakes.</p>
-<p>In short, if you read a lot of scientific papers, or do a lot of handwriting (e.g. for math), you will love the Digital Paper. I second what my friend <a href="https://twitter.com/gamesevolving">@gamesevolving</a> said: I should have gotten it a long time ago.</p>
-</div>
-    </div>
     </article>
 </div>
 
@@ -1493,7 +1552,7 @@ There's our pixel graph! Obviously, the speedup and n-d support are important fo
 <li class="next">
                 <a href="index-6.html" rel="next">Older posts</a>
             </li>
-        </ul></nav><script>var disqus_shortname="nikolademo";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><footer id="footer"><p>Contents © 2019         <a href="mailto:jni.soma@fastmail.com">Juan Nunez-Iglesias</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         
+        </ul></nav><script>var disqus_shortname="ilovesymposia";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><footer id="footer"><p>Contents © 2019         <a href="mailto:jni.soma@fastmail.com">Juan Nunez-Iglesias</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         
 <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <img alt="Creative Commons License BY" style="border-width:0; margin-bottom:12px;" src="https://i.creativecommons.org/l/by/4.0/88x31.png"></a></p>
             

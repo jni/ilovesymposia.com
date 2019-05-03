@@ -3,7 +3,92 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by/4.0/"&gt;
 &lt;img alt="Creative Commons License BY"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Wed, 01 May 2019 09:57:21 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Summer school announcement: 2nd Advanced Scientific Programming in Python (ASPP) Asia Pacific!</title><link>https://ilovesymposia.com/2018/08/30/summer-school-announcement-2nd-advanced-scientific-programming-in-python-aspp-asia-pacific/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;The Advanced Scientific Programming in Python (ASPP) summer school has had &lt;a href="https://scipy-school.org/archives"&gt;10 successful iterations&lt;/a&gt; in Europe and &lt;a href="https://python.g-node.org/aspp-asia-pacific-2018/"&gt;one iteration here in Melbourne&lt;/a&gt; earlier this year. Another European iteration is starting next week in Camerino, Italy.&lt;/p&gt;
+src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Fri, 03 May 2019 08:13:05 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Why you should cite open source tools</title><link>https://ilovesymposia.com/2019/05/02/why-you-should-cite-open-source-tools/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;Every now and then, a moment or a sentence in a conversation sticks out at you,
+and lodges itself in the back of your brain for months or even years. In this
+case, the sentence is a tweet, and I fear that the only way to dislodge it is
+to talk about it publicly.&lt;/p&gt;
+&lt;p&gt;Last year, I complained on Twitter that a very prominent paper that was getting
+lots of attention used scikit-image, but failed to cite our paper. (Or the
+papers corresponding to many other open source packages.) I continued that
+scientists developing open source software &lt;em&gt;depend&lt;/em&gt; on these citations to
+continue their work. (More on this in another post...) One response was that
+surely the developers of the open source scientific Python stack were not
+scientists per se, and that citations were not a priority for them.&lt;/p&gt;
+&lt;p&gt;I still sigh internally when I think of it.&lt;/p&gt;
+&lt;p&gt;That tweet manifests a pervasive perception that open source scientific
+software is written by God-like figures. These massively experienced software
+developers have easy access to funds for their work, and are at the service of
+all the other scientists, who are their users. I used to share this perception,
+but it is utterly false.&lt;/p&gt;
+&lt;p&gt;I certainly hadn't thought about the funding question, but I did think of
+packages like NumPy and SciPy as being written by "pros" (whatever that means),
+whose main job was to produce these amazing libraries.&lt;/p&gt;
+&lt;p&gt;My ideas started to change only after I attended the SciPy 2012 conference, and
+I was invited to the scikit-image sprint by its lead author, &lt;a href="https://mentat.za.net/"&gt;Stéfan van der
+Walt&lt;/a&gt;. I was totally starstruck, and even after meeting
+him I just assumed his job was "open source guru", or somesuch. It is only
+later that I learned that he was a postdoctoral researcher and lecturer in
+applied mathematics at Stellenbosch University, in South Africa. As with other
+academics, his main job was to produce research and to teach. Open source was
+something he produced on the side.&lt;/p&gt;
+&lt;p&gt;(Years later, as we were trying to finish the final chapter for
+&lt;a href="http://elegant-scipy.org"&gt;Elegant SciPy&lt;/a&gt;, Stéfan revamped the build
+infrastructure for our book — the scripts and configuration files that
+converted the Markdown text we were writing to executed code and html. "You
+have poor prioritisation skills, you know?", I taunted. He responded: "Yeah.
+But a lot of the SciPy documentation toolchain exists because of that." And
+yes: the revamped scripts ended up being extremely useful during the editing
+phase with O'Reilly.)&lt;/p&gt;
+&lt;p&gt;After the conference I continued to contribute to scikit-image, eventually
+joining the core development team, but throughout the process I continued to
+feel like an &lt;a href="https://en.wikipedia.org/wiki/Impostor_syndrome"&gt;impostor&lt;/a&gt;,
+someone who had somehow managed to gain entrance to this hallowed and
+otherworldly community despite his inferior skills and knowledge.&lt;/p&gt;
+&lt;p&gt;Only after years of interacting with this community did I internalise the fact
+that nearly all of this software stack has been produced by practising
+scientists who took the extra care and effort to ensure that their code was
+robust, well-tested, and easily accessible to all. Despite a recent influx of
+interest and contributions from industry, as far as I can tell, most
+contributions to the SciPy stack still come from practising scientists in
+academia.&lt;/p&gt;
+&lt;p&gt;I know this now, but until recently I was suffering from another fallacy: that
+if I knew it, clueless as I was, then surely everybody knew it. That tweet
+disabused me of that notion, and this is why you're reading this. I hope it is
+instructive, and that you'll find it worth sharing widely.&lt;/p&gt;
+&lt;p&gt;This idea, that the SciPy stack is made by active scientists, is important
+because it affects how this work can be supported. Sadly, neither university
+hierarchies nor national funding bodies recognise code as valuable output.
+(There are some
+&lt;a href="https://twitter.com/ethanwhite/status/1083008449242378240"&gt;exceptions&lt;/a&gt;, but
+this remains the norm.) By and large, the only things that count are papers,
+grants, and, to a lesser extent, teaching evaluation scores. &lt;/p&gt;
+&lt;p&gt;So, yes, many of the original contributors to the SciPy libraries are now in
+industry. But they were academics at the time that they contributed and were
+driven out because academia did not value their contributions. Academics should
+not have to sacrifice their careers to contribute to open source. Citations to
+software papers are an imperfect solution to this problem (again, more soon),
+but they sure as hell are better than nothing.&lt;/p&gt;
+&lt;p&gt;So, if you are a user of open source tools in the Scientific Python stack, I
+have two requests for you:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;When you publish your work, cite every library that you import. Most
+   scientific software has a notice on their homepage or README file pointing
+   to a paper you can cite. By definition, if you've imported a library, you've
+   found it useful, and if you've found it useful, then you probably care about
+   supporting its authors. This is a small way you can contribute to their
+   success.&lt;/li&gt;
+&lt;li&gt;You are good enough to contribute. If you have an issue
+   with an open source package you are using, look at the source code. Submit
+   an issue to the project's bug tracker (usually GitHub). And try your hand at
+   fixing it. The software's authors will usually offer guidance on
+   how to do this, and you will improve your own skills as a result. Good
+   software development practices is one of the most transferrable skills you
+   can gain.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Of course, citations alone will not solve the wider problem that open source
+software is chronically undervalued. I have many thoughts about how open source
+should be supported, especially in science, but I'll expand on that in an
+upcoming post.&lt;/p&gt;&lt;/div&gt;</description><category>open-source</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>science</category><guid>https://ilovesymposia.com/2019/05/02/why-you-should-cite-open-source-tools/</guid><pubDate>Thu, 02 May 2019 02:31:30 GMT</pubDate></item><item><title>Summer school announcement: 2nd Advanced Scientific Programming in Python (ASPP) Asia Pacific!</title><link>https://ilovesymposia.com/2018/08/30/summer-school-announcement-2nd-advanced-scientific-programming-in-python-aspp-asia-pacific/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;The Advanced Scientific Programming in Python (ASPP) summer school has had &lt;a href="https://scipy-school.org/archives"&gt;10 successful iterations&lt;/a&gt; in Europe and &lt;a href="https://python.g-node.org/aspp-asia-pacific-2018/"&gt;one iteration here in Melbourne&lt;/a&gt; earlier this year. Another European iteration is starting next week in Camerino, Italy.&lt;/p&gt;
 &lt;p&gt;Now, thanks to the generous sponsorship of &lt;a href="https://www.csiro.au"&gt;CSIRO&lt;/a&gt;, and the efforts of &lt;a href="http://biology.anu.edu.au/people/benjamin-schwessinger"&gt;Benjamin Schwessinger&lt;/a&gt; and &lt;a href="https://twitter.com/DataNerdery"&gt;Genevieve Buckley&lt;/a&gt;, two alumni from the Melbourne school, and &lt;a href="https://people.csiro.au/M/K/Kerensa-Mcelroy"&gt;Kerensa McElroy&lt;/a&gt;, Agriculture Data School Coordinator at CSIRO, the Asia Pacific fork of ASPP gets its second iteration in &lt;strong&gt;Canberra&lt;/strong&gt;, &lt;strong&gt;Jan 20-27, 2019&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;/p&gt;&lt;h3&gt;Key details&lt;/h3&gt;
 &lt;ul&gt;
