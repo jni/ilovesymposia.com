@@ -509,3 +509,6 @@
 'copy_files:output/cropped-purkinje-3-full-size-copy.jpg', (1191424, 291)
 'copy_files:output/cropped-purkinje-3-full-size-copy1.jpg', (1191936, 293)
 'copy_files:output/cropped-basket-and-pyramidals-copy.jpg', (1192448, 294)
+'render_posts:cache/posts/2019/05/02/why-you-should-cite-open-source-tools.html', (1192960, 472)
+'render_pages:output/2019/05/02/why-you-should-cite-open-source-tools/index.html', (1197568, 4987)
+'render_sources:output/2019/05/02/why-you-should-cite-open-source-tools/index.md', (1318400, 321)

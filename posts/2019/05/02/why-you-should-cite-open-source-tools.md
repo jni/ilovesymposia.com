@@ -2,7 +2,7 @@
 .. title: Why you should cite open source tools
 .. slug: why-you-should-cite-open-source-tools
 .. date: 2019-05-02 12:31:30 UTC+10:00
-.. tags: Planet SciPy,open source,science,programming,Python
+.. tags: Planet SciPy,open-source,science,programming,Python
 .. category: 
 .. link: 
 .. description: 
