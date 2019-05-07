@@ -3,7 +3,7 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by/4.0/"&gt;
 &lt;img alt="Creative Commons License BY"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Fri, 03 May 2019 08:55:03 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Why you should cite open source tools</title><link>https://ilovesymposia.com/2019/05/02/why-you-should-cite-open-source-tools/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;Every now and then, a moment or a sentence in a conversation sticks out at you,
+src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Tue, 07 May 2019 06:26:12 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Why you should cite open source tools</title><link>https://ilovesymposia.com/2019/05/02/why-you-should-cite-open-source-tools/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;Every now and then, a moment or a sentence in a conversation sticks out at you,
 and lodges itself in the back of your brain for months or even years. In this
 case, the sentence is a tweet, and I fear that the only way to dislodge it is
 to talk about it publicly.&lt;/p&gt;
@@ -31,7 +31,7 @@ later that I learned that he was a postdoctoral researcher and lecturer in
 applied mathematics at Stellenbosch University, in South Africa. As with other
 academics, his main job was to produce research and to teach. Open source was
 something he produced on the side.&lt;/p&gt;
-&lt;p&gt;(Years later, as we were trying to finish the final chapter for
+&lt;p&gt;(Years later, as we were scrambling to finish the final chapter for
 &lt;a href="http://elegant-scipy.org"&gt;Elegant SciPy&lt;/a&gt;, Stéfan revamped the build
 infrastructure for our book — the scripts and configuration files that
 converted the Markdown text we were writing to executed code and html. "You
