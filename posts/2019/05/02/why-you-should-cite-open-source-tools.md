@@ -43,7 +43,7 @@ applied mathematics at Stellenbosch University, in South Africa. As with other
 academics, his main job was to produce research and to teach. Open source was
 something he produced on the side.
 
-(Years later, as we were trying to finish the final chapter for
+(Years later, as we were scrambling to finish the final chapter for
 [Elegant SciPy](http://elegant-scipy.org), Stéfan revamped the build
 infrastructure for our book — the scripts and configuration files that
 converted the Markdown text we were writing to executed code and html. "You
