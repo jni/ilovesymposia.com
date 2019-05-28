@@ -3,7 +3,7 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by/4.0/"&gt;
 &lt;img alt="Creative Commons License BY"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Tue, 28 May 2019 08:39:32 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Why citations are not enough for open source software</title><link>https://ilovesymposia.com/2019/05/13/why-citations-are-not-enough-for-open-source-software/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;A few weeks ago I wrote about &lt;a href="https://ilovesymposia.com/2019/05/02/why-you-should-cite-open-source-tools/"&gt;why you should cite open source
+src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Tue, 28 May 2019 08:44:30 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Why citations are not enough for open source software</title><link>https://ilovesymposia.com/2019/05/28/why-citations-are-not-enough-for-open-source-software/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;A few weeks ago I wrote about &lt;a href="https://ilovesymposia.com/2019/05/02/why-you-should-cite-open-source-tools/"&gt;why you should cite open source
 tools&lt;/a&gt;.
 Although I think citations important, though, there are major problems in
 relying on them &lt;em&gt;alone&lt;/em&gt; to support open source work.&lt;/p&gt;
@@ -113,7 +113,7 @@ seeing what they come up with.&lt;/p&gt;
 &lt;a href="https://github.com/numfocus/scipy-2019-funding-foss-bof"&gt;organising&lt;/a&gt; a Birds
 of a Feather session to take place at the
 &lt;a href="https://www.scipy2019.scipy.org/"&gt;SciPy 2019&lt;/a&gt; in Austin in July.
-Please join us!&lt;/p&gt;&lt;/div&gt;</description><category>open-source</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>science</category><guid>https://ilovesymposia.com/2019/05/13/why-citations-are-not-enough-for-open-source-software/</guid><pubDate>Mon, 13 May 2019 09:57:59 GMT</pubDate></item><item><title>Why you should cite open source tools</title><link>https://ilovesymposia.com/2019/05/02/why-you-should-cite-open-source-tools/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;Every now and then, a moment or a sentence in a conversation sticks out at you,
+Please join us!&lt;/p&gt;&lt;/div&gt;</description><category>open-source</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>science</category><guid>https://ilovesymposia.com/2019/05/28/why-citations-are-not-enough-for-open-source-software/</guid><pubDate>Tue, 28 May 2019 08:41:54 GMT</pubDate></item><item><title>Why you should cite open source tools</title><link>https://ilovesymposia.com/2019/05/02/why-you-should-cite-open-source-tools/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;Every now and then, a moment or a sentence in a conversation sticks out at you,
 and lodges itself in the back of your brain for months or even years. In this
 case, the sentence is a tweet, and I fear that the only way to dislodge it is
 to talk about it publicly.&lt;/p&gt;
