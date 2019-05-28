@@ -27,6 +27,8 @@ But, much as exercise is wasted if your bathroom scale doesn't automatically twe
 
 Most high-profile open-source projects these days advertise their CI efforts. Above, I cheekily called this showing off, but it's truly important: anyone who lands on your GitHub page is a potential user or contributor, and if they see evidence that your codebase is stable and well-tested, they are more likely to stick around.
 
+<!-- TEASER_END -->
+
 Badging your README is easy. (You <em>do</em> have a README, <a href="">don't you?</a>) In Travis, go to your latest build. Near the top right, click on the "build passing" badge:
 
 <img src="/2014/10/screen-shot-2014-10-17-at-8-20-00-pm.png" alt="Travis-CI badge">

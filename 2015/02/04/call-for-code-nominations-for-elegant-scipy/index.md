@@ -18,6 +18,8 @@ It's official! Harriet Dashnow, Stéfan van der Walt, and I will be writing an O
 
 So, if you recently came across scientific Python code that made you go "Wow!" with its elegance, simplicity, cleverness, or power, please point us to it! As an example, have a look at Vighnesh Birodkar's code to build a region adjacency graph from an n-dimensional image, which I highlighted previously <a href="http://ilovesymposia.com/2014/06/24/a-clever-use-of-scipys-ndimage-generic_filter-for-n-dimensional-image-processing/">here</a>.
 
+<!-- TEASER_END -->
+
 Each chapter will have one or two snippets that we will work towards. Each of these will be credited as "written by/nominated by", and needs to be published under a permissive license such as MIT, BSD, or public domain to be considered for inclusion. We would especially like nominations in the following categories:
 
 <ul>

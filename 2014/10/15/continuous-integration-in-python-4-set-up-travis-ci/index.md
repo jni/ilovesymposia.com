@@ -7,18 +7,7 @@
 .. link: 
 .. description: 
 .. type: text
-.. excerpt: This is the fourth post in my Continuous integration (CI) in Python series, and the one that puts the "continuous" in CI! For the introductory three posts, see:
-
-- [Automated testing with pytest](http://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/)
-- [Measuring test coverage](http://ilovesymposia.com/2014/10/02/continuous-integration-1-test-coverage/)
-- [Setting up test configuration files](http://ilovesymposia.com/2014/10/13/continuous-integration-in-python-3-set-up-your-test-configuration-files/)
-
-## Introduction to Travis-CI
-
-Once you've set up your tests locally, it does you no good if you don't remember to run them! [Travis-CI](http://travis-ci.org/) makes this seamless, because it will check out your code and run you tests for *each and every commit you push to GitHub!* (This is even more important when you are receiving pull requests on GitHub: the tests will be run online, without you having to individually check out each PR and run the tests on your machine!)
-.. has_math: no
 .. status: published
-.. wp-status: publish
 -->
 
 <html><body><p>This is the fourth post in my Continuous integration (CI) in Python series, and the one that puts the "continuous" in CI! For the introductory three posts, see:
@@ -35,12 +24,13 @@ Once you've set up your tests locally, it does you no good if you don't remember
 
 This is what continuous integration is all about. Once upon a time, the common practice was to pile on new features on a codebase. Then, come release time, there would be a feature freeze, and some time would be spent cleaning up code and removing bugs. In continuous integration, instead, no new feature is allowed into the codebase until it is bug free, as demonstrated by the test suite.
 
+<!-- TEASER_END -->
+
 <h2>What to do</h2>
 
 You need to first add a <code>.travis.yml</code> file to the root of your project. This tells Travis how to install your program's dependencies, install your program, and run the tests. Here's an example file to run tests and coverage on our <code>maths.py</code> sample project:
 
-```
-[code lang=text]
+```yaml
 language: python
 python:
     - "2.7"
@@ -49,7 +39,6 @@ before_install:
     - pip install pytest pytest-cov
 script:
     - py.test
-[/code]
 ```
 
 Pretty simple: tell Travis the language of your project, the Python version (you can specify multiple versions, one per line, to test on multiple Python versions!), how to install test dependencies. Finally, the command to run your tests. (This can be anything, not just pytest or another testing framework, as long as a shell exit status of 0 means "success" and anything else means "failure".)

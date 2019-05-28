@@ -92,12 +92,31 @@ By now, you've got a bunch of">
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
     <div>
-<p></p>
 <p>This is the third post in my series on continuous integration (CI) in Python. For the first two posts, see <a href="http://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/">1: automated tests with pytest</a>, and <a href="http://ilovesymposia.com/2014/10/02/continuous-integration-1-test-coverage/">2: measuring test coverage</a>.</p>
 <p>By now, you've got a bunch of tests and doctests set up in your project, which you run with the command:</p>
-<p>```http://en.wikipedia.org/wiki/INI_file</p>
-<p>omit = *script.py</p>
-<p>```</p>
+<pre class="code literal-block"><span></span>$ py.test --doctest-modules --cov . --cov-report term-missing
+</pre>
+
+
+<!-- TEASER_END -->
+
+<p>If you happen to have a few script and setup files lying around that you don't want to test, this might expand to</p>
+<pre class="code literal-block"><span></span>$ py.test --doctest-modules --cov . --cov-report term-missing --ignore script.py
+</pre>
+
+
+<p>As you can see, this is getting cumbersome. You can fix this by adding a <code>setup.cfg</code> file to the root of your project, containing configuration options for your testing. This follows standard <a href="http://en.wikipedia.org/wiki/INI_file">INI file syntax</a>.</p>
+<pre class="code literal-block"><span></span><span class="k">[pytest]</span>
+<span class="na">addopts</span> <span class="o">=</span> <span class="s">--ignore script.py --doctest-modules --cov-report term-missing --cov .</span>
+</pre>
+
+
+<p>Note that the "ignore" flag only tells pytest not to run that file during testing. You also have to tell the coverage module that you don't want those lines counted for coverage. Do this in a <code>.coveragerc</code> file, with similar syntax:</p>
+<pre class="code literal-block"><span></span><span class="k">[run]</span>
+<span class="na">omit</span> <span class="o">=</span> <span class="s">*script.py</span>
+</pre>
+
+
 <p>Once you've done this, you can invoke your tests with a simple, undecorated call to just <code>py.test</code>.</p>
 <p>To find out more about your configuration options, see the pytest <a href="http://pytest.org/latest/customize.html">basic test configuration</a> page, and Ned Batchelder's excellent <a href="http://nedbatchelder.com/code/coverage/config.html"><code>.coveragerc</code> syntax guide</a>.</p>
 <p>That's it for this entry of my CI series. Follow this blog for the next two entries, setting up Travis CI and Coveralls.</p>

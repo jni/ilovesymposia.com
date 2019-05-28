@@ -18,6 +18,8 @@ No biggy. I can't say I wasn't a little nervous, but each time something went wr
 
 After my eventual success, I became a staunch advocate of jailbreaking and unlocking (the latter currently only available on the first-gen iPhone, though the folks over at iPhone-dev <a href="http://blog.iphone-dev.org/post/56396333/sunday-is-a-funday">appear to have finally broken through the 3G's defenses</a>). For the coders among you, you get a cool terminal:
 
+<!-- TEASER_END -->
+
 [gallery]
 
 <!--more-->

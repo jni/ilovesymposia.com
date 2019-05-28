@@ -7,15 +7,7 @@
 .. link: 
 .. description: 
 .. type: text
-.. excerpt: A big thank you to everyone who has already submitted, retweeted, and spread the word about [our book, Elegant SciPy](http://ilovesymposia.com/2015/02/04/call-for-code-nominations-for-elegant-scipy/)! We are **still looking for code submissions meeting these criteria**:
-- Submissions **must** use NumPy, SciPy, or a closely related library in a non-trivial way.
-- Submissions **must** be (re)licensed as BSD, MIT, public domain, or something similarly liberal. (This is easy if you are the author.)
-- Code should be satisfying in some way. ;) e.g. speed, conciseness, broad applicability...
-- Preferably, nominate *someone else's* code that impressed *you*.
-- Include a scientific application on real data.
-.. has_math: no
 .. status: published
-.. wp-status: publish
 -->
 
 <html><body><h2>Short version</h2>
@@ -27,11 +19,15 @@ Thank you to everyone who has already submitted, retweeted, and spread the word 
 - Preferably, nominate <em>someone else's</em> code that impressed <em>you</em>.
 - Include a scientific application on real data.
 
+<!-- TEASER_END -->
+
 Submit by one of:
 - Twitter: mention <a href="https://twitter.com/hdashnow">@hdashnow</a>, <a href="https://twitter.com/stefanvdwalt">@stefanvdwalt</a>, or <a href="https://twitter.com/jnuneziglesias">@jnuneziglesias</a>, or just use the hashtag #ElegantSciPy;
 - Email: <a href="mailto:stefanv(at)berkeley.edu">Stéfan van der Walt</a>, <a href="mailto:juan.n@unimelb.edu.au">Juan Nunez-Iglesias</a>, or <a href="mailto:harriet.dashnow@unimelb.edu.au">Harriet Dashnow</a>; or
 - GitHub: create a new issue <a href="https://github.com/HarrietInc/elegant-scipy-submissions/issues">here</a>.
 (All submissions will be credited as "written by" and "nominated by".)
+
+.. TEASER_END
 
 <h2>Long version</h2>
 

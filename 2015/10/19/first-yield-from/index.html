@@ -94,27 +94,23 @@ MathJax.Hub.Config({
 <p></p>
 <p>I never really understood why <code>yield from</code> was useful. Last weekend, I wanted to use Python 3.5's new <code>os.scandir</code> to explore a directory (and its subdirectories). Tragically, <code>os.scandir</code> is <em>not</em> recursive, and I find <code>os.walk</code>s 3-tuple values obnoxious.
 Lo and behold, while I was trying to implement a recursive version of <code>scandir</code>, a <code>yield from</code> use just popped right out!</p>
-<pre class="code literal-block"><span></span><span class="k">[code lang=python]</span>
-<span class="na">import os</span>
-<span class="na">def rscandir(path):</span>
-    <span class="na">for entry in os.scandir(path):</span>
-        <span class="na">yield entry</span>
-        <span class="na">if entry.is_dir():</span>
-            <span class="na">yield from rscandir(entry.path)</span>
-<span class="k">[/code]</span>
+<pre class="code literal-block"><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="k">def</span> <span class="nf">rscandir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">scandir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">entry</span>
+        <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+            <span class="k">yield from</span> <span class="n">rscandir</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
 </pre>
 
 
 <p>That's it! I have to admit that reads wonderfully. The Legacy Python (aka Python 2.x) alternative is quite a bit uglier:</p>
-<pre class="code literal-block"><span></span><span class="k">[code lang=python]</span>
-<span class="na">import os</span>
-<span class="na">def rscandir(path):</span>
-    <span class="na">for p in os.listdir(path):</span>
-        <span class="na">yield p</span>
-        <span class="na">if os.path.isdir(p):</span>
-            <span class="na">for q in rscandir(p):</span>
-                <span class="na">yield q</span>
-<span class="k">[/code]</span>
+<pre class="code literal-block"><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="k">def</span> <span class="nf">rscandir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">p</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">rscandir</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">q</span>
 </pre>
 
 

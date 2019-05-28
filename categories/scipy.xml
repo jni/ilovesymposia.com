@@ -3,21 +3,198 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by/4.0/"&gt;
 &lt;img alt="Creative Commons License BY"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Wed, 01 May 2019 09:57:22 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Prettier LowLevelCallables with Numba JIT and decorators</title><link>https://ilovesymposia.com/2017/03/15/prettier-lowlevelcallables-with-numba-jit-and-decorators/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;In my &lt;a href="https://ilovesymposia.com/2017/03/12/scipys-new-lowlevelcallable-is-a-game-changer/"&gt;recent post&lt;/a&gt;, I extolled the virtues of SciPy 0.19's &lt;code&gt;LowLevelCallable&lt;/code&gt;. I did lament, however, that for &lt;code&gt;generic_filter&lt;/code&gt;, the &lt;code&gt;LowLevelCallable&lt;/code&gt; interface is a good deal uglier than the standard function interface. In the latter, you merely need to provide a function that takes the values within a pixel neighbourhood, and outputs a single value — an arbitrary function of the input values. That is a Wholesome and Good filter function, the way God intended.&lt;/p&gt;
+src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Tue, 28 May 2019 10:34:03 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Prettier LowLevelCallables with Numba JIT and decorators</title><link>https://ilovesymposia.com/2017/03/15/prettier-lowlevelcallables-with-numba-jit-and-decorators/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;In my &lt;a href="https://ilovesymposia.com/2017/03/12/scipys-new-lowlevelcallable-is-a-game-changer/"&gt;recent post&lt;/a&gt;, I extolled the virtues of SciPy 0.19's &lt;code&gt;LowLevelCallable&lt;/code&gt;. I did lament, however, that for &lt;code&gt;generic_filter&lt;/code&gt;, the &lt;code&gt;LowLevelCallable&lt;/code&gt; interface is a good deal uglier than the standard function interface. In the latter, you merely need to provide a function that takes the values within a pixel neighbourhood, and outputs a single value — an arbitrary function of the input values. That is a Wholesome and Good filter function, the way God intended.&lt;/p&gt;
 &lt;p&gt;In contrast, a LowLevelCallable takes the following signature:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;gt&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;gt&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;gt&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;llc&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;jit_filter_function&lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;callback&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;buffer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;intptr_t&lt;/span&gt; &lt;span class="n"&gt;filter_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; 
+             &lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;return_value&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;user_data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;That’s not very Pythonic at all. In fact, it’s positively Conic (TM). For those that don’t know,
+&lt;a href="https://www.quora.com/Why-do-people-think-pointers-are-evil"&gt;pointers are evil&lt;/a&gt;,
+so let’s aim to avoid their use.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+
+&lt;p&gt;“But Juan!”, you are no doubt exclaiming. “Juan! Didn’t you &lt;em&gt;just&lt;/em&gt; tell us how to use pointers in Numba cfuncs, and tell us how great it was because it was so fast?”&lt;/p&gt;
+&lt;p&gt;Indeed I did. But it left a bad taste in my mouth. Although I felt that the tradeoff was worth it for such a phenomenal speed boost (300x!), I was unsatisfied. So I started immediately to look for a tidier solution. One that would let me write proper filter functions while still taking advantage of LowLevelCallables.&lt;/p&gt;
+&lt;p&gt;It turns out Numba cfuncs &lt;em&gt;can call Numba jitted functions&lt;/em&gt;, so, with a little bit of decorator magic, it’s now ludicrously easy to write performant callables for SciPy using just pure Python. (If you don’t know what Numba JIT is, &lt;a href="https://ilovesymposia.com/2016/12/20/numba-in-the-real-world/"&gt;read my earlier post&lt;/a&gt;.) As in the last post, let’s look at &lt;code&gt;grey_erosion&lt;/code&gt; as a baseline benchmark:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;footprint&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;([[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;                       &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;                       &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]],&lt;/span&gt; &lt;span class="n"&gt;dtype&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;bool&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;scipy&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;ndimage&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;ndi&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;timeit&lt;/span&gt; &lt;span class="n"&gt;ndi&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;grey_erosion&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;image&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;footprint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;fp&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="n"&gt;loop&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;best&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;160&lt;/span&gt; &lt;span class="n"&gt;ms&lt;/span&gt; &lt;span class="n"&gt;per&lt;/span&gt; &lt;span class="n"&gt;loop&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Now, we write a decorator that uses Numba jit &lt;em&gt;and&lt;/em&gt; Numba cfunc to make a LowLevelCallable suitable for passing directly into &lt;code&gt;generic_filter&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numba&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;numba&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;cfunc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;carray&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;numba.types&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;intc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;CPointer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;float64&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;intp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;voidptr&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;scipy&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;LowLevelCallable&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;jit_filter_function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;filter_function&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;jitted_function&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numba&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;jit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;filter_function&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nopython&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="nd"&gt;@cfunc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;intc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;CPointer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;float64&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;intp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;CPointer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;float64&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;voidptr&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;wrapped&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values_ptr&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;len_values&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;carray&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values_ptr&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;len_values&lt;/span&gt;&lt;span class="p"&gt;,),&lt;/span&gt; &lt;span class="n"&gt;dtype&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;float64&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;jitted_function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;LowLevelCallable&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;wrapped&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ctypes&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;If you haven’t seen decorators before, read &lt;a href="https://realpython.com/blog/python/primer-on-python-decorators/"&gt;this primer&lt;/a&gt; from Real Python. To summarise, we’ve written a function that takes as input a Python function, and outputs a LowLevelCallable. Here’s how to use it:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nd"&gt;@jit_filter_function&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;fmin&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;inf&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;As you can see, the &lt;code&gt;fmin&lt;/code&gt; function definition looks just like a normal Python function. All the magic happens when we attach our &lt;code&gt;@jit_filter_function&lt;/code&gt; decorator to the top of the function. Let’s see it in action:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;timeit&lt;/span&gt; &lt;span class="n"&gt;ndi&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;generic_filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;image&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fmin&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;footprint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;fp&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="mi"&gt;10&lt;/span&gt; &lt;span class="n"&gt;loops&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;best&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mf"&gt;92.9&lt;/span&gt; &lt;span class="n"&gt;ms&lt;/span&gt; &lt;span class="n"&gt;per&lt;/span&gt; &lt;span class="n"&gt;loop&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Wow! &lt;code&gt;numba.jit&lt;/code&gt; is actually over 70% faster than &lt;code&gt;grey_erosion&lt;/code&gt; or the plain &lt;code&gt;cfunc&lt;/code&gt; approach!&lt;/p&gt;
+&lt;p&gt;In case you want to use this, I’ve made a package &lt;a href="https://pypi.python.org/pypi/llc"&gt;available on PyPI&lt;/a&gt;, so you can actually pip install it right now with &lt;code&gt;pip install llc&lt;/code&gt; (for low-level callable), and then:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;llc&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;jit_filter_function&lt;/span&gt;
 &lt;/pre&gt;
 
 
 &lt;p&gt;The source code is &lt;a href="https://github.com/jni/llc-tools"&gt;on GitHub&lt;/a&gt;. Currently it only covers &lt;code&gt;ndi.generic_filter&lt;/code&gt;'s signature, and only with Numba, but I hope to gradually expand it to cover all the functions that take &lt;code&gt;LowLevelCallables&lt;/code&gt; in SciPy, as well as support Cython. Pull requests are welcome!&lt;/p&gt;&lt;/div&gt;</description><category>Numba</category><category>open-source</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>SciPy</category><guid>https://ilovesymposia.com/2017/03/15/prettier-lowlevelcallables-with-numba-jit-and-decorators/</guid><pubDate>Tue, 14 Mar 2017 13:14:49 GMT</pubDate></item><item><title>SciPy's new LowLevelCallable is a game-changer</title><link>https://ilovesymposia.com/2017/03/12/scipys-new-lowlevelcallable-is-a-game-changer/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;... and combines rather well with that other game-changing library I like, &lt;a href="https://ilovesymposia.com/2016/12/20/numba-in-the-real-world/"&gt;Numba&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;I've &lt;a href="https://ilovesymposia.com/2015/12/10/the-cost-of-a-python-function-call/"&gt;lamented before&lt;/a&gt; that function calls are expensive in Python, and that this severely hampers many functions that &lt;em&gt;should&lt;/em&gt; be insanely useful, such as SciPy's &lt;a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.generic_filter.html#scipy.ndimage.generic_filter"&gt;&lt;code&gt;ndimage.generic_filter&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+
 &lt;p&gt;To illustrate this, let's look at image &lt;em&gt;erosion&lt;/em&gt;, which is the replacement of each pixel in an image by the minimum of its neighbourhood. &lt;code&gt;ndimage&lt;/code&gt; has a fast C implementation, which serves as a perfect benchmark against the generic version, using a generic filter with &lt;code&gt;min&lt;/code&gt; as the operator. Let's start with a 2048 x 2048 random image:&lt;/p&gt;
-&lt;p&gt;```http://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#types&lt;/p&gt;
-&lt;p&gt;&amp;gt;&amp;gt;&amp;gt; %timeit ndi.generic_filter(image, LowLevelCallable(nbmin.ctypes), footprint=footprint)
-10 loops, best of 3: 113 ms per loop&lt;/p&gt;
-&lt;p&gt;```&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;image&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="mi"&gt;2048&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2048&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;and a neighbourhood “footprint” that picks out the pixels to the left and right, and above and below, the centre pixel:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;footprint&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;([[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;                       &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;                       &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]],&lt;/span&gt; &lt;span class="n"&gt;dtype&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;bool&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Now, we measure the speed of &lt;code&gt;grey_erosion&lt;/code&gt; and &lt;code&gt;generic_filter&lt;/code&gt;. Spoiler alert: it’s not pretty.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;scipy&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;ndimage&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;ndi&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;timeit&lt;/span&gt; &lt;span class="n"&gt;ndi&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;grey_erosion&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;image&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;footprint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;footprint&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="mi"&gt;10&lt;/span&gt; &lt;span class="n"&gt;loops&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;best&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;118&lt;/span&gt; &lt;span class="n"&gt;ms&lt;/span&gt; &lt;span class="n"&gt;per&lt;/span&gt; &lt;span class="n"&gt;loop&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;timeit&lt;/span&gt; &lt;span class="n"&gt;ndi&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;generic_filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;image&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;min&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;footprint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;footprint&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="n"&gt;loop&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;best&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;27&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="n"&gt;per&lt;/span&gt; &lt;span class="n"&gt;loop&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;As you can see, with Python functions, &lt;code&gt;generic_filter&lt;/code&gt; is unusable for anything but the tiniest of images.&lt;/p&gt;
+&lt;p&gt;A few months ago, I was
+&lt;a href="https://groups.google.com/a/continuum.io/d/msg/numba-users/HMg_65R8KZE/RnysYokGAwAJ"&gt;trying&lt;/a&gt;
+to get around this by using Numba-compiled functions, but the way to feed C
+functions to SciPy was different depending on which part of the library you
+were using. &lt;code&gt;scipy.integrate&lt;/code&gt; used ctypes, while &lt;code&gt;scipy.ndimage&lt;/code&gt; used &lt;code&gt;PyCObjects&lt;/code&gt; or
+&lt;code&gt;PyCapsules&lt;/code&gt;, depending on your Python version, and Numba only supported the
+former method at the time. (Plus, this topic starts to stretch my understanding
+of low-level Python, so I felt there wasn’t much I could do about it.)&lt;/p&gt;
+&lt;p&gt;Enter &lt;a href="https://github.com/scipy/scipy/pull/6509"&gt;this pull request&lt;/a&gt; to SciPy
+from Pauli Virtanen, which is live in the most recent SciPy version, 0.19. It
+unifies all C-function interfaces within SciPy, and Numba already supports this
+format. It takes a bit of gymnastics, but it works! It really works!&lt;/p&gt;
+&lt;p&gt;(By the way, the release is full of little gold nuggets. If you use SciPy at
+all, the release notes are well worth a read.)&lt;/p&gt;
+&lt;p&gt;First, we need to define a C function of the appropriate signature. Now, you
+might think this is the same as the Python signature, taking in an array of
+values and returning a single value, but that would be too easy! Instead, we
+have to go back to some C-style programming with pointers and array sizes. From
+the &lt;code&gt;generic_filter&lt;/code&gt; documentation:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This function also accepts low-level callback functions with one of the
+following signatures and wrapped in scipy.LowLevelCallable:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;c
+int callback(double *buffer, npy_intp filter_size, 
+             double *return_value, void *user_data)
+int callback(double *buffer, intptr_t filter_size, 
+             double *return_value, void *user_data)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;The calling function iterates over the elements of the input and output
+arrays, calling the callback function at each element. The elements within
+the footprint of the filter at the current element are passed through the
+buffer parameter, and the number of elements within the footprint through
+filter_size. The calculated value is returned in return_value. user_data is
+the data pointer provided to scipy.LowLevelCallable as-is.&lt;/p&gt;
+&lt;p&gt;The callback function must return an integer error status that is zero if
+something went wrong and one otherwise. &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;(Let’s leave aside that crazy reversal of Unix convention of the past 50 years
+in the last paragraph, except to note that our function must return 1 or it
+will be killed.)&lt;/p&gt;
+&lt;p&gt;So, we need a Numba cfunc that takes in:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;a double pointer pointing to the values within the footprint,&lt;/li&gt;
+&lt;li&gt;a pointer-sized integer that specifies the number of values in the footprint,&lt;/li&gt;
+&lt;li&gt;a double pointer for the result, and&lt;/li&gt;
+&lt;li&gt;a void pointer, which could point to additional parameters, but which we can ignore for now.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The Numba type names are listed in &lt;a href="http://numba.pydata.org/numba-doc/dev/reference/types.html#numba-types"&gt;this page&lt;/a&gt;. Unfortunately, at the time of
+writing, there’s no mention of how to make pointers there, but finding such a
+reference &lt;a href="http://numba.pydata.org/numba-doc/dev/user/cfunc.html#signature-specification"&gt;was not too hard&lt;/a&gt;. (Incidentally, it would make a good contribution to
+Numba’s documentation to add CPointer to the Numba types page.)&lt;/p&gt;
+&lt;p&gt;So, armed with all that documentation, and after much trial and error, I was
+finally ready to write that C callable:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;numba&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;cfunc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;carray&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;numba.types&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;intc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;intp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;float64&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;voidptr&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;numba.types&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;CPointer&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; 
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; 
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="nd"&gt;@cfunc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;intc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;CPointer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;float64&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;intp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;             &lt;span class="n"&gt;CPointer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;float64&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;voidptr&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;nbmin&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values_ptr&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;len_values&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;     &lt;span class="n"&gt;values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;carray&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values_ptr&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;len_values&lt;/span&gt;&lt;span class="p"&gt;,),&lt;/span&gt; &lt;span class="n"&gt;dtype&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;float64&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;     &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;inf&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;     &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;         &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;             &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;The only other tricky bits I had to watch out for while writing that function were as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;remembering that there’s two ways to de-reference a pointer in C: &lt;code&gt;*ptr&lt;/code&gt;,
+   which is not valid Python and thus not valid Numba, and &lt;code&gt;ptr[0]&lt;/code&gt;. So, to place
+   the result at the given double pointer, we use the latter syntax. (If you
+   prefer to use Cython, the same rule applies.)&lt;/li&gt;
+&lt;li&gt;Creating an array out of the &lt;code&gt;values_ptr&lt;/code&gt; and &lt;code&gt;len_values&lt;/code&gt; variables, as shown
+   here. That’s what enables the &lt;code&gt;for v in values&lt;/code&gt; Python-style access to the
+   array.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Ok, so now what you’ve been waiting for. How did we do? First, to recap, the original benchmarks:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;scipy&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;ndimage&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;ndi&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;timeit&lt;/span&gt; &lt;span class="n"&gt;ndi&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;grey_erosion&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;image&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;footprint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;footprint&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="mi"&gt;10&lt;/span&gt; &lt;span class="n"&gt;loops&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;best&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;118&lt;/span&gt; &lt;span class="n"&gt;ms&lt;/span&gt; &lt;span class="n"&gt;per&lt;/span&gt; &lt;span class="n"&gt;loop&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;timeit&lt;/span&gt; &lt;span class="n"&gt;ndi&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;generic_filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;image&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;min&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;footprint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;footprint&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="n"&gt;loop&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;best&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;27&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="n"&gt;per&lt;/span&gt; &lt;span class="n"&gt;loop&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;And now, with our new Numba cfunc:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;timeit&lt;/span&gt; &lt;span class="n"&gt;ndi&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;generic_filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;image&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;LowLevelCallable&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;nbmin&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ctypes&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;footprint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;footprint&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="mi"&gt;10&lt;/span&gt; &lt;span class="n"&gt;loops&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;best&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;113&lt;/span&gt; &lt;span class="n"&gt;ms&lt;/span&gt; &lt;span class="n"&gt;per&lt;/span&gt; &lt;span class="n"&gt;loop&lt;/span&gt;
+&lt;/pre&gt;
+
+
 &lt;p&gt;That's right: it's even marginally &lt;em&gt;faster&lt;/em&gt; than the pure C version! I almost cried when I ran that.&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;&lt;hr&gt;
+
+
+&lt;hr&gt;
+
 &lt;p&gt;Higher-order functions, ie functions that take other functions as input, enable powerful, concise, elegant &lt;a href="https://ilovesymposia.com/2014/06/24/a-clever-use-of-scipys-ndimage-generic_filter-for-n-dimensional-image-processing/"&gt;expressions&lt;/a&gt; of various algorithms. Unfortunately, these have been hampered in Python for large-scale data processing because of Python's function call overhead. SciPy's latest update goes a long way towards redressing this.&lt;/p&gt;&lt;/div&gt;</description><category>Numba</category><category>open-source</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>science</category><category>SciPy</category><guid>https://ilovesymposia.com/2017/03/12/scipys-new-lowlevelcallable-is-a-game-changer/</guid><pubDate>Sun, 12 Mar 2017 03:41:41 GMT</pubDate></item><item><title>Numba in the real world</title><link>https://ilovesymposia.com/2016/12/20/numba-in-the-real-world/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;div class="cell border-box-sizing text_cell rendered"&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
@@ -25,6 +202,8 @@ Numba is a just-in-time compiler (JIT) for Python code focused on NumPy arrays a
 &lt;p&gt;&lt;/p&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
+&lt;!-- TEASER_END --&gt;
+
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;
 &lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
@@ -964,11 +1143,11 @@ There's our pixel graph! Obviously, the speedup and n-d support are important fo
 
 &lt;p&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Numba</category><category>open-source</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>Scientific Computing</category><category>SciPy</category><guid>https://ilovesymposia.com/2016/12/20/numba-in-the-real-world/</guid><pubDate>Tue, 20 Dec 2016 10:03:58 GMT</pubDate></item><item><title>EuroSciPy 2015 debrief</title><link>https://ilovesymposia.com/2015/10/09/euroscipy-2015-debrief/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;The videos from EuroSciPy 2015 are &lt;a href="https://www.youtube.com/playlist?list=PLYx7XA2nY5GeQCCugyvtnHMVLdhYlrRxH"&gt;up&lt;/a&gt;! This marks a good time to write up my thoughts on the conference.
 I’ve &lt;a href="http://ilovesymposia.com/2015/03/23/go-to-scipy-2015/"&gt;mentioned before&lt;/a&gt; that the yearly SciPy conference is stunningly useful. This year I couldn’t make it to Austin, but I did attend &lt;a href="https://www.euroscipy.org/2015/"&gt;EuroSciPy&lt;/a&gt;, the European version of the same conference, in Cambridge, UK. It was spectacular.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+
 &lt;p&gt;&lt;/p&gt;&lt;h3&gt;Useful talks&lt;/h3&gt;
 &lt;p&gt;The talk of the conference, for me, goes to &lt;a href="https://youtu.be/8tysix6Olgc"&gt;Robin Wilson for recipy&lt;/a&gt;, which one can describe as a logging utility, if one wishes to make it sound as uninspiring as possible. Recipy’s strength is in its mind-boggling simplicity. Here is the unabridged usage guide:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[code lang=python]&lt;/span&gt;
-&lt;span class="na"&gt;import recipy&lt;/span&gt;
-&lt;span class="k"&gt;[/code]&lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;recipy&lt;/span&gt;
 &lt;/pre&gt;
 
 
@@ -990,6 +1169,8 @@ A final highlight from the main session was &lt;a href="https://youtu.be/MeFsmFT
 
 &lt;p&gt;As usual, I learned heaps and had a blast at this SciPy conference (my fourth). I hope it will remain a yearly ritual, and I hope someone reading this will give it a try next year!&lt;/p&gt;&lt;/div&gt;</description><category>conference</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>SciPy</category><guid>https://ilovesymposia.com/2015/10/09/euroscipy-2015-debrief/</guid><pubDate>Thu, 08 Oct 2015 14:06:01 GMT</pubDate></item><item><title>Calling out SciPy on diversity (even though it hurts)</title><link>https://ilovesymposia.com/2015/04/03/calling-out-scipy-on-diversity/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;Over the past few weeks, I've been heavily &lt;a href="http://ilovesymposia.com/2015/03/23/go-to-scipy-2015/"&gt;promoting&lt;/a&gt; the &lt;a href="http://scipy2015.scipy.org/"&gt;SciPy conference&lt;/a&gt;, a meeting about scientific programming in Python. I've been telling everyone who would listen that they should submit a talk abstract and go, because scientific programming is increasingly common in any scientist's work and SciPy massively improves how you do that.&lt;/p&gt;
 &lt;p&gt;I have also been guiltily ommitting that the speaker and attendee diversity at SciPy is shockingly bad. Last year, for example, 15% of attendees were women, and that was an improvement over the ratio three years ago, when just 3% (!!!) were women.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+
 &lt;p&gt;I rationalised continuing to promote this conference because there was &lt;a href="https://www.youtube.com/watch?v=e0Z9-EuZJac"&gt;talk&lt;/a&gt; from past organisers about making efforts to improve. (And indeed, the past three years have been on an upward trajectory.)&lt;br&gt;&lt;/p&gt;
 &lt;p&gt;A couple of days ago, however, the full list of keynote speakers was announced, and lo and behold, it's three white guys. I have to acknowledge that they are extremely accomplished in the SciPy universe, and, if diversity were not more generally a problem at this conference and in tech in general, I wouldn't bat an eye. Excellent choice of speakers, really. Looking forward to it.&lt;/p&gt;
 &lt;p&gt;But diversity &lt;i&gt;is&lt;/i&gt; a problem. It's an enormous problem. I'm inclined to call it catastrophic.&lt;/p&gt;

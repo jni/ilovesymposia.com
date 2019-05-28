@@ -24,6 +24,8 @@ Here's what I wrote about it when Sony announced it:
 
 Having had it for about a month, I can confidently say that it <em>does</em> indeed excel at those three things, beyond my wildest dreams. Even with the improved competition of the identically-priced iPad Pro (which can now handle points 1 and 2 with aplomb), I still prefer the Sony. Here's why:
 
+<!-- TEASER_END -->
+
 <ul>
 <li>Despite a comparatively low resolution (1200 x 1600), e-ink is simply nicer on the eyes. To see why, look at <a href="http://www.bit-101.com/blog/?p=2722">this old post</a> looking at an original iPad display and a Kindle e-ink display under a microscope. (More modern Retina displays are only marginally better, see <a href="http://prometheus.med.utah.edu/~bwjones/2010/06/apple-retina-display/">here</a>.) Here's a zoomed-in shot of a paper on the DPS-1: <img src="https://ilovesymposia.files.wordpress.com/2016/05/dps1-text-zoom.png?w=450" alt="Like paper" width="450" height="300" class="aligncenter size-medium wp-image-689"> I can barely tell that it's not just a slightly low-res print.</li>
 <li>And of course, for reading outdoors, e-ink is just infinitely better. Try <a href="/2016/05/dps-beach.jpg">this</a> on an iPad if you're craving a good cry.</li>

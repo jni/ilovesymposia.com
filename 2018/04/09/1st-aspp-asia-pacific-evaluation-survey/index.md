@@ -16,6 +16,8 @@
 
 First we want to note that this school was a bit different than the European ones, in that we only had attendees from Australian institutions, where the European school has broad international representation, including some from out of Europe. This was in some ways inevitable, as it is more expensive to travel to Australia from almost anywhere than to travel within Europe. On the other hand, we advertised relatively late, and we were unable to secure travel grants during the advertising period, so there is hope that a future edition would be able to attract a more international crowd from the Asia Pacific region.
 
+<!-- TEASER_END -->
+
 Given all this, there was a question as to whether we would be able to capture the atmosphere of the school, which normally sees the students living together and socialising for basically the whole week. In this case, most students just went home after classes were finished. But although some of that atmosphere was missing, by the end of the week we did manage to get some close links between all the students and the faculty. The evaluations below show that most of the value of the school was preserved.
 
 We note that 100% of the respondents (29/30 of the students) would recommend the course to their peers. So, although some lectures were better received than others, and although the programming project was not universally loved, we managed to provide value for everyone. All of this is in line with the evaluations at previous schools (available at https://python.g-node.org/wiki/archives.html).

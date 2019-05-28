@@ -26,6 +26,8 @@ So, on the basis of this framework, I'd like to review where scikit-image is now
 
 I will point out, from the beginning, that one of our values is that we are <em>community-driven</em>, and this is not a wishy-washy concept. (More below.) Therefore this blog post constitutes only a preliminary document, designed to kick-start an <em>official roadmap</em> for scikit-image 1.0 with more than a blank canvas. The roadmap will be debated on GitHub and the mailing list, open to discussion by anyone, and when completed will appear on our webpage. <em>This post is not the roadmap.</em>
 
+<!-- TEASER_END -->
+
 <h2>Part one: where we are</h2>
 
 scikit-image is a tremendously successful project that I feel very proud to have been a part of until now. I still cherish the email I got from Stéfan inviting me to join the core team. (Five years ago now!)

@@ -95,7 +95,67 @@ MathJax.Hub.Config({
 <p></p>
 <p>In my <a href="https://ilovesymposia.com/2017/03/12/scipys-new-lowlevelcallable-is-a-game-changer/">recent post</a>, I extolled the virtues of SciPy 0.19's <code>LowLevelCallable</code>. I did lament, however, that for <code>generic_filter</code>, the <code>LowLevelCallable</code> interface is a good deal uglier than the standard function interface. In the latter, you merely need to provide a function that takes the values within a pixel neighbourhood, and outputs a single value — an arbitrary function of the input values. That is a Wholesome and Good filter function, the way God intended.</p>
 <p>In contrast, a LowLevelCallable takes the following signature:</p>
-<pre class="code literal-block"><span></span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="kn">from</span> <span class="nn">llc</span> <span class="kn">import</span> <span class="n">jit_filter_function</span>
+<pre class="code literal-block"><span></span><span class="kt">int</span> <span class="n">callback</span><span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="n">buffer</span><span class="p">,</span> <span class="kt">intptr_t</span> <span class="n">filter_size</span><span class="p">,</span> 
+             <span class="kt">double</span> <span class="o">*</span><span class="n">return_value</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">user_data</span><span class="p">)</span>
+</pre>
+
+
+<p>That’s not very Pythonic at all. In fact, it’s positively Conic (TM). For those that don’t know,
+<a href="https://www.quora.com/Why-do-people-think-pointers-are-evil">pointers are evil</a>,
+so let’s aim to avoid their use.</p>
+<!-- TEASER_END -->
+
+<p>“But Juan!”, you are no doubt exclaiming. “Juan! Didn’t you <em>just</em> tell us how to use pointers in Numba cfuncs, and tell us how great it was because it was so fast?”</p>
+<p>Indeed I did. But it left a bad taste in my mouth. Although I felt that the tradeoff was worth it for such a phenomenal speed boost (300x!), I was unsatisfied. So I started immediately to look for a tidier solution. One that would let me write proper filter functions while still taking advantage of LowLevelCallables.</p>
+<p>It turns out Numba cfuncs <em>can call Numba jitted functions</em>, so, with a little bit of decorator magic, it’s now ludicrously easy to write performant callables for SciPy using just pure Python. (If you don’t know what Numba JIT is, <a href="https://ilovesymposia.com/2016/12/20/numba-in-the-real-world/">read my earlier post</a>.) As in the last post, let’s look at <code>grey_erosion</code> as a baseline benchmark:</p>
+<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">footprint</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+<span class="o">...</span>                       <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+<span class="o">...</span>                       <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">ndimage</span> <span class="k">as</span> <span class="n">ndi</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="o">%</span><span class="n">timeit</span> <span class="n">ndi</span><span class="o">.</span><span class="n">grey_erosion</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">footprint</span><span class="o">=</span><span class="n">fp</span><span class="p">)</span>
+<span class="mi">1</span> <span class="n">loop</span><span class="p">,</span> <span class="n">best</span> <span class="n">of</span> <span class="mi">3</span><span class="p">:</span> <span class="mi">160</span> <span class="n">ms</span> <span class="n">per</span> <span class="n">loop</span>
+</pre>
+
+
+<p>Now, we write a decorator that uses Numba jit <em>and</em> Numba cfunc to make a LowLevelCallable suitable for passing directly into <code>generic_filter</code>:</p>
+<pre class="code literal-block"><span></span><span class="kn">import</span> <span class="nn">numba</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">cfunc</span><span class="p">,</span> <span class="n">carray</span>
+<span class="kn">from</span> <span class="nn">numba.types</span> <span class="kn">import</span> <span class="n">intc</span><span class="p">,</span> <span class="n">CPointer</span><span class="p">,</span> <span class="n">float64</span><span class="p">,</span> <span class="n">intp</span><span class="p">,</span> <span class="n">voidptr</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">LowLevelCallable</span>
+
+<span class="k">def</span> <span class="nf">jit_filter_function</span><span class="p">(</span><span class="n">filter_function</span><span class="p">):</span>
+    <span class="n">jitted_function</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">filter_function</span><span class="p">,</span> <span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="nd">@cfunc</span><span class="p">(</span><span class="n">intc</span><span class="p">(</span><span class="n">CPointer</span><span class="p">(</span><span class="n">float64</span><span class="p">),</span> <span class="n">intp</span><span class="p">,</span> <span class="n">CPointer</span><span class="p">(</span><span class="n">float64</span><span class="p">),</span> <span class="n">voidptr</span><span class="p">))</span>
+    <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="n">values_ptr</span><span class="p">,</span> <span class="n">len_values</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">carray</span><span class="p">(</span><span class="n">values_ptr</span><span class="p">,</span> <span class="p">(</span><span class="n">len_values</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">jitted_function</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">LowLevelCallable</span><span class="p">(</span><span class="n">wrapped</span><span class="o">.</span><span class="n">ctypes</span><span class="p">)</span>
+</pre>
+
+
+<p>If you haven’t seen decorators before, read <a href="https://realpython.com/blog/python/primer-on-python-decorators/">this primer</a> from Real Python. To summarise, we’ve written a function that takes as input a Python function, and outputs a LowLevelCallable. Here’s how to use it:</p>
+<pre class="code literal-block"><span></span><span class="nd">@jit_filter_function</span>
+<span class="k">def</span> <span class="nf">fmin</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="k">return</span> <span class="n">result</span>
+</pre>
+
+
+<p>As you can see, the <code>fmin</code> function definition looks just like a normal Python function. All the magic happens when we attach our <code>@jit_filter_function</code> decorator to the top of the function. Let’s see it in action:</p>
+<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="o">%</span><span class="n">timeit</span> <span class="n">ndi</span><span class="o">.</span><span class="n">generic_filter</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">fmin</span><span class="p">,</span> <span class="n">footprint</span><span class="o">=</span><span class="n">fp</span><span class="p">)</span>
+<span class="mi">10</span> <span class="n">loops</span><span class="p">,</span> <span class="n">best</span> <span class="n">of</span> <span class="mi">3</span><span class="p">:</span> <span class="mf">92.9</span> <span class="n">ms</span> <span class="n">per</span> <span class="n">loop</span>
+</pre>
+
+
+<p>Wow! <code>numba.jit</code> is actually over 70% faster than <code>grey_erosion</code> or the plain <code>cfunc</code> approach!</p>
+<p>In case you want to use this, I’ve made a package <a href="https://pypi.python.org/pypi/llc">available on PyPI</a>, so you can actually pip install it right now with <code>pip install llc</code> (for low-level callable), and then:</p>
+<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">llc</span> <span class="kn">import</span> <span class="n">jit_filter_function</span>
 </pre>
 
 

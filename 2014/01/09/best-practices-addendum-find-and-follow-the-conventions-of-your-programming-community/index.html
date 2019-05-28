@@ -113,6 +113,8 @@ def scan(op, values, seed=None):
 First, this code ignores the article's own advice, <em>(1b) make names consistent, distinctive, and meaningful. </em> I would argue that "scan" here is neither distinctive (many other operations could be called "scan") nor meaningful (the function purpose is not at all clear from the name). My suggestion would be "cumulative_reduce".
 </p>
 
+<!-- TEASER_END -->
+
 <p>
 It also does not address another important piece of advice that I would add to their list, maybe as (1d): <strong>Find out, and follow, the conventions of the programming community you're joining.</strong> This will allow others to use and assess your code more readily, and you to contribute to other code libraries more easily. Here, although they have made efforts to make their advice language-agnostic, the authors have chosen Python to illustrate their point. Python happens to have strong style and documentation prescriptions in the form of Python Enhancement Proposals <a href="http://www.python.org/dev/peps/pep-0008/">PEP-8: Style Guide for Python Code</a> and <a href="http://www.python.org/dev/peps/pep-0257/">PEP-257: Docstring conventions</a>. Following PEP-8 and PEP-257, the above comments become an actual docstring (which is attached to the function automatically by documentation-generating tools):
 </p>

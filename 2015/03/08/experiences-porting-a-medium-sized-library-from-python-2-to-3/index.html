@@ -26,7 +26,7 @@ MathJax.Hub.Config({
 <meta property="og:site_name" content="I Love Symposia!">
 <meta property="og:title" content="Experiences porting a medium-sized library from Python 2 to 3">
 <meta property="og:url" content="https://ilovesymposia.com/2015/03/08/experiences-porting-a-medium-sized-library-from-python-2-to-3/">
-<meta property="og:description" content="Prompted in part by some discussions with Ed Schofield, creator of python-future.org, I've been going on a bit of a porting spree to Python 3. I just finished with my gala segmentation library. (Find ">
+<meta property="og:description" content="Update: Much of the information in this post is outdated (especially the part about Python 3 being slower — Python 3.7 is the fastest version of Python ever created.). Take everything you read here wi">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2015-03-08T23:33:34+11:00">
 <meta property="article:tag" content="Planet SciPy">
@@ -89,9 +89,12 @@ MathJax.Hub.Config({
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
     <div>
+<p><strong>Update:</strong> Much of the information in this post is outdated (especially the part about Python 3 being slower — Python 3.7 is the fastest version of Python ever created.). Take everything you read here with a grain of salt.</p>
 <p></p>
 <p>Prompted in part by some discussions with Ed Schofield, creator of <a href="http://python-future.org">python-future.org</a>, I've been going on a bit of a porting spree to Python 3. I just finished with my gala segmentation library. (Find it on <a href="https://github.com/janelia-flyem/gala">GitHub</a> and <a href="http://gala.readthedocs.org">ReadTheDocs</a>.) Overall, the process is nowhere near as onerous as you might think it is. Getting started really is the hardest part. If you have more than yourself as a user, you should definitely just get on with it and port.</p>
 <p>The second hardest part is the testing. In particular, you will need to be careful with dictionary iteration, pickled objects, and file persistence in general. I'll go through these gotchas in more detail below.</p>
+<!-- TEASER_END -->
+
 <p></p>
 <h3>Reminder: the order of dictionary items is undefined</h3>
 <p>This is one of those <em>duh</em> things that I forget over and over and over. In my porting, some tests that depended on a scikit-learn <code>RandomForest</code> object were failing. I assumed that there was some difference between the random seeding in Python 2 and Python 3, leading to slightly different models between the two versions of the random forest.</p>
@@ -105,34 +108,30 @@ MathJax.Hub.Config({
 <h3>Even when you do, objects may not map cleanly between Python 2 and 3 (for some libraries)</h3>
 
 <p>In Python 2:</p>
-<pre class="code literal-block"><span></span><span class="k">[code lang=python]</span>
-<span class="na">&amp;gt;&amp;gt;&amp;gt; from sklearn.ensemble import RandomForestClassifier as RF</span>
-<span class="na">&amp;gt;&amp;gt;&amp;gt; rf</span> <span class="o">=</span> <span class="s">RF()</span>
-<span class="na">&amp;gt;&amp;gt;&amp;gt; from sklearn.datasets import load_iris</span>
-<span class="na">&amp;gt;&amp;gt;&amp;gt; iris</span> <span class="o">=</span> <span class="s">load_iris()</span>
-<span class="na">&amp;gt;&amp;gt;&amp;gt; rf</span> <span class="o">=</span> <span class="s">rf.fit(iris.data, iris.target)</span>
-<span class="na">&amp;gt;&amp;gt;&amp;gt; with open('rf', 'wb') as fout:</span>
-<span class="na">...     pck.dump(r, fout, protocol</span><span class="o">=</span><span class="s">2)</span>
-<span class="k">[/code]</span>
+<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span> <span class="k">as</span> <span class="n">RF</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">rf</span> <span class="o">=</span> <span class="n">RF</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_iris</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">iris</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">rf</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'rf'</span><span class="p">,</span> <span class="s1">'wb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+<span class="o">...</span>     <span class="n">pck</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">fout</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre>
 
 
 <p>Then, in Python 3:</p>
-<pre class="code literal-block"><span></span><span class="k">[code lang=python]</span>
-<span class="na">&amp;gt;&amp;gt;&amp;gt; with open('rf', 'rb') as fin:</span>
-<span class="na">...     rf</span> <span class="o">=</span> <span class="s">pck.load(fin, encoding='bytes')</span>
-<span class="na">... </span>
-<span class="na">---------------------------------------------------------------------------</span>
-<span class="na">KeyError                                  Traceback (most recent call last)</span>
-<span class="na">&lt;ipython-input-9-674ee92b354d&gt; in &lt;module&gt;()</span>
-      <span class="na">1 with open('rf', 'rb') as fin:</span>
-<span class="na">----&amp;gt; 2     rf</span> <span class="o">=</span> <span class="s">pck.load(fin, encoding='bytes')</span>
-<span class="s">      3 </span>
+<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'rf'</span><span class="p">,</span> <span class="s1">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
+<span class="o">...</span>     <span class="n">rf</span> <span class="o">=</span> <span class="n">pck</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'bytes'</span><span class="p">)</span>
+<span class="o">...</span> 
+<span class="o">---------------------------------------------------------------------------</span>
+<span class="ne">KeyError</span>                                  <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">9</span><span class="o">-</span><span class="mi">674</span><span class="n">ee92b354d</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+      <span class="mi">1</span> <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'rf'</span><span class="p">,</span> <span class="s1">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
+<span class="o">----&gt;</span> <span class="mi">2</span>     <span class="n">rf</span> <span class="o">=</span> <span class="n">pck</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'bytes'</span><span class="p">)</span>
+      <span class="mi">3</span> 
 
-<span class="na">/Users/nuneziglesiasj/anaconda/envs/py3k/lib/python3.4/site-packages/sklearn/tree/_tree.so in sklearn.tree._tree.Tree.__setstate__ (sklearn/tree/_tree.c:18115)()</span>
+<span class="o">/</span><span class="n">Users</span><span class="o">/</span><span class="n">nuneziglesiasj</span><span class="o">/</span><span class="n">anaconda</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">py3k</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="o">.</span><span class="mi">4</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">sklearn</span><span class="o">/</span><span class="n">tree</span><span class="o">/</span><span class="n">_tree</span><span class="o">.</span><span class="n">so</span> <span class="ow">in</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Tree</span><span class="o">.</span><span class="n">__setstate__</span> <span class="p">(</span><span class="n">sklearn</span><span class="o">/</span><span class="n">tree</span><span class="o">/</span><span class="n">_tree</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">18115</span><span class="p">)()</span>
 
-<span class="na">KeyError: 'node_count'</span>
-<span class="k">[/code]</span>
+<span class="ne">KeyError</span><span class="p">:</span> <span class="s1">'node_count'</span>
 </pre>
 
 

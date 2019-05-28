@@ -3,7 +3,7 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by/4.0/"&gt;
 &lt;img alt="Creative Commons License BY"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Tue, 28 May 2019 08:44:30 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Why citations are not enough for open source software</title><link>https://ilovesymposia.com/2019/05/28/why-citations-are-not-enough-for-open-source-software/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;A few weeks ago I wrote about &lt;a href="https://ilovesymposia.com/2019/05/02/why-you-should-cite-open-source-tools/"&gt;why you should cite open source
+src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Tue, 28 May 2019 10:34:04 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Why citations are not enough for open source software</title><link>https://ilovesymposia.com/2019/05/28/why-citations-are-not-enough-for-open-source-software/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;A few weeks ago I wrote about &lt;a href="https://ilovesymposia.com/2019/05/02/why-you-should-cite-open-source-tools/"&gt;why you should cite open source
 tools&lt;/a&gt;.
 Although I think citations important, though, there are major problems in
 relying on them &lt;em&gt;alone&lt;/em&gt; to support open source work.&lt;/p&gt;
@@ -20,6 +20,8 @@ and influence, and reinforces my earlier point: &lt;strong&gt;cite open source s
 Definitely don't use this post as an excuse not to cite it!!!&lt;/strong&gt;)&lt;/p&gt;
 &lt;p&gt;Not surprisingly, we have had massive contributions to scikit-image since our
 2014 paper, and those contributors miss out on the citations to our paper.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+
 &lt;p&gt;From a maintainer point of view, one way to deal with this is to periodically
 write “update” publications that become the preferred way to cite the
 software. This is the approach taken by the
@@ -130,6 +132,8 @@ software is written by God-like figures. These massively experienced software
 developers have easy access to funds for their work, and are at the service of
 all the other scientists, who are their users. I used to share this perception,
 but it is utterly false.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+
 &lt;p&gt;I certainly hadn't thought about the funding question, but I did think of
 packages like NumPy and SciPy as being written by "pros" (whatever that means),
 whose main job was to produce these amazing libraries.&lt;/p&gt;
@@ -215,6 +219,8 @@ open source?&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>open-source<
 &lt;li&gt;apply: https://scipy-school.org/applications&lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;!-- TEASER_END --&gt;
+
 &lt;h3&gt;Background&lt;/h3&gt;
 
 &lt;p&gt;Three years ago, I had the privilege of teaching the 2015 ASPP school in Munich. It turned out to be a fantastic teaching experience (I have taught in 2 more since), and more importantly, it was a fantastic experience for the students. Students are selected for the school to fit a certain profile, neither too novice nor too advanced. As such, participants selected for the school are almost guaranteed to learn a great deal.&lt;/p&gt;
@@ -234,6 +240,8 @@ open source?&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>open-source<
 &lt;p&gt;Juan.&lt;/p&gt;&lt;/div&gt;</description><category>conference</category><category>open-source</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>science</category><guid>https://ilovesymposia.com/2018/08/30/summer-school-announcement-2nd-advanced-scientific-programming-in-python-aspp-asia-pacific/</guid><pubDate>Thu, 30 Aug 2018 04:48:05 GMT</pubDate></item><item><title>What do scientists know about open source?</title><link>https://ilovesymposia.com/2018/06/20/what-do-scientists-know-about-open-source/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;A friend recently pointed out this great talk by Matt Bernius, &lt;a href="https://community.redhat.com/blog/2018/05/what-college-students-know/"&gt;What students know and don't know about open source&lt;/a&gt;. If you have even a minor interest in open source it's worth a watch, but the gist is: in the US alone, there are about 200,000 students enrolled in a computer science major. Open source communities are a great space to learn real-world programming, so why don't these numbers translate into massive contributions to open source?&lt;/p&gt;
 &lt;p&gt;At the core of the issue, Matt identifies two main problems: (1) colleges and universities simply don't teach open source, or even collaborative coding; and (2), many open source communities make newcomers feel unwelcome in a variety of ways.&lt;/p&gt;
 &lt;p&gt;I want to comment about this in the context of programming in science. That is, programming where the code is not the main product, but rather a useful tool to obtain a scientific result, for example in biology or physics. Here, we still see relatively little contribution to open source, for related but different cultural issues.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+
 &lt;p&gt;I've sent my &lt;a href="https://ilovesymposia.com/2015/12/26/why-scientists-should-code-in-the-open/"&gt;scientists should code in the open&lt;/a&gt; post to a few people and the response from most remains sceptical. I hope this post will address some of their concerns.&lt;/p&gt;
 &lt;p&gt;&lt;/p&gt;&lt;h3&gt;Scientific culture is ridiculously secretive&lt;/h3&gt;
 &lt;p&gt;The most common objection is to my assertion that people won't scoop you by looking at your code. I remember a tweet (that I sadly can't find now) that really got to the gist of the problem. It went something like this:&lt;/p&gt;
@@ -295,6 +303,8 @@ Actually I drafted this post a while back, and tried this yesterday, with mixed 
 
 &lt;p&gt;&lt;/p&gt;&lt;/div&gt;</description><category>open-source</category><category>Planet SciPy</category><category>programming</category><category>science</category><guid>https://ilovesymposia.com/2018/06/20/what-do-scientists-know-about-open-source/</guid><pubDate>Wed, 20 Jun 2018 11:19:46 GMT</pubDate></item><item><title>1st ASPP Asia Pacific evaluation survey</title><link>https://ilovesymposia.com/2018/04/09/1st-aspp-asia-pacific-evaluation-survey/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;In January of 2018, we had the first &lt;a href="http://python.g-node.org"&gt;ASPP summer school&lt;/a&gt; outside of Europe. (This was a parallel workshop to the European one, which will be held in Italy in September 2018.) In general, it was a great success, with some caveats that we will elaborate on below.&lt;/p&gt;
 &lt;p&gt;First we want to note that this school was a bit different than the European ones, in that we only had attendees from Australian institutions, where the European school has broad international representation, including some from out of Europe. This was in some ways inevitable, as it is more expensive to travel to Australia from almost anywhere than to travel within Europe. On the other hand, we advertised relatively late, and we were unable to secure travel grants during the advertising period, so there is hope that a future edition would be able to attract a more international crowd from the Asia Pacific region.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+
 &lt;p&gt;Given all this, there was a question as to whether we would be able to capture the atmosphere of the school, which normally sees the students living together and socialising for basically the whole week. In this case, most students just went home after classes were finished. But although some of that atmosphere was missing, by the end of the week we did manage to get some close links between all the students and the faculty. The evaluations below show that most of the value of the school was preserved.&lt;/p&gt;
 &lt;p&gt;We note that 100% of the respondents (29/30 of the students) would recommend the course to their peers. So, although some lectures were better received than others, and although the programming project was not universally loved, we managed to provide value for everyone. All of this is in line with the evaluations at previous schools (available at https://python.g-node.org/wiki/archives.html).&lt;/p&gt;
 &lt;p&gt;The project, which consists of programming a videogame bot, is controversial every year, but, consistently, more people like it than don't, and people get to practice git, pair programming, and programming as a team, which is the single most difficult skill to practice when programming for science. Indeed when we walk around during the project programming sessions, we see people extremely engaged in what they are coding. It's difficult to imagine a scientific problem engaging such diverse people as the school's attendees (which come from very disparate scientific fields).&lt;/p&gt;
@@ -308,11 +318,128 @@ Actually I drafted this post a while back, and tried this yesterday, with mixed 
 &lt;p&gt;You can access the full survey results &lt;a href="https://python.g-node.org/wiki/_media/evaluation_survey_2018_melbourne.pdf"&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;-- Juan, and the Organisers.&lt;/p&gt;&lt;/div&gt;</description><category>conference</category><category>programming</category><category>Python</category><category>science</category><guid>https://ilovesymposia.com/2018/04/09/1st-aspp-asia-pacific-evaluation-survey/</guid><pubDate>Mon, 09 Apr 2018 03:29:53 GMT</pubDate></item><item><title>SciPy's new LowLevelCallable is a game-changer</title><link>https://ilovesymposia.com/2017/03/12/scipys-new-lowlevelcallable-is-a-game-changer/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;... and combines rather well with that other game-changing library I like, &lt;a href="https://ilovesymposia.com/2016/12/20/numba-in-the-real-world/"&gt;Numba&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;I've &lt;a href="https://ilovesymposia.com/2015/12/10/the-cost-of-a-python-function-call/"&gt;lamented before&lt;/a&gt; that function calls are expensive in Python, and that this severely hampers many functions that &lt;em&gt;should&lt;/em&gt; be insanely useful, such as SciPy's &lt;a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.generic_filter.html#scipy.ndimage.generic_filter"&gt;&lt;code&gt;ndimage.generic_filter&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+
 &lt;p&gt;To illustrate this, let's look at image &lt;em&gt;erosion&lt;/em&gt;, which is the replacement of each pixel in an image by the minimum of its neighbourhood. &lt;code&gt;ndimage&lt;/code&gt; has a fast C implementation, which serves as a perfect benchmark against the generic version, using a generic filter with &lt;code&gt;min&lt;/code&gt; as the operator. Let's start with a 2048 x 2048 random image:&lt;/p&gt;
-&lt;p&gt;```http://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#types&lt;/p&gt;
-&lt;p&gt;&amp;gt;&amp;gt;&amp;gt; %timeit ndi.generic_filter(image, LowLevelCallable(nbmin.ctypes), footprint=footprint)
-10 loops, best of 3: 113 ms per loop&lt;/p&gt;
-&lt;p&gt;```&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;image&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="mi"&gt;2048&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2048&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;and a neighbourhood “footprint” that picks out the pixels to the left and right, and above and below, the centre pixel:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;footprint&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;([[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;                       &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;                       &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]],&lt;/span&gt; &lt;span class="n"&gt;dtype&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;bool&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Now, we measure the speed of &lt;code&gt;grey_erosion&lt;/code&gt; and &lt;code&gt;generic_filter&lt;/code&gt;. Spoiler alert: it’s not pretty.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;scipy&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;ndimage&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;ndi&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;timeit&lt;/span&gt; &lt;span class="n"&gt;ndi&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;grey_erosion&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;image&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;footprint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;footprint&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="mi"&gt;10&lt;/span&gt; &lt;span class="n"&gt;loops&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;best&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;118&lt;/span&gt; &lt;span class="n"&gt;ms&lt;/span&gt; &lt;span class="n"&gt;per&lt;/span&gt; &lt;span class="n"&gt;loop&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;timeit&lt;/span&gt; &lt;span class="n"&gt;ndi&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;generic_filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;image&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;min&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;footprint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;footprint&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="n"&gt;loop&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;best&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;27&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="n"&gt;per&lt;/span&gt; &lt;span class="n"&gt;loop&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;As you can see, with Python functions, &lt;code&gt;generic_filter&lt;/code&gt; is unusable for anything but the tiniest of images.&lt;/p&gt;
+&lt;p&gt;A few months ago, I was
+&lt;a href="https://groups.google.com/a/continuum.io/d/msg/numba-users/HMg_65R8KZE/RnysYokGAwAJ"&gt;trying&lt;/a&gt;
+to get around this by using Numba-compiled functions, but the way to feed C
+functions to SciPy was different depending on which part of the library you
+were using. &lt;code&gt;scipy.integrate&lt;/code&gt; used ctypes, while &lt;code&gt;scipy.ndimage&lt;/code&gt; used &lt;code&gt;PyCObjects&lt;/code&gt; or
+&lt;code&gt;PyCapsules&lt;/code&gt;, depending on your Python version, and Numba only supported the
+former method at the time. (Plus, this topic starts to stretch my understanding
+of low-level Python, so I felt there wasn’t much I could do about it.)&lt;/p&gt;
+&lt;p&gt;Enter &lt;a href="https://github.com/scipy/scipy/pull/6509"&gt;this pull request&lt;/a&gt; to SciPy
+from Pauli Virtanen, which is live in the most recent SciPy version, 0.19. It
+unifies all C-function interfaces within SciPy, and Numba already supports this
+format. It takes a bit of gymnastics, but it works! It really works!&lt;/p&gt;
+&lt;p&gt;(By the way, the release is full of little gold nuggets. If you use SciPy at
+all, the release notes are well worth a read.)&lt;/p&gt;
+&lt;p&gt;First, we need to define a C function of the appropriate signature. Now, you
+might think this is the same as the Python signature, taking in an array of
+values and returning a single value, but that would be too easy! Instead, we
+have to go back to some C-style programming with pointers and array sizes. From
+the &lt;code&gt;generic_filter&lt;/code&gt; documentation:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This function also accepts low-level callback functions with one of the
+following signatures and wrapped in scipy.LowLevelCallable:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;c
+int callback(double *buffer, npy_intp filter_size, 
+             double *return_value, void *user_data)
+int callback(double *buffer, intptr_t filter_size, 
+             double *return_value, void *user_data)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;The calling function iterates over the elements of the input and output
+arrays, calling the callback function at each element. The elements within
+the footprint of the filter at the current element are passed through the
+buffer parameter, and the number of elements within the footprint through
+filter_size. The calculated value is returned in return_value. user_data is
+the data pointer provided to scipy.LowLevelCallable as-is.&lt;/p&gt;
+&lt;p&gt;The callback function must return an integer error status that is zero if
+something went wrong and one otherwise. &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;(Let’s leave aside that crazy reversal of Unix convention of the past 50 years
+in the last paragraph, except to note that our function must return 1 or it
+will be killed.)&lt;/p&gt;
+&lt;p&gt;So, we need a Numba cfunc that takes in:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;a double pointer pointing to the values within the footprint,&lt;/li&gt;
+&lt;li&gt;a pointer-sized integer that specifies the number of values in the footprint,&lt;/li&gt;
+&lt;li&gt;a double pointer for the result, and&lt;/li&gt;
+&lt;li&gt;a void pointer, which could point to additional parameters, but which we can ignore for now.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The Numba type names are listed in &lt;a href="http://numba.pydata.org/numba-doc/dev/reference/types.html#numba-types"&gt;this page&lt;/a&gt;. Unfortunately, at the time of
+writing, there’s no mention of how to make pointers there, but finding such a
+reference &lt;a href="http://numba.pydata.org/numba-doc/dev/user/cfunc.html#signature-specification"&gt;was not too hard&lt;/a&gt;. (Incidentally, it would make a good contribution to
+Numba’s documentation to add CPointer to the Numba types page.)&lt;/p&gt;
+&lt;p&gt;So, armed with all that documentation, and after much trial and error, I was
+finally ready to write that C callable:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;numba&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;cfunc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;carray&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;numba.types&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;intc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;intp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;float64&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;voidptr&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;numba.types&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;CPointer&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; 
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; 
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="nd"&gt;@cfunc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;intc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;CPointer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;float64&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;intp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;             &lt;span class="n"&gt;CPointer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;float64&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;voidptr&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;nbmin&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values_ptr&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;len_values&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;     &lt;span class="n"&gt;values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;carray&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values_ptr&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;len_values&lt;/span&gt;&lt;span class="p"&gt;,),&lt;/span&gt; &lt;span class="n"&gt;dtype&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;float64&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;     &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;inf&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;     &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;         &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;             &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;The only other tricky bits I had to watch out for while writing that function were as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;remembering that there’s two ways to de-reference a pointer in C: &lt;code&gt;*ptr&lt;/code&gt;,
+   which is not valid Python and thus not valid Numba, and &lt;code&gt;ptr[0]&lt;/code&gt;. So, to place
+   the result at the given double pointer, we use the latter syntax. (If you
+   prefer to use Cython, the same rule applies.)&lt;/li&gt;
+&lt;li&gt;Creating an array out of the &lt;code&gt;values_ptr&lt;/code&gt; and &lt;code&gt;len_values&lt;/code&gt; variables, as shown
+   here. That’s what enables the &lt;code&gt;for v in values&lt;/code&gt; Python-style access to the
+   array.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Ok, so now what you’ve been waiting for. How did we do? First, to recap, the original benchmarks:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;scipy&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;ndimage&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;ndi&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;timeit&lt;/span&gt; &lt;span class="n"&gt;ndi&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;grey_erosion&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;image&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;footprint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;footprint&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="mi"&gt;10&lt;/span&gt; &lt;span class="n"&gt;loops&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;best&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;118&lt;/span&gt; &lt;span class="n"&gt;ms&lt;/span&gt; &lt;span class="n"&gt;per&lt;/span&gt; &lt;span class="n"&gt;loop&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;timeit&lt;/span&gt; &lt;span class="n"&gt;ndi&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;generic_filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;image&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;min&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;footprint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;footprint&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="n"&gt;loop&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;best&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;27&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="n"&gt;per&lt;/span&gt; &lt;span class="n"&gt;loop&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;And now, with our new Numba cfunc:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;timeit&lt;/span&gt; &lt;span class="n"&gt;ndi&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;generic_filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;image&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;LowLevelCallable&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;nbmin&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ctypes&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;footprint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;footprint&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="mi"&gt;10&lt;/span&gt; &lt;span class="n"&gt;loops&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;best&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;113&lt;/span&gt; &lt;span class="n"&gt;ms&lt;/span&gt; &lt;span class="n"&gt;per&lt;/span&gt; &lt;span class="n"&gt;loop&lt;/span&gt;
+&lt;/pre&gt;
+
+
 &lt;p&gt;That's right: it's even marginally &lt;em&gt;faster&lt;/em&gt; than the pure C version! I almost cried when I ran that.&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;&lt;hr&gt;
+
+
+&lt;hr&gt;
+
 &lt;p&gt;Higher-order functions, ie functions that take other functions as input, enable powerful, concise, elegant &lt;a href="https://ilovesymposia.com/2014/06/24/a-clever-use-of-scipys-ndimage-generic_filter-for-n-dimensional-image-processing/"&gt;expressions&lt;/a&gt; of various algorithms. Unfortunately, these have been hampered in Python for large-scale data processing because of Python's function call overhead. SciPy's latest update goes a long way towards redressing this.&lt;/p&gt;&lt;/div&gt;</description><category>Numba</category><category>open-source</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>science</category><category>SciPy</category><guid>https://ilovesymposia.com/2017/03/12/scipys-new-lowlevelcallable-is-a-game-changer/</guid><pubDate>Sun, 12 Mar 2017 03:41:41 GMT</pubDate></item><item><title>Brian Greene on the Colbert Report</title><link>https://ilovesymposia.com/2008/05/29/brian-greene-on-the-colbert-report/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;I promise sometime soon I'll write something &lt;em&gt;not&lt;/em&gt; about someone else's videos! But for now, enjoy theoretical physicist &lt;a href="http://www.comedycentral.com/colbertreport/videos.jhtml?videoId=167386"&gt;Brian Greene on the Colbert Report&lt;/a&gt;. Stephen drives an excellent interview, as usual, and proves &lt;a href="http://www.comedycentral.com/colbertreport/videos.jhtml?videoId=76296"&gt;yet again&lt;/a&gt; that he either knows a good deal of science, or he does his homework before talking about it. As a result, science coverage on the Colbert Report is invariably excellent. &lt;a href="http://ilovesymposia.wordpress.com/wp-admin/post.php?action=edit&amp;amp;post=4&amp;amp;message=4"&gt;&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>brian greene</category><category>physics</category><category>science</category><category>stephen colbert</category><category>Video</category><guid>https://ilovesymposia.com/2008/05/29/brian-greene-on-the-colbert-report/</guid><pubDate>Thu, 29 May 2008 07:21:18 GMT</pubDate></item></channel></rss>

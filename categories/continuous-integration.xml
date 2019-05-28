@@ -3,13 +3,15 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by/4.0/"&gt;
 &lt;img alt="Creative Commons License BY"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Wed, 01 May 2019 09:57:21 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Continuous integration in Python, 7: some helper tools and final thoughts</title><link>https://ilovesymposia.com/2014/10/27/continuous-integration-in-python-7-some-helper-tools-and-final-thoughts/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;Almost everything I know about good Python development I've learned from &lt;a href="https://github.com/stefanv"&gt;Stéfan van der Walt&lt;/a&gt;, &lt;a href="https://github.com/tonysyu"&gt;Tony Yu&lt;/a&gt;, and the rest of the &lt;a href="https://github.com/scikit-image/scikit-image/graphs/contributors"&gt;scikit-image team&lt;/a&gt;. But a few weeks ago, I was trying to emulate the scikit-image CI process for my own project: &lt;a href="https://github.com/jni/cellom2tif"&gt;cellom2tif&lt;/a&gt;, a tool to liberate images from a &lt;a href="http://www.openmicroscopy.org/site/support/bio-formats5/formats/cellomics.html"&gt;rather useless&lt;/a&gt; proprietary format. (I consider this parenthetical comment sufficient fanfare to announce the &lt;a href="https://pypi.python.org/pypi/cellom2tif/0.2.0"&gt;0.2 release!&lt;/a&gt;) As I started copying and editing config files, I found that even from a complete template, getting started was not very straightforward. First, scikit-image has much more complicated requirements, so that a lot of the &lt;code&gt;.travis.yml&lt;/code&gt; file was just noise for my purposes. And second, as detailed in the previous posts, a lot of the steps are not found or recorded anywhere in the repository, but rather must be navigated to on the webpages of GitHub, Travis, and Coveralls. I therefore decided to write this series as both a notetaking exercise and a guide for future CI novices. (Such as future me.)
+src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Tue, 28 May 2019 10:34:03 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Continuous integration in Python, 7: some helper tools and final thoughts</title><link>https://ilovesymposia.com/2014/10/27/continuous-integration-in-python-7-some-helper-tools-and-final-thoughts/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;Almost everything I know about good Python development I've learned from &lt;a href="https://github.com/stefanv"&gt;Stéfan van der Walt&lt;/a&gt;, &lt;a href="https://github.com/tonysyu"&gt;Tony Yu&lt;/a&gt;, and the rest of the &lt;a href="https://github.com/scikit-image/scikit-image/graphs/contributors"&gt;scikit-image team&lt;/a&gt;. But a few weeks ago, I was trying to emulate the scikit-image CI process for my own project: &lt;a href="https://github.com/jni/cellom2tif"&gt;cellom2tif&lt;/a&gt;, a tool to liberate images from a &lt;a href="http://www.openmicroscopy.org/site/support/bio-formats5/formats/cellomics.html"&gt;rather useless&lt;/a&gt; proprietary format. (I consider this parenthetical comment sufficient fanfare to announce the &lt;a href="https://pypi.python.org/pypi/cellom2tif/0.2.0"&gt;0.2 release!&lt;/a&gt;) As I started copying and editing config files, I found that even from a complete template, getting started was not very straightforward. First, scikit-image has much more complicated requirements, so that a lot of the &lt;code&gt;.travis.yml&lt;/code&gt; file was just noise for my purposes. And second, as detailed in the previous posts, a lot of the steps are not found or recorded anywhere in the repository, but rather must be navigated to on the webpages of GitHub, Travis, and Coveralls. I therefore decided to write this series as both a notetaking exercise and a guide for future CI novices. (Such as future me.)
 .. has_math: no
 .. status: published
 .. wp-status: publish
 --&amp;gt;&lt;/p&gt;
 &lt;p&gt;&lt;/p&gt;&lt;p&gt;It's time to draw my "continuous integration in Python" series to a close. This final post ties all six previous posts together and is the preferred write-up to share more widely and on which to provide feedback.&lt;/p&gt;
 &lt;p&gt;Almost everything I know about good Python development I've learned from &lt;a href="https://github.com/stefanv"&gt;Stéfan van der Walt&lt;/a&gt;, &lt;a href="https://github.com/tonysyu"&gt;Tony Yu&lt;/a&gt;, and the rest of the &lt;a href="https://github.com/scikit-image/scikit-image/graphs/contributors"&gt;scikit-image team&lt;/a&gt;. But a few weeks ago, I was trying to emulate the scikit-image CI process for my own project: &lt;a href="https://github.com/jni/cellom2tif"&gt;cellom2tif&lt;/a&gt;, a tool to liberate images from a &lt;a href="http://www.openmicroscopy.org/site/support/bio-formats5/formats/cellomics.html"&gt;rather useless&lt;/a&gt; proprietary format. (I consider this parenthetical comment sufficient fanfare to announce the &lt;a href="https://pypi.python.org/pypi/cellom2tif/0.2.0"&gt;0.2 release!&lt;/a&gt;) As I started copying and editing config files, I found that even from a complete template, getting started was not very straightforward. First, scikit-image has much more complicated requirements, so that a lot of the &lt;code&gt;.travis.yml&lt;/code&gt; file was just noise for my purposes. And second, as detailed in the previous posts, a lot of the steps are not found or recorded anywhere in the repository, but rather must be navigated to on the webpages of GitHub, Travis, and Coveralls. I therefore decided to write this series as both a notetaking exercise and a guide for future CI novices. (Such as future me.)&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+
 &lt;p&gt;To recap, here are my six steps to doing continuous integration in Python with pytest, Travis, and Coveralls:&lt;/p&gt;
 &lt;p&gt;&lt;/p&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/"&gt;Write tests&lt;/a&gt;&lt;/li&gt;
@@ -65,6 +67,8 @@ src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright>
 &lt;/ul&gt;
 &lt;p&gt;But, much as exercise is wasted if your bathroom scale doesn't automatically tweet about it, all this effort is for naught if visitors to your GitHub page can't see it!&lt;/p&gt;
 &lt;p&gt;Most high-profile open-source projects these days advertise their CI efforts. Above, I cheekily called this showing off, but it's truly important: anyone who lands on your GitHub page is a potential user or contributor, and if they see evidence that your codebase is stable and well-tested, they are more likely to stick around.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+
 &lt;p&gt;Badging your README is easy. (You &lt;em&gt;do&lt;/em&gt; have a README, &lt;a href="https://ilovesymposia.com/2014/10/17/continuous-integration-in-python-6-show-off-your-work/"&gt;don't you?&lt;/a&gt;) In Travis, go to your latest build. Near the top right, click on the "build passing" badge:&lt;/p&gt;
 &lt;p&gt;&lt;img src="https://ilovesymposia.com/2014/10/screen-shot-2014-10-17-at-8-20-00-pm.png" alt="Travis-CI badge"&gt;&lt;/p&gt;
 &lt;p&gt;You'll get an overlay, with a pull-down menu for all the different options for getting the badge. You can grab the image URL, or you can directly grab the Markdown to put into your markdown-formatted README, or a bunch of other options, including RST:&lt;/p&gt;
@@ -75,34 +79,45 @@ src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright>
 &lt;p&gt;Again, just grab whichever URL is appropriate for your needs (I prefer Markdown-formatted READMEs), and add it to your README, usually next to the Travis badge.&lt;/p&gt;
 &lt;p&gt;And you're done! You've got &lt;a href="http://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/"&gt;automated tests&lt;/a&gt;, &lt;a href="http://ilovesymposia.com/2014/10/02/continuous-integration-1-test-coverage/"&gt;tons of test coverage&lt;/a&gt;, you're running everything correctly thanks to &lt;a href="http://ilovesymposia.com/2014/10/13/continuous-integration-in-python-3-set-up-your-test-configuration-files/"&gt;configuration files&lt;/a&gt;, and all this is getting run on demand thanks to &lt;a href="http://ilovesymposia.com/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/"&gt;Travis&lt;/a&gt; and &lt;a href="http://ilovesymposia.com/2014/10/15/continuous-integration-in-python-5-report-test-coverage-using-coveralls/"&gt;Coveralls&lt;/a&gt;. And thanks to badging, the whole world knows about it:&lt;/p&gt;
 &lt;p&gt;&lt;img src="https://ilovesymposia.com/2014/10/screen-shot-2014-10-18-at-12-33-37-am.png" alt="Readme badges"&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Update:&lt;/strong&gt; &lt;a href="https://ilovesymposia.com/2014/10/27/continuous-integration-in-python-7-some-helper-tools-and-final-thoughts/"&gt;Volume 7: Some final thoughts, tips, and tools.&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>continuous integration</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>test-driven development</category><guid>https://ilovesymposia.com/2014/10/17/continuous-integration-in-python-6-show-off-your-work/</guid><pubDate>Thu, 16 Oct 2014 19:37:37 GMT</pubDate></item><item><title>Continuous integration in Python, 5: report test coverage using Coveralls</title><link>https://ilovesymposia.com/2014/10/15/continuous-integration-in-python-5-report-test-coverage-using-coveralls/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;In this series of posts, we've covered:&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/"&gt;Automated testing with pytest&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/02/continuous-integration-1-test-coverage/"&gt;Measuring test coverage&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/13/continuous-integration-in-python-3-set-up-your-test-configuration-files/"&gt;Setting up test configuration files&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Using Travis-CI to &lt;a href="http://ilovesymposia.com/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/"&gt;run your tests automatically with each push&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Today I will show you how to continuously check your test coverage using &lt;a href="https://coveralls.io"&gt;Coveralls&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Travis runs whatever commands you tell it to run in your &lt;code&gt;.travis.yml&lt;/code&gt; file. Normally, that's just installing your program and its requirements, and running your tests. If you wanted instead to launch some nuclear missiles, you could do that. (Assuming you were happy to put the launch keys in a public git repository... =P)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Update:&lt;/strong&gt; &lt;a href="https://ilovesymposia.com/2014/10/27/continuous-integration-in-python-7-some-helper-tools-and-final-thoughts/"&gt;Volume 7: Some final thoughts, tips, and tools.&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>continuous integration</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>test-driven development</category><guid>https://ilovesymposia.com/2014/10/17/continuous-integration-in-python-6-show-off-your-work/</guid><pubDate>Thu, 16 Oct 2014 19:37:37 GMT</pubDate></item><item><title>Continuous integration in Python, 5: report test coverage using Coveralls</title><link>https://ilovesymposia.com/2014/10/15/continuous-integration-in-python-5-report-test-coverage-using-coveralls/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;Travis runs whatever commands you tell it to run in your &lt;code&gt;.travis.yml&lt;/code&gt; file. Normally, that's just installing your program and its requirements, and running your tests. If you wanted instead to launch some nuclear missiles, you could do that. (Assuming you were happy to put the launch keys in a public git repository... =P)&lt;/p&gt;
 &lt;p&gt;The &lt;a href="https://coveralls.io"&gt;Coveralls&lt;/a&gt; service, once again free for open-source repositories, takes advantage of this: you just need to install an extra piece of software from PyPI, and run it after your tests have passed. Do so by adding the line &lt;code&gt;pip install coveralls&lt;/code&gt; to your &lt;code&gt;before_install&lt;/code&gt; section, and just the &lt;code&gt;coveralls&lt;/code&gt; command to a new &lt;code&gt;after_success&lt;/code&gt; section:&lt;/p&gt;
-&lt;p&gt;```https://coveralls.io
-; then
-          coveralls;
-      fi&lt;/p&gt;
-&lt;p&gt;```&lt;/p&gt;
-&lt;p&gt;This is the approach taken by the scikit-image project.)&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Update:&lt;/strong&gt; &lt;a href="http://ilovesymposia.com/2014/10/17/continuous-integration-in-python-6-show-off-your-work/"&gt;Volume 6: Badge your repo to show off your work&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>continuous integration</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>test-driven development</category><guid>https://ilovesymposia.com/2014/10/15/continuous-integration-in-python-5-report-test-coverage-using-coveralls/</guid><pubDate>Wed, 15 Oct 2014 12:11:19 GMT</pubDate></item><item><title>Continuous integration in Python, 4: set up Travis-CI</title><link>https://ilovesymposia.com/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/"&gt;Automated testing with pytest&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/02/continuous-integration-1-test-coverage/"&gt;Measuring test coverage&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/13/continuous-integration-in-python-3-set-up-your-test-configuration-files/"&gt;Setting up test configuration files&lt;/a&gt;&lt;/li&gt;
+&lt;!-- TEASER_END --&gt;
+
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;language&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;python&lt;/span&gt;
+&lt;span class="l l-Scalar l-Scalar-Plain"&gt;python&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+&lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="s"&gt;"2.7"&lt;/span&gt;
+&lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="s"&gt;"3.4"&lt;/span&gt;
+&lt;span class="l l-Scalar l-Scalar-Plain"&gt;before_install&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+&lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;pip install pytest pytest-cov&lt;/span&gt;
+&lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;pip install coveralls&lt;/span&gt;
+&lt;span class="l l-Scalar l-Scalar-Plain"&gt;script&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+&lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;py.test&lt;/span&gt;
+&lt;span class="l l-Scalar l-Scalar-Plain"&gt;after_success&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+&lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;coveralls&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;This will push your coverage report to Coveralls every time Travis is run, i.e., &lt;em&gt;every time you push to your GitHub repository.&lt;/em&gt; You will need to turn on the service by:
+&lt;/p&gt;&lt;ul&gt;
+    &lt;li&gt;going to &lt;a href="https://coveralls.io"&gt;coveralls.io&lt;/a&gt; and signing in with your GitHub credentials&lt;/li&gt;
+    &lt;li&gt;clicking on "Repositories", and "Add Repo" (and perhaps on "Sync GitHub Repos", top right)&lt;/li&gt;
+    &lt;li&gt;switching your repository's switch to "On"&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3&gt;Introduction to Travis-CI&lt;/h3&gt;
-&lt;p&gt;Once you've set up your tests locally, it does you no good if you don't remember to run them! &lt;a href="http://travis-ci.org/"&gt;Travis-CI&lt;/a&gt; makes this seamless, because it will check out your code and run you tests for &lt;em&gt;each and every commit you push to GitHub!&lt;/em&gt; (This is even more important when you are receiving pull requests on GitHub: the tests will be run online, without you having to individually check out each PR and run the tests on your machine!)
-.. has_math: no
-.. status: published
-.. wp-status: publish
---&amp;gt;&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;&lt;p&gt;This is the fourth post in my Continuous integration (CI) in Python series, and the one that puts the "continuous" in CI! For the introductory three posts, see:&lt;/p&gt;
+&lt;img src="https://ilovesymposia.files.wordpress.com/2014/10/skitch-8.png" alt="Adding a repo to Coveralls"&gt;
+&lt;p&gt;That's it! With just two small changes to your &lt;code&gt;.travis.yml&lt;/code&gt; and the flick of a switch, you will get continuous monitoring of your test coverage with each push, and also with each pull request. By default, Coveralls will even comment on your pull requests, so that you instantly know whether someone is not testing their submitted code!&lt;/p&gt;
+&lt;p&gt;Plus, you get a swanky web dashboard to monitor your coverage!&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://ilovesymposia.files.wordpress.com/2014/10/screen-shot-2014-10-16-at-3-49-30-pm.png" alt="Coveralls dashboard"&gt;&lt;/p&gt;
+&lt;p&gt;Tune in tomorrow for the final chapter in continuous integration in Python: showing off! No, it's not a blog post about blogging about it. =P&lt;/p&gt;
+&lt;p&gt;(Addendum: the above &lt;code&gt;.travis.yml&lt;/code&gt; will run Coveralls &lt;em&gt;twice&lt;/em&gt;, once per Python version, so it will also comment twice for your PRs, notify you twice, etc. If you want to test more Python versions, the problem multiplies. Therefore, you can choose to call Coveralls &lt;em&gt;only for a specific Python version&lt;/em&gt;, like so:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;after_success&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+&lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;if [[ $ENV == python=3.4* ]]; then&lt;/span&gt;
+&lt;span class="l l-Scalar l-Scalar-Plain"&gt;coveralls;&lt;/span&gt;
+&lt;span class="l l-Scalar l-Scalar-Plain"&gt;fi&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;This is the approach taken by the scikit-image project.)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Update:&lt;/strong&gt; &lt;a href="http://ilovesymposia.com/2014/10/17/continuous-integration-in-python-6-show-off-your-work/"&gt;Volume 6: Badge your repo to show off your work&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>continuous integration</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>test-driven development</category><guid>https://ilovesymposia.com/2014/10/15/continuous-integration-in-python-5-report-test-coverage-using-coveralls/</guid><pubDate>Wed, 15 Oct 2014 12:11:19 GMT</pubDate></item><item><title>Continuous integration in Python, 4: set up Travis-CI</title><link>https://ilovesymposia.com/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;This is the fourth post in my Continuous integration (CI) in Python series, and the one that puts the "continuous" in CI! For the introductory three posts, see:&lt;/p&gt;
 &lt;p&gt;&lt;/p&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/"&gt;Automated testing with pytest&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://ilovesymposia.com/2014/10/02/continuous-integration-1-test-coverage/"&gt;Measuring test coverage&lt;/a&gt;&lt;/li&gt;
@@ -112,19 +127,19 @@ src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright>
 
 &lt;p&gt;Once you've set up your tests locally, it does you no good if you don't remember to run them! &lt;a href="http://travis-ci.org/"&gt;Travis-CI&lt;/a&gt; makes this seamless, because it will check out your code and run you tests for &lt;em&gt;each and every commit you push to GitHub!&lt;/em&gt; (This is even more important when you are receiving pull requests on GitHub: the tests will be run online, without you having to individually check out each PR and run the tests on your machine!)&lt;/p&gt;
 &lt;p&gt;This is what continuous integration is all about. Once upon a time, the common practice was to pile on new features on a codebase. Then, come release time, there would be a feature freeze, and some time would be spent cleaning up code and removing bugs. In continuous integration, instead, no new feature is allowed into the codebase until it is bug free, as demonstrated by the test suite.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+
 &lt;h3&gt;What to do&lt;/h3&gt;
 
 &lt;p&gt;You need to first add a &lt;code&gt;.travis.yml&lt;/code&gt; file to the root of your project. This tells Travis how to install your program's dependencies, install your program, and run the tests. Here's an example file to run tests and coverage on our &lt;code&gt;maths.py&lt;/code&gt; sample project:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[code lang=text]&lt;/span&gt;
-&lt;span class="na"&gt;language: python&lt;/span&gt;
-&lt;span class="na"&gt;python:&lt;/span&gt;
-    &lt;span class="na"&gt;- "2.7"&lt;/span&gt;
-    &lt;span class="na"&gt;- "3.4"&lt;/span&gt;
-&lt;span class="na"&gt;before_install:&lt;/span&gt;
-    &lt;span class="na"&gt;- pip install pytest pytest-cov&lt;/span&gt;
-&lt;span class="na"&gt;script:&lt;/span&gt;
-    &lt;span class="na"&gt;- py.test&lt;/span&gt;
-&lt;span class="k"&gt;[/code]&lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;language&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;python&lt;/span&gt;
+&lt;span class="l l-Scalar l-Scalar-Plain"&gt;python&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+    &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="s"&gt;"2.7"&lt;/span&gt;
+    &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="s"&gt;"3.4"&lt;/span&gt;
+&lt;span class="l l-Scalar l-Scalar-Plain"&gt;before_install&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+    &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;pip install pytest pytest-cov&lt;/span&gt;
+&lt;span class="l l-Scalar l-Scalar-Plain"&gt;script&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+    &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;py.test&lt;/span&gt;
 &lt;/pre&gt;
 
 
@@ -144,113 +159,182 @@ src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright>
 &lt;p&gt;Voilà! Every push and pull-request to your repository will trigger a job on Travis's servers, building your dependencies and your software, running your tests, and emailing you if anything went wrong! Amazingly, this is completely free for open source projects, so you really have no excuse for not using it!&lt;/p&gt;
 &lt;p&gt;&lt;img src="https://ilovesymposia.com/2014/10/screen-shot-2014-10-15-at-9-55-05-pm.png" alt="Travis build page"&gt;&lt;/p&gt;
 &lt;p&gt;Follow this blog to learn how to continuously check test coverage using &lt;a href="https://coveralls.io"&gt;Coveralls&lt;/a&gt;, coming in the next post!&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Update:&lt;/strong&gt; &lt;a href="http://ilovesymposia.com/2014/10/15/continuous-integration-in-python-5-report-test-coverage-using-coveralls/"&gt;Volume 5: turn on Coveralls&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>continuous integration</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>test-driven development</category><guid>https://ilovesymposia.com/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/</guid><pubDate>Tue, 14 Oct 2014 17:00:59 GMT</pubDate></item><item><title>Continuous integration in Python 3: set up your test configuration files</title><link>https://ilovesymposia.com/2014/10/13/continuous-integration-in-python-3-set-up-your-test-configuration-files/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;This is the third post in my series on continuous integration (CI) in Python. For the first two posts, see &lt;a href="http://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/"&gt;1: automated tests with pytest&lt;/a&gt;, and &lt;a href="http://ilovesymposia.com/2014/10/02/continuous-integration-1-test-coverage/"&gt;2: measuring test coverage&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Update:&lt;/strong&gt; &lt;a href="http://ilovesymposia.com/2014/10/15/continuous-integration-in-python-5-report-test-coverage-using-coveralls/"&gt;Volume 5: turn on Coveralls&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>continuous integration</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>test-driven development</category><guid>https://ilovesymposia.com/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/</guid><pubDate>Tue, 14 Oct 2014 17:00:59 GMT</pubDate></item><item><title>Continuous integration in Python 3: set up your test configuration files</title><link>https://ilovesymposia.com/2014/10/13/continuous-integration-in-python-3-set-up-your-test-configuration-files/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;This is the third post in my series on continuous integration (CI) in Python. For the first two posts, see &lt;a href="http://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/"&gt;1: automated tests with pytest&lt;/a&gt;, and &lt;a href="http://ilovesymposia.com/2014/10/02/continuous-integration-1-test-coverage/"&gt;2: measuring test coverage&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;By now, you've got a bunch of tests and doctests set up in your project, which you run with the command:&lt;/p&gt;
-&lt;p&gt;```http://en.wikipedia.org/wiki/INI_file&lt;/p&gt;
-&lt;p&gt;omit = *script.py&lt;/p&gt;
-&lt;p&gt;```&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;$ py.test --doctest-modules --cov . --cov-report term-missing
+&lt;/pre&gt;
+
+
+&lt;!-- TEASER_END --&gt;
+
+&lt;p&gt;If you happen to have a few script and setup files lying around that you don't want to test, this might expand to&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;$ py.test --doctest-modules --cov . --cov-report term-missing --ignore script.py
+&lt;/pre&gt;
+
+
+&lt;p&gt;As you can see, this is getting cumbersome. You can fix this by adding a &lt;code&gt;setup.cfg&lt;/code&gt; file to the root of your project, containing configuration options for your testing. This follows standard &lt;a href="http://en.wikipedia.org/wiki/INI_file"&gt;INI file syntax&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[pytest]&lt;/span&gt;
+&lt;span class="na"&gt;addopts&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;--ignore script.py --doctest-modules --cov-report term-missing --cov .&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Note that the "ignore" flag only tells pytest not to run that file during testing. You also have to tell the coverage module that you don't want those lines counted for coverage. Do this in a &lt;code&gt;.coveragerc&lt;/code&gt; file, with similar syntax:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[run]&lt;/span&gt;
+&lt;span class="na"&gt;omit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;*script.py&lt;/span&gt;
+&lt;/pre&gt;
+
+
 &lt;p&gt;Once you've done this, you can invoke your tests with a simple, undecorated call to just &lt;code&gt;py.test&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;To find out more about your configuration options, see the pytest &lt;a href="http://pytest.org/latest/customize.html"&gt;basic test configuration&lt;/a&gt; page, and Ned Batchelder's excellent &lt;a href="http://nedbatchelder.com/code/coverage/config.html"&gt;&lt;code&gt;.coveragerc&lt;/code&gt; syntax guide&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;That's it for this entry of my CI series. Follow this blog for the next two entries, setting up Travis CI and Coveralls.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Update:&lt;/strong&gt; &lt;a href="http://ilovesymposia.com/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/"&gt;Volume 4: Set up Travis-CI&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>continuous integration</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>test-driven development</category><guid>https://ilovesymposia.com/2014/10/13/continuous-integration-in-python-3-set-up-your-test-configuration-files/</guid><pubDate>Mon, 13 Oct 2014 08:57:20 GMT</pubDate></item><item><title>Continuous integration in Python, Volume 2: measuring test coverage</title><link>https://ilovesymposia.com/2014/10/02/continuous-integration-1-test-coverage/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;(&lt;strong&gt;Edit&lt;/strong&gt;: I initially thought it would be cute to number from 0. But it turns out it becomes rather obnoxious to relate English (first, second, ...) to 0-indexing. So this was formerly volume 1. But everything else remains the same.)&lt;/p&gt;
 &lt;p&gt;This is the second post in a series about setting up continuous integration for a Python project from scratch. For the first post, see &lt;a href="http://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/"&gt;Automated tests with pytest&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;After you've written some test cases for a tiny project, it's easy to check what code you have automatically tested. For even moderately big projects, you will need tools that automatically check what parts of your code are actually tested. The proportion of lines of code that are run at least once during your tests is called your &lt;em&gt;test coverage&lt;/em&gt;.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+
 &lt;p&gt;For the same reasons that testing is important, measuring coverage is important. Pytest can measure coverage for you with the coverage plugin, found in the &lt;a href="https://pypi.python.org/pypi/pytest-cov"&gt;pytest-cov&lt;/a&gt; package. Once you've installed the extension, a test coverage measurement is just a command-line option away:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[code lang=text]&lt;/span&gt;
- &lt;span class="na"&gt;~/projects/maths $ py.test --doctest-modules --cov .&lt;/span&gt;
-&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;============================ test session starts ==============================&lt;/span&gt;
-&lt;span class="na"&gt;platform darwin -- Python 2.7.8 -- py-1.4.25 -- pytest-2.6.3&lt;/span&gt;
-&lt;span class="na"&gt;plugins: cov&lt;/span&gt;
-&lt;span class="na"&gt;collected 2 items &lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt; ~/projects/maths $ py.test --doctest-modules --cov .
+============================= test session starts ==============================
+platform darwin -- Python 2.7.8 -- py-1.4.25 -- pytest-2.6.3
+plugins: cov
+collected 2 items 
 
-&lt;span class="na"&gt;maths.py .&lt;/span&gt;
-&lt;span class="na"&gt;test_maths.py .&lt;/span&gt;
-&lt;span class="na"&gt;--------------- coverage: platform darwin, python 2.7.8-final-0 ----------------&lt;/span&gt;
-&lt;span class="na"&gt;Name         Stmts   Miss  Cover&lt;/span&gt;
-&lt;span class="na"&gt;--------------------------------&lt;/span&gt;
-&lt;span class="na"&gt;maths            2      0   100%&lt;/span&gt;
-&lt;span class="na"&gt;test_maths       4      0   100%&lt;/span&gt;
-&lt;span class="na"&gt;--------------------------------&lt;/span&gt;
-&lt;span class="na"&gt;TOTAL            6      0   100%&lt;/span&gt;
+maths.py .
+test_maths.py .
+--------------- coverage: platform darwin, python 2.7.8-final-0 ----------------
+Name         Stmts   Miss  Cover
+--------------------------------
+maths            2      0   100%
+test_maths       4      0   100%
+--------------------------------
+TOTAL            6      0   100%
 
-&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;========================== 2 passed in 0.07 seconds ===========================&lt;/span&gt;
-&lt;span class="k"&gt;[/code]&lt;/span&gt;
+=========================== 2 passed in 0.07 seconds ===========================
 &lt;/pre&gt;
 
 
 &lt;p&gt;(The &lt;code&gt;--cov&lt;/code&gt; takes a directory as input, which I find obnoxious, given that py.test so naturally defaults to the current directory. But it is what it is.)&lt;/p&gt;
 &lt;p&gt;Now, if I add a function without a test, I'll see my coverage drop:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[code lang=text]&lt;/span&gt;
-&lt;span class="na"&gt;def sqrt(x):&lt;/span&gt;
-    &lt;span class="na"&gt;"""Return the square root of `x`."""&lt;/span&gt;
-    &lt;span class="na"&gt;return x * 0.5&lt;/span&gt;
-&lt;span class="k"&gt;[/code]&lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;sqrt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;"""Return the square root of `x`."""&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mf"&gt;0.5&lt;/span&gt;
 &lt;/pre&gt;
 
 
 &lt;p&gt;(The typo is intentional.)&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[code lang=text]&lt;/span&gt;
-&lt;span class="na"&gt;--------------- coverage: platform darwin, python 2.7.8-final-0 ----------------&lt;/span&gt;
-&lt;span class="na"&gt;Name         Stmts   Miss  Cover&lt;/span&gt;
-&lt;span class="na"&gt;--------------------------------&lt;/span&gt;
-&lt;span class="na"&gt;maths            4      1    75%&lt;/span&gt;
-&lt;span class="na"&gt;test_maths       4      0   100%&lt;/span&gt;
-&lt;span class="na"&gt;--------------------------------&lt;/span&gt;
-&lt;span class="na"&gt;TOTAL            8      1    88%&lt;/span&gt;
-&lt;span class="k"&gt;[/code]&lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;--------------- coverage: platform darwin, python 2.7.8-final-0 ----------------
+Name         Stmts   Miss  Cover
+--------------------------------
+maths            4      1    75%
+test_maths       4      0   100%
+--------------------------------
+TOTAL            8      1    88%
 &lt;/pre&gt;
 
 
 &lt;p&gt;With one more option, &lt;code&gt;--cov-report term-missing&lt;/code&gt;, I can see which lines I &lt;em&gt;haven't&lt;/em&gt; covered, so I can try to design tests specifically for that code:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[code lang=text]&lt;/span&gt;
-&lt;span class="na"&gt;--------------- coverage: platform darwin, python 2.7.8-final-0 ----------------&lt;/span&gt;
-&lt;span class="na"&gt;Name         Stmts   Miss  Cover   Missing&lt;/span&gt;
-&lt;span class="na"&gt;------------------------------------------&lt;/span&gt;
-&lt;span class="na"&gt;maths            4      1    75%   24&lt;/span&gt;
-&lt;span class="na"&gt;test_maths       4      0   100%   &lt;/span&gt;
-&lt;span class="na"&gt;------------------------------------------&lt;/span&gt;
-&lt;span class="na"&gt;TOTAL            8      1    88%   &lt;/span&gt;
-&lt;span class="k"&gt;[/code]&lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;--------------- coverage: platform darwin, python 2.7.8-final-0 ----------------
+Name         Stmts   Miss  Cover   Missing
+------------------------------------------
+maths            4      1    75%   24
+test_maths       4      0   100%   
+------------------------------------------
+TOTAL            8      1    88%   
 &lt;/pre&gt;
 
 
 &lt;p&gt;Do note that 100% coverage does not ensure correctness. For example, suppose I test my &lt;code&gt;sqrt&lt;/code&gt; function like so:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[code lang=python]&lt;/span&gt;
-&lt;span class="na"&gt;def sqrt(x):&lt;/span&gt;
-    &lt;span class="na"&gt;"""Return the square root of `x`.&lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;sqrt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;"""Return the square root of `x`.&lt;/span&gt;
 
-    &lt;span class="na"&gt;Examples&lt;/span&gt;
-    &lt;span class="na"&gt;--------&lt;/span&gt;
-    &lt;span class="na"&gt;&amp;amp;gt;&amp;amp;gt;&amp;amp;gt; sqrt(4.0)&lt;/span&gt;
-    &lt;span class="na"&gt;2.0&lt;/span&gt;
-    &lt;span class="na"&gt;"""&lt;/span&gt;
-    &lt;span class="na"&gt;return x * 0.5&lt;/span&gt;
-&lt;span class="k"&gt;[/code]&lt;/span&gt;
+&lt;span class="sd"&gt;    Examples&lt;/span&gt;
+&lt;span class="sd"&gt;    --------&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;gt;&amp;gt;&amp;gt; sqrt(4.0)&lt;/span&gt;
+&lt;span class="sd"&gt;    2.0&lt;/span&gt;
+&lt;span class="sd"&gt;    """&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mf"&gt;0.5&lt;/span&gt;
 &lt;/pre&gt;
 
 
 &lt;p&gt;Even though my test is correct, and I now have 100% test coverage, I haven't detected my mistake. Oops!&lt;/p&gt;
 &lt;p&gt;But, keeping that caveat in mind, full test coverage &lt;em&gt;is&lt;/em&gt; a wonderful thing, and if you don't test something, you're guaranteed not to catch errors. Further, my example above is quite contrived, and in most situations full test coverage &lt;em&gt;will&lt;/em&gt; spot most errors.&lt;/p&gt;
 &lt;p&gt;That's it for part 2. Tune in next time to learn how to turn on &lt;a href="https://travis-ci.org"&gt;Travis&lt;/a&gt; continuous integration for your GitHub projects!&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Update:&lt;/strong&gt; &lt;a href="http://ilovesymposia.com/2014/10/13/continuous-integration-in-python-3-set-up-your-test-configuration-files/"&gt;Volume 3: set up config files.&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>continuous integration</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>test-driven development</category><guid>https://ilovesymposia.com/2014/10/02/continuous-integration-1-test-coverage/</guid><pubDate>Wed, 01 Oct 2014 15:04:04 GMT</pubDate></item><item><title>Continuous integration in Python, Volume 1: automated tests with pytest</title><link>https://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;Without further ado, here goes the first post: how to set up automated testing for your Python project using &lt;a href="http://pytest.org/latest/"&gt;pytest&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;.. has_math: no
-.. status: published
-.. wp-status: publish
---&amp;gt;&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;&lt;p&gt;(&lt;strong&gt;Edit&lt;/strong&gt;: I initially thought it would be cute to number from 0. But it turns out it becomes rather obnoxious to relate English (first, second, …) to 0-indexing. So this was formerly volume 0. But everything else remains the same.)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Update:&lt;/strong&gt; &lt;a href="http://ilovesymposia.com/2014/10/13/continuous-integration-in-python-3-set-up-your-test-configuration-files/"&gt;Volume 3: set up config files.&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>continuous integration</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>test-driven development</category><guid>https://ilovesymposia.com/2014/10/02/continuous-integration-1-test-coverage/</guid><pubDate>Wed, 01 Oct 2014 15:04:04 GMT</pubDate></item><item><title>Continuous integration in Python, Volume 1: automated tests with pytest</title><link>https://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;(&lt;strong&gt;Edit&lt;/strong&gt;: I initially thought it would be cute to number from 0. But it turns out it becomes rather obnoxious to relate English (first, second, …) to 0-indexing. So this was formerly volume 0. But everything else remains the same.)&lt;/p&gt;
 &lt;p&gt;I just finished the process of setting up continuous integration &lt;em&gt;from scratch&lt;/em&gt; for one of my projects, &lt;a href="https://github.com/jni/cellom2tif"&gt;cellom2tif&lt;/a&gt;, a simple image file converter/liberator. I thought I would write a blog post about that process, but it has slowly mutated into a hefty document that I thought would work better as a series. I'll cover automated testing, test coverage, and how to get these to run automatically for your project with &lt;a href="https://travis-ci.org"&gt;Travis-CI&lt;/a&gt; and &lt;a href="https://coveralls.io"&gt;Coveralls&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Without further ado, here goes the first post: how to set up automated testing for your Python project using &lt;a href="http://pytest.org/latest/"&gt;pytest&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;&lt;h3&gt;Automated tests, and why you need them&lt;/h3&gt;
+&lt;!-- TEASER_END --&gt;
+
+&lt;h3&gt;Automated tests, and why you need them&lt;/h3&gt;
+
 &lt;p&gt;Software engineering is hard, and it's incredibly easy to mess things up, so you should write &lt;em&gt;tests&lt;/em&gt; for all your functions, which ensure that nothing obviously stupid is going wrong. Tests can take a lot of different forms, but here's a really basic example. Suppose this is a function in your file, &lt;code&gt;maths.py&lt;/code&gt;:&lt;/p&gt;
-&lt;p&gt;```http://ilovesymposia.com/2014/01/09/best-practices-addendum-find-and-follow-the-conventions-of-your-programming-community/&lt;/p&gt;
-&lt;p&gt;~/projects/maths $ py.test --doctest-modules
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;square&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Then, elsewhere in your package, you should have a file &lt;code&gt;test_maths.py&lt;/code&gt; with the following function definition:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;maths&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;square&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_square&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;square&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;16&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;This way, if someone (such as your future self) comes along and messes with the code in &lt;code&gt;square()&lt;/code&gt;, &lt;code&gt;test_square&lt;/code&gt; will tell you whether they broke it.
+&lt;/p&gt;&lt;h3&gt;Testing in Python with pytest&lt;/h3&gt;
+A whole slew of testing frameworks, such as &lt;a href="https://nose.readthedocs.org/en/latest/"&gt;nose&lt;/a&gt;, will then traverse your project, look for files and functions whose names begin with &lt;code&gt;test_&lt;/code&gt;, run them, and report any errors or assertion failures.
+&lt;p&gt;I've chosen to use &lt;a href="http://pytest.org/latest/"&gt;pytest&lt;/a&gt; as my framework because:
+&lt;/p&gt;&lt;ul&gt;
+    &lt;li&gt;it is a strict superset of both nose and Python's built-in unittest, so that if you run it on projects set up with those, it'll work out of the box;&lt;/li&gt;
+    &lt;li&gt;its output is more readable than nose's; and&lt;/li&gt;
+    &lt;li&gt;its &lt;a href="http://pytest.org/latest/fixture.html#fixture"&gt;fixtures&lt;/a&gt; provide a very nice syntax for test setup and cleanup.&lt;/li&gt;
+&lt;/ul&gt;
+For a quick intro to pytest, you can watch Andreas Pelme's talk at this year's EuroPython conference:
+&lt;iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/LdVJj65ikRY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;p&gt;But the basics are very simple: sprinkle files named &lt;code&gt;test_something.py&lt;/code&gt; throughout your project, each containing one or more &lt;code&gt;test_function()&lt;/code&gt; definition; then type &lt;code&gt;py.test&lt;/code&gt; on the command line (at your project root directory), and voila! Pytest will traverse all your subdirectories, gather up all the test files and functions, and run your tests.&lt;/p&gt;
+&lt;p&gt;Here's the output for the minimal &lt;code&gt;maths&lt;/code&gt; project described above:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;~/projects/maths $ py.test
 ============================= test session starts ==============================
 platform darwin -- Python 2.7.8 -- py-1.4.20 -- pytest-2.5.2
-collected 2 items&lt;/p&gt;
-&lt;p&gt;maths.py .
-test_maths.py .&lt;/p&gt;
-&lt;p&gt;=========================== 2 passed in 0.06 seconds ===========================&lt;/p&gt;
-&lt;p&gt;```&lt;/p&gt;
+collected 1 items
+
+test_maths.py .
+
+=========================== 1 passed in 0.03 seconds ===========================
+&lt;/pre&gt;
+
+
+&lt;p&gt;In addition to the test functions described above, there is a Python standard called &lt;a href="https://docs.python.org/2/library/doctest.html"&gt;doctest&lt;/a&gt; in which properly formatted usage examples in your documentation are automatically run as tests. Here's an example:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;square&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;"""Return the square of a number `x`.&lt;/span&gt;
+
+&lt;span class="sd"&gt;    [...]&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Examples&lt;/span&gt;
+&lt;span class="sd"&gt;    --------&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;gt;&amp;gt;&amp;gt; square(5)&lt;/span&gt;
+&lt;span class="sd"&gt;    25&lt;/span&gt;
+&lt;span class="sd"&gt;    """&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;(See my &lt;a href="http://ilovesymposia.com/2014/01/09/best-practices-addendum-find-and-follow-the-conventions-of-your-programming-community/"&gt;post on NumPy docstring conventions&lt;/a&gt; for what should go in the ellipsis above.)&lt;/p&gt;
+&lt;p&gt;Depending the complexity of your code, doctests, test functions, or both will be the appropriate route. Pytest supports doctests with the &lt;code&gt;--doctest-modules&lt;/code&gt; flag. (This runs both your standard tests &lt;em&gt;and&lt;/em&gt; doctests.)&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;~/projects/maths $ py.test --doctest-modules
+============================= test session starts ==============================
+platform darwin -- Python 2.7.8 -- py-1.4.20 -- pytest-2.5.2
+collected 2 items
+
+maths.py .
+test_maths.py .
+
+=========================== 2 passed in 0.06 seconds ===========================
+&lt;/pre&gt;
+
+
 &lt;h3&gt;Test-driven development&lt;/h3&gt;
 
 &lt;p&gt;That was easy! And yet most people, my past self included, neglect tests, thinking they'll do them eventually, when the software is ready. This is backwards. You've probably heard the phrase "Test-driven development (TDD)"; this is what they're talking about: writing your tests &lt;em&gt;before&lt;/em&gt; you've written the functionality to pass them. It might initially &lt;em&gt;seem&lt;/em&gt; like wasted effort, like you're not making progress in what you actually want to do, which is write your software. But it's not:&lt;/p&gt;

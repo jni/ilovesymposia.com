@@ -93,25 +93,23 @@ MathJax.Hub.Config({
 <p>I've read in various places that the Python function call overhead is very high. As I was parroting this "fact" to <a href="https://twitter.com/edschofield">Ed Schofield</a> recently, he asked me what the cost of a function actually was. I had no idea. This prompted us to do a few quick benchmarks.</p>
 <p>The short version is that it takes about 150ns to call a function in Python (on my laptop). This doesn't sound like a lot, but it means that you can make <em>at most</em> 6.7 million calls per second, two to three orders of magnitude slower than your processor's clock speed.</p>
 <p>If you want your function to do something, such as, oh, I don't know, <em>receive an input argument</em>, this goes up to 350ns, throttling you at 2.8 million calls per second.</p>
+<!-- TEASER_END -->
+
 <p></p>
 <h3>Benchmarking function calls</h3>
 <p>I cleaned up Ed's and my initial experiments to make a small <a href="https://github.com/jni/performance-tests/blob/master/function-calls/f.py">module</a> and <a href="https://github.com/jni/performance-tests/blob/master/function-calls/timer.py">timer</a> to measure all these values. You can clone the <a href="https://github.com/jni/performance-tests">repo</a> and run <code>python function-calls/timer.py</code> to check the numbers on your machine.</p>
 <p>The benchmarks are variations of comparing the execution time of:</p>
-<pre class="code literal-block"><span></span><span class="k">[code lang=python]</span>
-<span class="na">for i in range(n):</span>
-    <span class="na">pass</span>
-<span class="k">[/code]</span>
+<pre class="code literal-block"><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">pass</span>
 </pre>
 
 
 <p>and:</p>
-<pre class="code literal-block"><span></span><span class="k">[code lang=python]</span>
-<span class="na">def f():</span>
-    <span class="na">pass</span>
+<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="k">pass</span>
 
-<span class="na">for i in range(n):</span>
-    <span class="na">f()</span>
-<span class="k">[/code]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">f</span><span class="p">()</span>
 </pre>
 
 

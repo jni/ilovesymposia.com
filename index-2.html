@@ -78,7 +78,7 @@ MathJax.Hub.Config({
 
         </p>
 </div>
-    </header><div class="e-content entry-content">
+    </header><div class="p-summary entry-summary">
     <div>
 <p></p>
 <p>Apparently <a href="http://www.wired.com/autopia/2013/05/better-place-bankruptcy-report/">Better Place is preparing for bankruptcy</a>. I wrote an <a href="http://ilovesymposia.com/2009/07/18/the-electric-car-of-the-present/">optimistic post</a> about Better Place years ago, when they were just about to launch. They created a swappable battery system for electric cars along with corresponding battery swap stations. In my opinion, these were the most credible cure to range anxiety for electric vehicles. Batteries take a long time to charge, even on Tesla's <a href="http://www.teslamotors.com/charging#/onthego">Supercharger stations</a>, which they ludicrously refer to as "super-quick" just because they can give you half a charge in half an hour. A swap in Better Place's stations took two minutes.</p>
@@ -96,7 +96,7 @@ MathJax.Hub.Config({
 
         </p>
 </div>
-    </header><div class="e-content entry-content">
+    </header><div class="p-summary entry-summary">
     <div>
 <p></p>
 <p>Both <a href="http://www.theverge.com/2013/5/13/4325948/sony-digital-paper-large-screen-ereader-years-late">The Verge</a> and <a href="http://techcrunch.com/2013/05/13/sonys-got-a-13-3-inch-e-reader-with-pen-input-which-is-sort-of-like-a-dodo-with-antlers/">Techcrunch</a> are quite negative about <a href="http://www.sony.co.jp/SonyInfo/News/Press/201305/13-058/">Sony's big new device</a>... So much so that they compelled me to write this post. <em>Someone</em> should give Sony some positive coverage! I think it's an excellent idea, and if Sony needs some enthusiastic testers down under, they should send this thing my way. ;)
@@ -117,15 +117,14 @@ For those of you that haven't seen it, Sony's new device is dubbed "e-paper", ha
 
         </p>
 </div>
-    </header><div class="e-content entry-content">
+    </header><div class="p-summary entry-summary">
     <div>
 <p></p>
 <p>I recently found myself at the wrong end of a crappy internet connection and needing to download a 97MB file. Safari and Chrome would both choke during the download and leave me with a unusable, truncated 4MB file, with no way to resume the download. The OSX command-line download utility, <span style="font-family:courier new;">curl</span>, can resume downloads, but I had to check manually each time the download was interrupted and re-run the command.</p>
 <p>After typing "up, enter" more times than I care to admit, I decided to figure out the automatic way. Here's my bash one-liner to get automatic download resume in <span style="font-family:courier new;">curl</span>:</p>
 <p><code>export ec=18; while [ $ec -eq 18 ]; do /usr/bin/curl -O -C - "http://www.example.com/a-big-archive.zip"; export ec=$?; done
 </code></p>
-<p>Explanation: the exit code <span style="font-family:courier new;">curl</span> chucks when a download is interrupted is 18, and <span style="font-family:courier new;">$?</span> gives you the exit code of the last command in bash. So, while the exit code is 18, keep trying to download the file, maintaining the filename (-O) and resuming where the previous download left off (-C).</p>
-<p><strong>Update:</strong> As Jan points out in the comments, depending what is going wrong with the download, your error code may be different. Just change "18" to whatever error you're seeing to get it to work for you! (If you're feeling adventurous, you could change the condition to <code>while [ $ec -ne 0 ]</code>, but that feels like using a <a href="https://docs.python.org/2/howto/doanddont.html#except">bare except</a> in Python, which is bad. ;)</p>
+<p class="more"><a href="2013/04/11/automatically-resume-interrupted-downloads-in-osx-with-curl/">Read more…</a></p>
 </div>
     </div>
     </article><article class="post h-entry post-text"><header><h1 class="post-title p-name"><a href="2012/05/09/h5cat-quickly-preview-hdf5-file-contents-from-the-command-line/" class="u-url">h5cat: quickly preview HDF5 file contents from the command-line</a></h1>
@@ -139,13 +138,65 @@ For those of you that haven't seen it, Sony's new device is dubbed "e-paper", ha
 
         </p>
 </div>
-    </header><div class="e-content entry-content">
+    </header><div class="p-summary entry-summary">
     <div>
 <p></p>
 <p>As a first attempt at writing actually useful blog posts, I'll publicise a small Python script I wrote to peek inside HDF5 files when <a href="http://www.hdfgroup.org/hdf-java-html/hdfview/">HDFView</a> is overkill. Sometimes you just want to know how many dimensions a stored array has, or its exact path within the HDF hierarchy. </p>
-<p>The "codebase" is currently tiny enough that it all fits below:</p>
-<p>```python</p>
-<p>```</p>
+<p>The “codebase” is currently tiny enough that it all fits below:</p>
+<pre class="code literal-block"><span></span><span class="ch">#!/usr/bin/env python</span>
+
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">h5py</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">array</span>
+
+<span class="n">arguments</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">add_help</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">arggroup</span> <span class="o">=</span> <span class="n">arguments</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'HDF5 cat options'</span><span class="p">)</span>
+<span class="n">arggroup</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-g'</span><span class="p">,</span> <span class="s1">'--group'</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">'GROUP'</span><span class="p">,</span>
+    <span class="n">help</span><span class="o">=</span><span class="s1">'Preview only path given by GROUP'</span><span class="p">)</span>
+<span class="n">arggroup</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-v'</span><span class="p">,</span> <span class="s1">'--verbose'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_true'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+    <span class="n">help</span><span class="o">=</span><span class="s1">'Include array printout.'</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">'Preview the contents of an HDF5 file'</span><span class="p">,</span>
+        <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">arguments</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'fin'</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">'+'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'The input HDF5 files.'</span><span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">fin</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">fin</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s1">'&gt;&gt;&gt;'</span><span class="p">,</span> <span class="n">fin</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">group</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">groups</span> <span class="o">=</span> <span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">group</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">groups</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">groups</span><span class="o">.</span><span class="n">append</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">   '</span><span class="p">,</span> <span class="n">g</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">g</span><span class="p">])</span> <span class="o">==</span> <span class="n">h5py</span><span class="o">.</span><span class="n">highlevel</span><span class="o">.</span><span class="n">Dataset</span><span class="p">:</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="n">g</span><span class="p">]</span>
+                <span class="k">print</span> <span class="s1">'      shape: '</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">      type: '</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">dtype</span>
+                <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                    <span class="n">a</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">g</span><span class="p">])</span>
+                    <span class="k">print</span> <span class="n">a</span>
+</pre>
+
+
+<p>h5cat is <a href="https://github.com/jni/h5cat">available</a> on GitHub under an MIT license. Here's an example use case:</p>
+<pre class="code literal-block"><span></span>$ h5cat -v -g vi single-channel-tr3-0-0.00.lzf.h5
+&gt;&gt;&gt; single-channel-tr3-0-0.00.lzf.h5
+
+    vi
+      shape:  <span class="o">(</span><span class="m">3</span>, <span class="m">1</span><span class="o">)</span> 
+      type:  float64
+<span class="o">[[</span> <span class="m">0</span>.        <span class="o">]</span>
+ <span class="o">[</span> <span class="m">0</span>.06224902<span class="o">]</span>
+ <span class="o">[</span> <span class="m">2</span>.23062383<span class="o">]]</span>
+</pre>
+
+
+<p></p>
 </div>
     </div>
     </article><article class="post h-entry post-text"><header><h1 class="post-title p-name"><a href="2009/07/19/on-happiness/" class="u-url">On Happiness</a></h1>
@@ -159,19 +210,14 @@ For those of you that haven't seen it, Sony's new device is dubbed "e-paper", ha
 
         </p>
 </div>
-    </header><div class="e-content entry-content">
+    </header><div class="p-summary entry-summary">
     <div>
 <p></p>
 <p>Time for another TED talk... Psychologist Nancy Etcoff gave a fairly entertaining talk about happiness. Mostly it's a bunch of "we're gonna figure this out, we promise, here are some clues", but there are a few nuggets in there that I found worth sharing.</p>
-<p>[ted id=570]</p>
-<p>First, most interesting to me, is a little bit of scientific evidence on the cliché that selflessness equals happiness: if you run language metrics on the works of suicidal poets, you find an excess of self-centred words, such as "I", "me", "my", when compared to other poetry. Focusing on things other than yourself will make you a happier person.</p>
-<!--more-->
+<div style="max-width:854px"><div style="position:relative;height:0;padding-bottom:56.25%"><iframe src="https://embed.ted.com/talks/nancy_etcoff_on_happiness_and_why_we_want_it" width="854" height="480" style="position:absolute;left:0;top:0;width:100%;height:100%" frameborder="0" scrolling="no" allowfullscreen></iframe></div></div>
 
-<p>Having said that, Etcoff does point out that absence of depression is not happiness, as we all know. The pain avoidance and reward-seeking systems of the brain are separate, and to be happy you need both to be in order. She mentions that people who come off anti-depressants often relapse, because only one of the systems was being treated (I forget which—watch the talk!), so as soon as the treatment stops, the symptoms of the other system become manifest again.</p>
-<p>Next, there are three different reward systems in the brain, and they can be decoupled. Etcoff distinguishes between lust, romantic attraction, and attachment. These are mediated by different molecules in the brain, and keeping them in sync is critical to your own happiness.</p>
-<p>And last: as has been well publicised, more money does not equal more happiness. This has been observed on an individual level (the richest are about as happy as the middle-class) and a societal level (as societies have gotten richer, happiness levels have stayed the same, and depression has actually increased). But, as a researcher, I love the New Yorker's take on it (from the talk):</p>
-<p><a href="http://ilovesymposia.files.wordpress.com/2009/07/researchers.png"><img class="aligncenter size-full wp-image-137" title="How much researchers make" src="http://ilovesymposia.files.wordpress.com/2009/07/researchers.png" alt="How much researchers make" width="306" height="306"></a></p>
-<p>Anyway, there you have it. In short: help others! Be happy! And keep watching this space for more on happiness!</p>
+<p>First, most interesting to me, is a little bit of scientific evidence on the cliché that selflessness equals happiness: if you run language metrics on the works of suicidal poets, you find an excess of self-centred words, such as "I", "me", "my", when compared to other poetry. Focusing on things other than yourself will make you a happier person.</p>
+<p class="more"><a href="2009/07/19/on-happiness/">Read more…</a></p>
 </div>
     </div>
     </article><article class="post h-entry post-text"><header><h1 class="post-title p-name"><a href="2009/07/18/the-electric-car-of-the-present/" class="u-url">The electric car of the... Present?</a></h1>
@@ -185,16 +231,15 @@ For those of you that haven't seen it, Sony's new device is dubbed "e-paper", ha
 
         </p>
 </div>
-    </header><div class="e-content entry-content">
+    </header><div class="p-summary entry-summary">
     <div>
 <p></p>
 <em>I Love Symposia!</em> is going back to its roots, with a post about a TED talk!
 <p>In <a href="http://www.ted.com/talks/shai_agassi_on_electric_cars.html">his talk</a>, <a href="http://en.wikipedia.org/wiki/Shai_Agassi">Shai Agassi</a> of <a href="http://www.betterplace.com/">Better Place</a> lays out his vision for cheap electric cars running on electricity from 100% renewable sources, and using technology available <em>today</em>. If you live in Israel, Denmark, Australia or Northern California, you are first in line to try out their cars, which will be built by Renault and Nissan.</p>
-<p>[ted id=512]</p>
+<div style="max-width:854px"><div style="position:relative;height:0;padding-bottom:56.25%"><iframe src="https://embed.ted.com/talks/shai_agassi_on_electric_cars" width="854" height="480" style="position:absolute;left:0;top:0;width:100%;height:100%" frameborder="0" scrolling="no" allowfullscreen></iframe></div></div>
+
 <p>Agassi gets around the problem of the limited range of electric cars by making the battery quickly and easily replaceable. Thus you'll stop at a <span style="text-decoration:line-through;">petrol</span> battery station and a robotic system will swap out the battery in less than two minutes—presto! Instant battery recharge. That's less time than it takes to fill up.</p>
-<p>With one trillion dollars set aside for the economic stimulus, it'll be disappointing if none of it goes to building battery change stations in the US. Ditto for China.</p>
-<p>If you're lucky enough to be in one of the pilot regions, be sure to go to the <a href="http://www.betterplace.com/">Better Place</a> website for more information! If not, then follow Al Gore's advice and invest in green tech. As Agassi says, this is now a <em>moral</em> choice.</p>
-<p>(Just as a quick aside, I was happy to discover that Wordpress.com now allows you to embed TED talks! If you use Wordpress.com, find the announcement <a href="http://en.blog.wordpress.com/2009/04/15/ted-ideas-worth-spreading/">here</a> and the instructions <a href="http://support.wordpress.com/videos/ted-talks/">here</a>.)</p>
+<p class="more"><a href="2009/07/18/the-electric-car-of-the-present/">Read more…</a></p>
 </div>
     </div>
     </article><article class="post h-entry post-text"><header><h1 class="post-title p-name"><a href="2009/06/25/apple-pages-and-its-shortcomings/" class="u-url">Apple Pages and its shortcomings</a></h1>
@@ -208,17 +253,13 @@ For those of you that haven't seen it, Sony's new device is dubbed "e-paper", ha
 
         </p>
 </div>
-    </header><div class="e-content entry-content">
+    </header><div class="p-summary entry-summary">
     <div>
 <p></p>
 <p>I recently finished writing a paper (will add link once it's published—cross your fingers!). I would have used LaTeX, but under certain circumstances, one must revert to good ol' .doc format. Now, MS Office on the Mac is a <em>Mess</em> (with a capital M)—your choices are Office '04, which runs on Rosetta and is therefore dreadfully slow, or Office '08, which is—in short—a giant pile of garbage. So to write this paper, I went with the <a href="http://www.apple.com/iwork/pages/">Pages</a> app from Apple iWork.</p>
 <p><a href="http://www.apple.com/iwork/pages/"><img class="aligncenter size-full wp-image-120" title="Picture 1" src="http://ilovesymposia.files.wordpress.com/2009/06/picture-11.png" alt="Picture 1" width="187" height="65"></a></p>
-<p>Pages, on the whole, is a fine piece of software. There's lots of little touches that make it stand out from MS Word, as well as Google Docs. For one, it's very snappy. My paper is loaded almost instantly, where Word takes several seconds. Word even takes several seconds to scroll past an image! (Ugh.) And Pages plays well with Spaces. If you're a Spaces user, this advantage cannot be overstated—Word '04 was already painfully clumsy with its Spaces compatibility, and '08 only turns up the pain to 11.<!--more--></p>
-<p>The track changes interface is fantastic, a million times better than Word's. Not only does it look much cleaner (with comments and change bubbles <em>outside</em> of the page, instead of on it, messing with your layout), but it sports a very clever feature that highlights changes and comments that fall within a selection — or even better, you can make it hide all change bubbles except those within a selection. For pages that have many small changes, that's a real blessing, as it allows you to focus on exactly the changes you are working on. (As a side note, Pages and MS Word play nice with each other with respect to track changes.)</p>
-<p>The one ludicrous, awful, <em>very</em> 1990 thing about Pages is that it doesn't have an auto-save feature, something that Word got around what, 1997? I realised this the hard way when I lost 5h of work as my Mac froze. (<a href="http://www.shimoapp.com/">Shimo</a>, the usually excellent VPN client, appears to have been the culprit, btw.) As I rebooted, I searched in vain for a "recover changes" button, a hidden swap file somewhere, <em>anything</em>. Nada. Pages could only show me the last saved version of my work. I <em>still</em> can't believe that, 3 revisions in, Pages still lacks any form of auto-save or document recovery feature.</p>
-<p>Anyway, since I wanted to keep using Pages, a quick Google search turned up <a href="http://tristanchadwick.com/worksaver/">WorkSaver</a>, a nifty little donationware auto-save tool for all of Apple iWork. Users of <em>any</em> iWork app—do download this and set it to start at login! Hasn't saved my ass yet, but I'm sure it will. Oh and the homepage and app icon are both <em>super</em>-cute!</p>
-<p><a href="http://www.endnote.com/enx2info.asp">Endnote X2</a> is another mess of an app, but a necessary evil in the world of academic word processing. Pages '09 boasts Endnote integration, and it is relatively ok but generally very clumsy. First, it will only work if Endnote has a default library to open at login, it will only work with that one library, and it will only allow you to use Endnote bibliography styles that are marked as favourites within Endnote. And second, when you click "insert citation" in Pages, you get a window asking you what citation you want. This window looks exactly like any other OSX search window: a table with a search box above it. In every other app, the table would have been populated with all your references, and those that didn't match your search criteria would have been trimmed as you typed your query. Not so in this case: when you start, the search result table is blank. As you type, nothing happens. You have to enter a complete search query, hit Enter, and only then will the table be populated with search results. This inconsistent behaviour had me going crazy for about an hour, thinking that Pages couldn't find my Endnote library. It was one of those times when you wish that software was something physical that you could toss across the room, out the window, or smash to pieces with a hammer.</p>
-<p>In the end, I still prefer Pages over Word, but it's clear that Apple's iWork team have their work cut out for them. On top of all the shortcomings of Pages, the .pages file format is still evolving and there's virtually no chance that other software makers will support it. I'm puzzled and disappointed that Apple chose to invent some new format rather than use the open standard .odt format, which Pages can't even import/export. Unless Apple gets serious with compatibility, it's clear that iWork will remain isolated from the rest of the "productivity" software that is out there. Nevertheless, if you are writing for yourself and just yourself, or if you foresee only a single export to .doc or .pdf format, it's a far better choice than the alternatives.</p>
+<p>Pages, on the whole, is a fine piece of software. There's lots of little touches that make it stand out from MS Word, as well as Google Docs. For one, it's very snappy. My paper is loaded almost instantly, where Word takes several seconds. Word even takes several seconds to scroll past an image! (Ugh.) And Pages plays well with Spaces. If you're a Spaces user, this advantage cannot be overstated—Word '04 was already painfully clumsy with its Spaces compatibility, and '08 only turns up the pain to 11.</p>
+<p class="more"><a href="2009/06/25/apple-pages-and-its-shortcomings/">Read more…</a></p>
 </div>
     </div>
     </article><article class="post h-entry post-text"><header><h1 class="post-title p-name"><a href="2009/06/12/google-engulfs-more-software/" class="u-url">Google engulfs more software</a></h1>
@@ -232,7 +273,7 @@ For those of you that haven't seen it, Sony's new device is dubbed "e-paper", ha
 
         </p>
 </div>
-    </header><div class="e-content entry-content">
+    </header><div class="p-summary entry-summary">
     <div>
 <p></p>
 <p>It seems that Google are intent on doing everything themselves.</p>
@@ -252,7 +293,7 @@ For those of you that haven't seen it, Sony's new device is dubbed "e-paper", ha
 
         </p>
 </div>
-    </header><div class="e-content entry-content">
+    </header><div class="p-summary entry-summary">
     <div>
 <p></p>
 <a href="http://ilovesymposia.files.wordpress.com/2009/06/picture-41.png"><img class="aligncenter size-full wp-image-111" title="Picture 4" src="http://ilovesymposia.files.wordpress.com/2009/06/picture-41.png" alt="Picture 4" width="460" height="34"></a>
@@ -260,30 +301,7 @@ For those of you that haven't seen it, Sony's new device is dubbed "e-paper", ha
 <p>I've decided to write this post as a last-ditch attempt. It will compile most of the arguments I have made in favour of making the Gmail switch.</p>
 <p>I'll start with the short list.</p>
 <p><strong>1. Freedom</strong>. Gmail has by far the most liberal approach to your email data around. You can access the account with any email client, using either POP (download only) or IMAP (2-way sync between your local data and the Gmail server), for free (Yahoo <a href="http://ilovesymposia.files.wordpress.com/2009/06/picture-1.png">charges you for a "Pro" account</a>, and <span style="text-decoration:line-through;">Hotmail only allows it using MS Outlook</span> Hotmail only <a href="http://www.liveside.net/main/archive/2009/03/13/pop3-technology-has-now-rolled-out-to-hotmail-customers-worldwide.aspx">started offering this in March</a>). This way, Gmail lets you back up your data on your computer. You can also forward your email to another account for free. (Again, Yahoo <a href="http://ilovesymposia.files.wordpress.com/2009/06/picture-1.png">only allows this with a Pro account</a>. Hotmail only recently started giving it away for free.)</p>
-<!--more-->
-
-<p><strong>2. More freedom</strong>. Gmail chat uses the <a href="http://en.wikipedia.org/wiki/Jabber">Jabber instant messaging protocol</a>, a free and open standard. This means that anyone can run their own chat server and users between servers can communicate. Contrast this to MSN, Yahoo, or AIM, all of which are closed networks.</p>
-<p><strong>3. Constant innovation</strong>. Gmail, of course, was the first webmail to offer reasonable amounts of free storage online. When it launched on April 1st, 2004 with 1GB of free storage, Hotmail was offering a paltry 2MB and Yahoo 6MB. After it became apparent that Gmail was <em>not</em>, in fact, an April Fool's joke, both competing services updated their storage quotas, I think to something like 100MB and 250MB. Anyway, the numbers don't much matter. My point is that other webmail services are always playing catch up with Gmail.</p>
-<p>The principal reason for this is that <em>Gmail is actually the email system used internally at Google</em>. Google employees therefore have a strong incentive to improve it, and they are the ones with <a href="http://gmailblog.blogspot.com/2008/06/introducing-gmail-labs.html">the power to do it</a>! These days Gmail has <a href="http://googleblog.blogspot.com/2006/02/chat-email-crazy-delicious.html">built-in chat</a> (since 2006, while Hotmail got it... a couple of months ago! Way to keep up, guys!), <a href="http://gmailblog.blogspot.com/2008/10/almost-new-in-labs-sms-text-messaging.html">SMS-chat</a>, built-in <em><a href="http://gmailblog.blogspot.com/2008/11/say-hello-to-gmail-voice-and-video-chat.html">video chat</a></em>(!), <a href="http://gmailblog.blogspot.com/2009/01/new-in-labs-offline-gmail.html">offline access</a> (in the browser, not a client), <a href="http://gmailblog.blogspot.com/2009/05/new-in-labs-automatic-message.html">built-in translation</a>, <a href="http://gmailblog.blogspot.com/2009/03/new-in-labs-youtube-picasa-flickr-and.html">previews</a> for YouTube, Flickr, and <a href="http://gmailblog.blogspot.com/2009/04/powerpoint-and-tiff-file-viewing.html">other commonly emailed stuff</a>, undo send, <a href="http://gmailblog.blogspot.com/2009/02/tasks-paper-vs-iphone.html">built-in task management</a> and <a href="http://gmailblog.blogspot.com/2009/05/tasks-now-in-calendar-too.html">calendar integration</a>, <a href="http://gmailblog.blogspot.com/2008/10/gmail-for-mobile-faster-smoother-and.html">mobile</a>-<a href="http://gmailblog.blogspot.com/2008/01/new-gmail-for-iphone.html">optimised</a> <a href="http://gmailblog.blogspot.com/2008/10/sneak-peek-at-gmail-on-android.html">interfaces</a>, and other features too numerous to list here.</p>
-<p>I often hear, yeah, but Hotmail and Yahoo now also offer tons of storage, so what's my incentive to switch now? Well, good for you, that's where Gmail was five years ago.
-<strong> </strong></p>
-<p><strong>4. The best interface</strong>. This isn't just a matter of taste. Every. Single. Person I convinced to switch after a long battle against "but I <em>like</em> the Hotmail[/Yahoo/whatever] interface!" ended up coming back to me telling me how much better Gmail is. The innovative Conversation View, in which related emails are bundled together, is, I'll admit, disconcerting at first. But it rapidly becomes second nature and you will wonder how you lived without it.</p>
-<p>On top of that, Gmail has unobtrusive text ads instead of Yahoo and Hotmail's ludicrous banner ads that sometimes border on the pornographic. <a href="http://ilovesymposia.files.wordpress.com/2009/06/picture-14.png">Here's an actual full-screen ad</a> I got in Yahoo after sending an email. It's a video ad, not a picture. This is not what you want on your screen if your boss is walking by! Plus, do you really want to annoy your friends/co-workers/prospective employers with the <a href="http://ilovesymposia.files.wordpress.com/2009/06/picture-2.png">unrequested</a> <a href="http://ilovesymposia.files.wordpress.com/2009/06/hotmail-signature.png">invitations</a> that Yahoo and Hotmail append to your outgoing messages?
-<strong></strong></p>
-<p><strong>5. Great search that actually works</strong>. I used to be very, very careful about organising my messages. In today's world, however, even if you have a bunch of carefully thought-out folders, chances are you're still going to be rummaging through a <em>lot</em> of messages before you find what you want... Unless you have decent search. Unfortunately, that's just not the case in either Yahoo or Hotmail. The very first searches I tried in either service to illustrate this failed dramatically. This is my Yahoo inbox before a search:<a href="http://ilovesymposia.files.wordpress.com/2009/06/picture-21.png"><img class="aligncenter size-full wp-image-88" title="Picture 2" src="http://ilovesymposia.files.wordpress.com/2009/06/picture-21.png" alt="Picture 2" width="460" height="68"></a></p>
-<p>Now, see what happens when I search for Flickr:<a href="http://ilovesymposia.files.wordpress.com/2009/06/picture-4.png"><img class="aligncenter size-full wp-image-89" title="Picture 4" src="http://ilovesymposia.files.wordpress.com/2009/06/picture-4.png" alt="Picture 4" width="460" height="85"></a><em></em></p>
-<p><em>One</em> message matches my search! Yeeeeaaaah... Great job guys... Same deal for Hotmail. Here's a message a friend of mine sent me years ago (before Gmail):<a href="http://ilovesymposia.files.wordpress.com/2009/06/picture-17.png"><img class="aligncenter size-full wp-image-90" title="Picture 17" src="http://ilovesymposia.files.wordpress.com/2009/06/picture-17.png" alt="Picture 17" width="460" height="112"></a></p>
-<p>Notice in the final paragraph he mentions David Bowtell, a professor we had in undergrad. Let's say I want to find this email later. I might naively think that typing this:<a href="http://ilovesymposia.files.wordpress.com/2009/06/picture-18.png"><img class="aligncenter size-full wp-image-91" title="Picture 18" src="http://ilovesymposia.files.wordpress.com/2009/06/picture-18.png" alt="Picture 18" width="242" height="36"></a>into the search box would find the message. Guess again! <a href="http://ilovesymposia.files.wordpress.com/2009/06/picture-20.png"><img class="aligncenter size-full wp-image-92" title="Picture 20" src="http://ilovesymposia.files.wordpress.com/2009/06/picture-20.png" alt="Picture 20" width="460" height="212"></a></p>
-<p>Not only did Hotmail FAIL to find the message, as a bonus I get to stare at someone's rotting teeth in all their magnified glory! The clean ones underneath offer little consolation.</p>
-<p>Gmail, on the other hand, was created by the number one search company in the world. Not only do they have the best email search, they offer a <a href="http://gmailblog.blogspot.com/2009/06/tip-slice-and-dice-your-mail-with.html">wide</a> <a href="http://gmailblog.blogspot.com/2008/05/how-to-find-any-email-with-gmail-search.html">range</a> of search operators to help you find <em>exactly</em> what you want. (And yes, I have imported that message into Gmail, and yes, <a href="http://ilovesymposia.files.wordpress.com/2009/06/picture-22.png">Gmail does find it with the exact same query</a>. And notice the nice, actually relevant and helpful ads on the right!)
-<strong></strong></p>
-<p><strong>6. Dead simple migration</strong>. Google recently removed that one final hurdle perhaps holding you back: those thousands of messages and hundreds of contacts stuck in your old account. <a href="http://gmailblog.blogspot.com/2009/05/import-your-mail-and-contacts-from.html">Gmail now offers one-click import</a> of all your contacts and emails from any Hotmail or Yahoo account, or many other types.</p>
-<p>For the technically minded, there's even more reasons to like Gmail.</p>
-<p><strong>7. Keyboard shortcuts</strong>. It's amazingly easy and convenient to use Gmail without <a href="http://gmailblog.blogspot.com/2008/10/tip-read-your-mail-without-touching.html">ever taking your hands off the keyboard</a>. Get to the relevant message in your inbox by using 'j' to go to an older message and 'k' to go to a newer one. Then hit 'o' to open it, 'r' to reply, type your message, 'tab, Enter' to send, and 'e' to <a href="http://gmailblog.blogspot.com/2008/04/9-reasons-to-archive.html">archive</a> the conversation, which drops you back in the inbox. It's super-fast working through dozens of emails. And if you forget what shortcut it is you need, hit '?' to display a list of all the shortcuts, which disappears as soon as you hit the next shortcut.
-<strong></strong></p>
-<p><strong>8. Security</strong>. Google takes it very seriously. First, unlike either Yahoo or Hotmail, Gmail offers the option of <em>always</em> using a secure connection. This makes it impossible for snoops sitting next to you at Starbucks to read your email.</p>
-<p>But second, and even more impressive, Gmail tells you the IP of any other locations where your account is currently open. <a href="http://gmailblog.blogspot.com/2008/07/remote-sign-out-and-info-to-help-you.html">This is always on at the bottom of your browser</a>. You can then click "more info" to display the last five accesses to your account, what kind of access it was (browser, mobile browser, email client, etc.), when the access occurred, and the IP address of the source of the access. You also have the option to sign out all other accounts, which invalidates any previous cookies other than the one you are currently using. In short, if someone else is snooping in your account, you'll know, and you'll be able to take steps to prevent it from happening again. No other webmail service gives users this kind of power.</p>
-<p>In short, Gmail is free, as in beer, and free, as in speech, it's better than the alternatives in a number of ways, and it's super-easy to switch. I hope you'll make the switch soon!</p>
+<p class="more"><a href="2009/06/12/gmail-some-reasons-to-switch/">Read more…</a></p>
 </div>
     </div>
     </article><article class="post h-entry post-text"><header><h1 class="post-title p-name"><a href="2008/12/18/randomise-your-samples/" class="u-url">Randomise your samples!</a></h1>
@@ -297,27 +315,12 @@ For those of you that haven't seen it, Sony's new device is dubbed "e-paper", ha
 
         </p>
 </div>
-    </header><div class="e-content entry-content">
+    </header><div class="p-summary entry-summary">
     <div>
-<p>Hyuna Yang and colleagues seem to have at least part of the answer. They had five different research centers analyse the exact same RNA samples, and collected the raw fluorescence values—before normalisation or any other kind of analysis. </p>
-<p>Hyuna Yang and colleagues seem to have at least part of the answer. They got five different groups to analyse the exact same RNA samples, and got back the raw fluorescence values—before normalisation or any other kind of analysis. 
-.. has_math: no
-.. status: published
-.. wp-status: publish
---&gt;</p>
 <p></p>
 <span><a href="http://www.researchblogging.org"><img class="alignleft" src="http://www.researchblogging.org/public/citation_icons/rb2_large_gray.png" alt="ResearchBlogging.org" width="70" height="85"></a></span>Microarrays certainly <a href="http://reproducibleresearch.org/blog/2008/12/10/three-reasons-to-distrust-microarray-results/">get a lot of flak</a> for being noisy sources of data. It's certainly a valid concern, since a single microarray usually measures the expression levels of tens of thousands of genes, and only a few biological samples are examined. There's no hope of accurately estimating the levels of that many variables with so few samples. Eric Blalock and his colleagues, however, <a href="http://dx.doi.org/10.1016/j.arr.2005.06.006">made a compelling case in 2005</a> that the fault lies not with the technology itself, but with the statistical inferences drawn from the generated data. How then to reconcile the wild variability between published microarray results from different labs with the apparent validity of the technology?
-<p>Hyuna Yang and colleagues seem to have at least part of the answer. They had five different research centers analyse the exact same RNA samples, and collected the raw fluorescence values—before normalisation or any other kind of analysis. After a long (and, dare I say, tedious) analysis, they actually found that batch processing effects had a significant effect on the list of affected genes detected. The authors do a good job of explaining what batch effects are, so I'll open the floor to them:<!--more-->
-</p>
-<blockquote>Due to personnel and equipment constraints, all samples may not be processed at one time. For instance, one fluidics station used for the wash and staining step, is able to process only up to four samples [at a time].</blockquote>
-Because of this, some samples are of necessity processed at different times. If the experimenters are not careful when deciding how to group the samples for processing, this can result in confounding factors:
-<blockquote>Both centers 2 and 3 stored male arrays at 4 degrees while female samples were washed and stained. These centers have the longest lists of differentially expressed genes between sexes.</blockquote>
-Similarly, centers 4 and 5 grouped samples according to mouse strain, and it showed in their long lists of genes differentially expressed between strains. What's happening is that the list of genes actually affected by a particular biological condition (sex or strain) is being contaminated by genes affected by sample processing order, a factor that, I think you'll agree, is extremely uninteresting from a biological perspective. This is very bad news for whoever wants to analyse the data after the fact (including <a href="http://ilovesymposia.wordpress.com/about-the-author/">your humble correspondent</a>, actually!). The authors conclude that the batch effect "cannot be removed from the data without compromising the biological signal."
-<p>The discussion section of the paper is required reading for anyone who will be designing and running microarray experiments in the future, or any kind of experiment, for that matter. The gist of it is this: processing in batches is inevitable, but confounding batches and biological factors is not! When deciding in what order to process your samples, assign them <em>randomly</em> to batches, not systematically (as we are all wont to do). (<a href="http://en.wikipedia.org/wiki/Stratified_sampling">Sample stratification</a> would also work, though the authors don't mention it.)</p>
-<p>So, finally, what should we think about published microarray results? I'd have to agree with critics that single experiments found in the literature to date are not trustworthy. Most published microarray studies, however, follow up with targeted experiments. And one hopes that future microarray experiments (or <a href="http://nar.oxfordjournals.org/cgi/content/full/36/21/e141">whichever expression technology replaces them</a>) will take heed of the recommendations of Yang <em>et al</em>'s PLoS ONE paper. That would certainly go a long way to improving the reproducibility and trustworthiness of genome-wide expression studies.</p>
-<p>[ This post was part of the PLoS ONE @ Two synchroblogging celebration! ]</p>
-<p><span class="Z3988" title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;rft.jtitle=PLoS+ONE&amp;rft_id=info%3Adoi%2F10.1371%2Fjournal.pone.0003724&amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;rft.atitle=Randomization+in+Laboratory+Procedure+Is+Key+to+Obtaining+Reproducible+Microarray+Results&amp;rft.issn=1932-6203&amp;rft.date=2008&amp;rft.volume=3&amp;rft.issue=11&amp;rft.spage=0&amp;rft.epage=0&amp;rft.artnum=http%3A%2F%2Fdx.plos.org%2F10.1371%2Fjournal.pone.0003724&amp;rft.au=Hyuna+Yang&amp;rft.au=Christina+A.+Harrington&amp;rft.au=Kristina+Vartanian&amp;rft.au=Christopher+D.+Coldren&amp;rft.au=Rob+Hall&amp;rft.au=Gary+A.+Churchill&amp;rfe_dat=bpr3.included=1;bpr3.tags=Biology%2CGenetics%2C+Computational+Biology">Hyuna Yang, Christina A. Harrington, Kristina Vartanian, Christopher D. Coldren, Rob Hall, Gary A. Churchill (2008). Randomization in Laboratory Procedure Is Key to Obtaining Reproducible Microarray Results <span>PLoS ONE, 3</span> (11) DOI: <a rev="review" href="http://dx.doi.org/10.1371/journal.pone.0003724">10.1371/journal.pone.0003724</a></span></p>
-<p><span class="Z3988" title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;rft.jtitle=Ageing+Research+Reviews&amp;rft_id=info%3Adoi%2F10.1016%2Fj.arr.2005.06.006&amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;rft.atitle=Harnessing+the+power+of+gene+microarrays+for+the+study+of+brain+aging+and+Alzheimer%27s+disease%3A+Statistical+reliability+and+functional+correlation&amp;rft.issn=15681637&amp;rft.date=2005&amp;rft.volume=&amp;rft.issue=&amp;rft.spage=0&amp;rft.epage=0&amp;rft.artnum=http%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS1568163705000449&amp;rft.au=E+BLALOCK&amp;rft.au=K+CHEN&amp;rft.au=A+STROMBERG&amp;rft.au=C+NORRIS&amp;rft.au=I+KADISH&amp;rft.au=S+KRANER&amp;rft.au=N+PORTER&amp;rft.au=P+LANDFIELD&amp;rfe_dat=bpr3.included=1;bpr3.tags=Biology%2CMicroarrays">E BLALOCK, K CHEN, A STROMBERG, C NORRIS, I KADISH, S KRANER, N PORTER, P LANDFIELD (2005). Harnessing the power of gene microarrays for the study of brain aging and Alzheimer's disease: Statistical reliability and functional correlation <span>Ageing Research Reviews</span> DOI: <a rev="review" href="http://dx.doi.org/10.1016/j.arr.2005.06.006">10.1016/j.arr.2005.06.006</a></span></p>
+<p>Hyuna Yang and colleagues seem to have at least part of the answer. They had five different research centers analyse the exact same RNA samples, and collected the raw fluorescence values—before normalisation or any other kind of analysis. After a long (and, dare I say, tedious) analysis, they actually found that batch processing effects had a significant effect on the list of affected genes detected. The authors do a good job of explaining what batch effects are, so I'll open the floor to them:</p>
+<p class="more"><a href="2008/12/18/randomise-your-samples/">Read more…</a></p>
 </div>
     </div>
     </article>

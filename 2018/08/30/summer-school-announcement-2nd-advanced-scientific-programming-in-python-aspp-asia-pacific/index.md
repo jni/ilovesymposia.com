@@ -30,6 +30,8 @@ Now, thanks to the generous sponsorship of <a href="https://www.csiro.au">CSIRO<
 <li>apply: https://scipy-school.org/applications</li>
 </ul>
 
+<!-- TEASER_END -->
+
 <h2>Background</h2>
 
 Three years ago, I had the privilege of teaching the 2015 ASPP school in Munich. It turned out to be a fantastic teaching experience (I have taught in 2 more since), and more importantly, it was a fantastic experience for the students. Students are selected for the school to fit a certain profile, neither too novice nor too advanced. As such, participants selected for the school are almost guaranteed to learn a great deal.

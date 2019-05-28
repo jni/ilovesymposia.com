@@ -14,11 +14,11 @@
 
 <html><body><p>Time for another TED talk... Psychologist Nancy Etcoff gave a fairly entertaining talk about happiness. Mostly it's a bunch of "we're gonna figure this out, we promise, here are some clues", but there are a few nuggets in there that I found worth sharing.
 
-[ted id=570]
+<div style="max-width:854px"><div style="position:relative;height:0;padding-bottom:56.25%"><iframe src="https://embed.ted.com/talks/nancy_etcoff_on_happiness_and_why_we_want_it" width="854" height="480" style="position:absolute;left:0;top:0;width:100%;height:100%" frameborder="0" scrolling="no" allowfullscreen></iframe></div></div>
 
 First, most interesting to me, is a little bit of scientific evidence on the cliché that selflessness equals happiness: if you run language metrics on the works of suicidal poets, you find an excess of self-centred words, such as "I", "me", "my", when compared to other poetry. Focusing on things other than yourself will make you a happier person.
 
-<!--more-->
+<!-- TEASER_END -->
 
 Having said that, Etcoff does point out that absence of depression is not happiness, as we all know. The pain avoidance and reward-seeking systems of the brain are separate, and to be happy you need both to be in order. She mentions that people who come off anti-depressants often relapse, because only one of the systems was being treated (I forget which—watch the talk!), so as soon as the treatment stops, the symptoms of the other system become manifest again.
 

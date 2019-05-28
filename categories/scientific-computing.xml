@@ -3,7 +3,7 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by/4.0/"&gt;
 &lt;img alt="Creative Commons License BY"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Wed, 01 May 2019 09:57:22 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Summer School Announcement: ASPP Asia-Pacific 2018</title><link>https://ilovesymposia.com/2017/10/05/summer-school-announcement-aspp-asia-pacific-2018/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;The Advanced Scientific Programming in Python (ASPP) summer school has had 10 extremely successful iterations in Europe. (You can find past materials, schedules, and student evaluations at &lt;a href="https://python.g-node.org/archives"&gt;https://python.g-node.org/archives&lt;/a&gt;.) Now, thanks to the &lt;a href="https://incf.org"&gt;INCF&lt;/a&gt;, we will be holding its first iteration in Australia, to cater to the Asia Pacific region. (Note: the original ASPP will still take place in Europe next Northern summer; this is a fork of that school.)&lt;/p&gt;
+src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Tue, 28 May 2019 10:34:04 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Summer School Announcement: ASPP Asia-Pacific 2018</title><link>https://ilovesymposia.com/2017/10/05/summer-school-announcement-aspp-asia-pacific-2018/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;The Advanced Scientific Programming in Python (ASPP) summer school has had 10 extremely successful iterations in Europe. (You can find past materials, schedules, and student evaluations at &lt;a href="https://python.g-node.org/archives"&gt;https://python.g-node.org/archives&lt;/a&gt;.) Now, thanks to the &lt;a href="https://incf.org"&gt;INCF&lt;/a&gt;, we will be holding its first iteration in Australia, to cater to the Asia Pacific region. (Note: the original ASPP will still take place in Europe next Northern summer; this is a fork of that school.)&lt;/p&gt;
 &lt;p&gt;&lt;/p&gt;&lt;h3&gt;Key details&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;The workshop runs &lt;strong&gt;January 14-21&lt;/strong&gt; at the &lt;strong&gt;Melbourne Brain Centre&lt;/strong&gt;, University of Melbourne, Australia&lt;/li&gt;
@@ -15,6 +15,8 @@ src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright>
 &lt;li&gt;website: https://melbournebioinformatics.org.au/aspp-asia-pacific&lt;/li&gt;
 &lt;li&gt;apply: https://melbournebioinformatics.org.au/aspp-asia-pacific/applications (make sure you read the FAQ on that page)&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;!-- TEASER_END --&gt;
 
 &lt;h3&gt;Background&lt;/h3&gt;
 
@@ -39,6 +41,8 @@ Numba is a just-in-time compiler (JIT) for Python code focused on NumPy arrays a
 &lt;p&gt;&lt;/p&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
+&lt;!-- TEASER_END --&gt;
+
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;
 &lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
@@ -983,6 +987,8 @@ There's our pixel graph! Obviously, the speedup and n-d support are important fo
 &lt;p&gt;Most scientists go to conferences in their own field: neuroscientists go to the monstrous Society for Neuroscience (SfN); Bioinformaticians go to RECOMB, ISMB, or PSB; and so on.&lt;/p&gt;
 &lt;p&gt;People go to these to keep up with the latest advances in their field, and often, to do a bit of networking.&lt;/p&gt;
 &lt;p&gt;SciPy is a different kind of conference. &lt;em&gt;It changes the way you do science.&lt;/em&gt; You learn about the latest free and open source software to help you with your work. You learn to write functions and interfaces instead of scripts, and to write tests so you don't break your code. You also learn to contribute these to bigger projects, maximising the reach and impact of your work (see "sprints", below).&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+
 &lt;p&gt;And you learn these things by &lt;em&gt;doing&lt;/em&gt; them, with the people who are the best at this, rather than by reading books and blog posts. (Which maybe I shouldn't knock, since I'm writing a book about all this and you are reading my blog!)&lt;/p&gt;
 &lt;p&gt;Attendees to SciPy have scientific software in common, but come from diverse fields, including physics, pure maths, data visualisation, geosciences, climatology, and yes, biology and bioinformatics. Mingling with such a diverse group is a fantastic way to get your creative juices flowing!&lt;/p&gt;
 &lt;p&gt;The conference lasts a full week and is broken up into three parts: tutorials, main conference, and sprints.&lt;/p&gt;
@@ -1011,11 +1017,14 @@ There's our pixel graph! Obviously, the speedup and n-d support are important fo
 - Code should be satisfying in some way, such as speed, conciseness, broad applicability...
 - Preferably, nominate &lt;em&gt;someone else's&lt;/em&gt; code that impressed &lt;em&gt;you&lt;/em&gt;.
 - Include a scientific application on real data.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+
 &lt;p&gt;Submit by one of:
 - Twitter: mention &lt;a href="https://twitter.com/hdashnow"&gt;@hdashnow&lt;/a&gt;, &lt;a href="https://twitter.com/stefanvdwalt"&gt;@stefanvdwalt&lt;/a&gt;, or &lt;a href="https://twitter.com/jnuneziglesias"&gt;@jnuneziglesias&lt;/a&gt;, or just use the hashtag #ElegantSciPy;
 - Email: &lt;a href="mailto:stefanv(at)berkeley.edu"&gt;Stéfan van der Walt&lt;/a&gt;, &lt;a href="mailto:juan.n@unimelb.edu.au"&gt;Juan Nunez-Iglesias&lt;/a&gt;, or &lt;a href="mailto:harriet.dashnow@unimelb.edu.au"&gt;Harriet Dashnow&lt;/a&gt;; or
 - GitHub: create a new issue &lt;a href="https://github.com/HarrietInc/elegant-scipy-submissions/issues"&gt;here&lt;/a&gt;.
 (All submissions will be credited as "written by" and "nominated by".)&lt;/p&gt;
+&lt;p&gt;.. TEASER_END&lt;/p&gt;
 &lt;h3&gt;Long version&lt;/h3&gt;
 
 &lt;p&gt;A big thank you to everyone that has submitted code, retweeted, posted on mailing lists, and otherwise spread the word about the book! We're still pretty far from a book-length title though. I was also a bit vague about the kinds of submissions we wanted. I'll elaborate a bit on each of the above points:&lt;/p&gt;
@@ -1036,6 +1045,8 @@ There's our pixel graph! Obviously, the speedup and n-d support are important fo
 &lt;p&gt;Thank you, and we hope to hear from you!&lt;/p&gt;&lt;/div&gt;</description><category>Planet SciPy</category><category>programming</category><category>Python</category><category>Scientific Computing</category><guid>https://ilovesymposia.com/2015/02/23/clarifications-about-our-book-elegant-scipy-and-our-call-for-code-submissions/</guid><pubDate>Sun, 22 Feb 2015 19:31:46 GMT</pubDate></item><item><title>Call for code nominations for Elegant SciPy!</title><link>https://ilovesymposia.com/2015/02/04/call-for-code-nominations-for-elegant-scipy/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;strong&gt;Update:&lt;/strong&gt; See the also the &lt;a href="http://ilovesymposia.com/2015/02/23/clarifications-about-our-book-elegant-scipy-and-our-call-for-code-submissions/"&gt;clarifications&lt;/a&gt; to this post, and submit code by creating an issue in our &lt;a href="https://github.com/HarrietInc/elegant-scipy-submissions"&gt;GitHub repo&lt;/a&gt;!
 &lt;p&gt;It's official! Harriet Dashnow, Stéfan van der Walt, and I will be writing an O'Reilly book about the SciPy library and the surrounding ecosystem. The book is called Elegant SciPy, and is intended to teach SciPy to fledgling Pythonistas, guided by the most elegant SciPy code examples we can find.&lt;/p&gt;
 &lt;p&gt;So, if you recently came across scientific Python code that made you go "Wow!" with its elegance, simplicity, cleverness, or power, please point us to it! As an example, have a look at Vighnesh Birodkar's code to build a region adjacency graph from an n-dimensional image, which I highlighted previously &lt;a href="http://ilovesymposia.com/2014/06/24/a-clever-use-of-scipys-ndimage-generic_filter-for-n-dimensional-image-processing/"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+
 &lt;p&gt;Each chapter will have one or two snippets that we will work towards. Each of these will be credited as "written by/nominated by", and needs to be published under a permissive license such as MIT, BSD, or public domain to be considered for inclusion. We would especially like nominations in the following categories:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;statistics (using scipy.stats)&lt;/li&gt;
@@ -1081,6 +1092,8 @@ def scan(op, values, seed=None):
 &lt;p&gt;
 First, this code ignores the article's own advice, &lt;em&gt;(1b) make names consistent, distinctive, and meaningful. &lt;/em&gt; I would argue that "scan" here is neither distinctive (many other operations could be called "scan") nor meaningful (the function purpose is not at all clear from the name). My suggestion would be "cumulative_reduce".
 &lt;/p&gt;
+
+&lt;!-- TEASER_END --&gt;
 
 &lt;p&gt;
 It also does not address another important piece of advice that I would add to their list, maybe as (1d): &lt;strong&gt;Find out, and follow, the conventions of the programming community you're joining.&lt;/strong&gt; This will allow others to use and assess your code more readily, and you to contribute to other code libraries more easily. Here, although they have made efforts to make their advice language-agnostic, the authors have chosen Python to illustrate their point. Python happens to have strong style and documentation prescriptions in the form of Python Enhancement Proposals &lt;a href="http://www.python.org/dev/peps/pep-0008/"&gt;PEP-8: Style Guide for Python Code&lt;/a&gt; and &lt;a href="http://www.python.org/dev/peps/pep-0257/"&gt;PEP-257: Docstring conventions&lt;/a&gt;. Following PEP-8 and PEP-257, the above comments become an actual docstring (which is attached to the function automatically by documentation-generating tools):

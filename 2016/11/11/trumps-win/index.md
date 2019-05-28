@@ -16,6 +16,8 @@
 
 I am deeply, depressingly pessimistic about the future of the planet under Trump. Let's take the very best, most ludicrously optimistic scenario: that Trump swings to the center<a href="#fn1"><sup>1</sup></a> and doesn't make good on his many horrid promises. Even then, his election, and the Republicans' victory in the House and Senate, represent game over in the fight to avoid climate change<a href="#fn2"><sup>2</sup></a>.
 
+<!-- TEASER_END -->
+
 Like many of us, I'd buried my head in the sand about this, even after I read Michael Moore's again-famous essay predicting Trump's victory<a href="#fn3"><sup>3</sup></a>, which is well worth a read. After that, here are some choice quotes from essays I recommend about how this nightmare came to be. From Glenn Greenwald's The Ongoing, Dangerous Refusal to Learn the Lesson of Brexit<a href="#fn4"><sup>4</sup></a>:
 
 </p><blockquote>

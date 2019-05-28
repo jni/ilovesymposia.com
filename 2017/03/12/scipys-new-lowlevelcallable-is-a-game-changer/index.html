@@ -97,13 +97,128 @@ I've lamented before that function calls are expensive in Python, and that this 
 <p></p>
 <p>... and combines rather well with that other game-changing library I like, <a href="https://ilovesymposia.com/2016/12/20/numba-in-the-real-world/">Numba</a>.</p>
 <p>I've <a href="https://ilovesymposia.com/2015/12/10/the-cost-of-a-python-function-call/">lamented before</a> that function calls are expensive in Python, and that this severely hampers many functions that <em>should</em> be insanely useful, such as SciPy's <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.generic_filter.html#scipy.ndimage.generic_filter"><code>ndimage.generic_filter</code></a>.</p>
+<!-- TEASER_END -->
+
 <p>To illustrate this, let's look at image <em>erosion</em>, which is the replacement of each pixel in an image by the minimum of its neighbourhood. <code>ndimage</code> has a fast C implementation, which serves as a perfect benchmark against the generic version, using a generic filter with <code>min</code> as the operator. Let's start with a 2048 x 2048 random image:</p>
-<p>```http://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#types</p>
-<p>&gt;&gt;&gt; %timeit ndi.generic_filter(image, LowLevelCallable(nbmin.ctypes), footprint=footprint)
-10 loops, best of 3: 113 ms per loop</p>
-<p>```</p>
+<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">2048</span><span class="p">,</span> <span class="mi">2048</span><span class="p">))</span>
+</pre>
+
+
+<p>and a neighbourhood “footprint” that picks out the pixels to the left and right, and above and below, the centre pixel:</p>
+<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">footprint</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+<span class="o">...</span>                       <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+<span class="o">...</span>                       <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+</pre>
+
+
+<p>Now, we measure the speed of <code>grey_erosion</code> and <code>generic_filter</code>. Spoiler alert: it’s not pretty.</p>
+<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">ndimage</span> <span class="k">as</span> <span class="n">ndi</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="o">%</span><span class="n">timeit</span> <span class="n">ndi</span><span class="o">.</span><span class="n">grey_erosion</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">footprint</span><span class="o">=</span><span class="n">footprint</span><span class="p">)</span>
+<span class="mi">10</span> <span class="n">loops</span><span class="p">,</span> <span class="n">best</span> <span class="n">of</span> <span class="mi">3</span><span class="p">:</span> <span class="mi">118</span> <span class="n">ms</span> <span class="n">per</span> <span class="n">loop</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="o">%</span><span class="n">timeit</span> <span class="n">ndi</span><span class="o">.</span><span class="n">generic_filter</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">,</span> <span class="n">footprint</span><span class="o">=</span><span class="n">footprint</span><span class="p">)</span>
+<span class="mi">1</span> <span class="n">loop</span><span class="p">,</span> <span class="n">best</span> <span class="n">of</span> <span class="mi">3</span><span class="p">:</span> <span class="mi">27</span> <span class="n">s</span> <span class="n">per</span> <span class="n">loop</span>
+</pre>
+
+
+<p>As you can see, with Python functions, <code>generic_filter</code> is unusable for anything but the tiniest of images.</p>
+<p>A few months ago, I was
+<a href="https://groups.google.com/a/continuum.io/d/msg/numba-users/HMg_65R8KZE/RnysYokGAwAJ">trying</a>
+to get around this by using Numba-compiled functions, but the way to feed C
+functions to SciPy was different depending on which part of the library you
+were using. <code>scipy.integrate</code> used ctypes, while <code>scipy.ndimage</code> used <code>PyCObjects</code> or
+<code>PyCapsules</code>, depending on your Python version, and Numba only supported the
+former method at the time. (Plus, this topic starts to stretch my understanding
+of low-level Python, so I felt there wasn’t much I could do about it.)</p>
+<p>Enter <a href="https://github.com/scipy/scipy/pull/6509">this pull request</a> to SciPy
+from Pauli Virtanen, which is live in the most recent SciPy version, 0.19. It
+unifies all C-function interfaces within SciPy, and Numba already supports this
+format. It takes a bit of gymnastics, but it works! It really works!</p>
+<p>(By the way, the release is full of little gold nuggets. If you use SciPy at
+all, the release notes are well worth a read.)</p>
+<p>First, we need to define a C function of the appropriate signature. Now, you
+might think this is the same as the Python signature, taking in an array of
+values and returning a single value, but that would be too easy! Instead, we
+have to go back to some C-style programming with pointers and array sizes. From
+the <code>generic_filter</code> documentation:</p>
+<blockquote>
+<p>This function also accepts low-level callback functions with one of the
+following signatures and wrapped in scipy.LowLevelCallable:</p>
+<p><code>c
+int callback(double *buffer, npy_intp filter_size, 
+             double *return_value, void *user_data)
+int callback(double *buffer, intptr_t filter_size, 
+             double *return_value, void *user_data)</code></p>
+<p>The calling function iterates over the elements of the input and output
+arrays, calling the callback function at each element. The elements within
+the footprint of the filter at the current element are passed through the
+buffer parameter, and the number of elements within the footprint through
+filter_size. The calculated value is returned in return_value. user_data is
+the data pointer provided to scipy.LowLevelCallable as-is.</p>
+<p>The callback function must return an integer error status that is zero if
+something went wrong and one otherwise. </p>
+</blockquote>
+<p>(Let’s leave aside that crazy reversal of Unix convention of the past 50 years
+in the last paragraph, except to note that our function must return 1 or it
+will be killed.)</p>
+<p>So, we need a Numba cfunc that takes in:</p>
+<ul>
+<li>a double pointer pointing to the values within the footprint,</li>
+<li>a pointer-sized integer that specifies the number of values in the footprint,</li>
+<li>a double pointer for the result, and</li>
+<li>a void pointer, which could point to additional parameters, but which we can ignore for now.</li>
+</ul>
+<p>The Numba type names are listed in <a href="http://numba.pydata.org/numba-doc/dev/reference/types.html#numba-types">this page</a>. Unfortunately, at the time of
+writing, there’s no mention of how to make pointers there, but finding such a
+reference <a href="http://numba.pydata.org/numba-doc/dev/user/cfunc.html#signature-specification">was not too hard</a>. (Incidentally, it would make a good contribution to
+Numba’s documentation to add CPointer to the Numba types page.)</p>
+<p>So, armed with all that documentation, and after much trial and error, I was
+finally ready to write that C callable:</p>
+<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">cfunc</span><span class="p">,</span> <span class="n">carray</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">numba.types</span> <span class="kn">import</span> <span class="n">intc</span><span class="p">,</span> <span class="n">intp</span><span class="p">,</span> <span class="n">float64</span><span class="p">,</span> <span class="n">voidptr</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">numba.types</span> <span class="kn">import</span> <span class="n">CPointer</span>
+<span class="o">&gt;&gt;&gt;</span> 
+<span class="o">&gt;&gt;&gt;</span> 
+<span class="o">&gt;&gt;&gt;</span> <span class="nd">@cfunc</span><span class="p">(</span><span class="n">intc</span><span class="p">(</span><span class="n">CPointer</span><span class="p">(</span><span class="n">float64</span><span class="p">),</span> <span class="n">intp</span><span class="p">,</span>
+<span class="o">...</span>             <span class="n">CPointer</span><span class="p">(</span><span class="n">float64</span><span class="p">),</span> <span class="n">voidptr</span><span class="p">))</span>
+<span class="o">...</span> <span class="k">def</span> <span class="nf">nbmin</span><span class="p">(</span><span class="n">values_ptr</span><span class="p">,</span> <span class="n">len_values</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="o">...</span>     <span class="n">values</span> <span class="o">=</span> <span class="n">carray</span><span class="p">(</span><span class="n">values_ptr</span><span class="p">,</span> <span class="p">(</span><span class="n">len_values</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
+<span class="o">...</span>     <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+<span class="o">...</span>     <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+<span class="o">...</span>         <span class="k">if</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+<span class="o">...</span>             <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+<span class="o">...</span>     <span class="k">return</span> <span class="mi">1</span>
+</pre>
+
+
+<p>The only other tricky bits I had to watch out for while writing that function were as follows:</p>
+<ul>
+<li>remembering that there’s two ways to de-reference a pointer in C: <code>*ptr</code>,
+   which is not valid Python and thus not valid Numba, and <code>ptr[0]</code>. So, to place
+   the result at the given double pointer, we use the latter syntax. (If you
+   prefer to use Cython, the same rule applies.)</li>
+<li>Creating an array out of the <code>values_ptr</code> and <code>len_values</code> variables, as shown
+   here. That’s what enables the <code>for v in values</code> Python-style access to the
+   array.</li>
+</ul>
+<p>Ok, so now what you’ve been waiting for. How did we do? First, to recap, the original benchmarks:</p>
+<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">ndimage</span> <span class="k">as</span> <span class="n">ndi</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="o">%</span><span class="n">timeit</span> <span class="n">ndi</span><span class="o">.</span><span class="n">grey_erosion</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">footprint</span><span class="o">=</span><span class="n">footprint</span><span class="p">)</span>
+<span class="mi">10</span> <span class="n">loops</span><span class="p">,</span> <span class="n">best</span> <span class="n">of</span> <span class="mi">3</span><span class="p">:</span> <span class="mi">118</span> <span class="n">ms</span> <span class="n">per</span> <span class="n">loop</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="o">%</span><span class="n">timeit</span> <span class="n">ndi</span><span class="o">.</span><span class="n">generic_filter</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">,</span> <span class="n">footprint</span><span class="o">=</span><span class="n">footprint</span><span class="p">)</span>
+<span class="mi">1</span> <span class="n">loop</span><span class="p">,</span> <span class="n">best</span> <span class="n">of</span> <span class="mi">3</span><span class="p">:</span> <span class="mi">27</span> <span class="n">s</span> <span class="n">per</span> <span class="n">loop</span>
+</pre>
+
+
+<p>And now, with our new Numba cfunc:</p>
+<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="o">%</span><span class="n">timeit</span> <span class="n">ndi</span><span class="o">.</span><span class="n">generic_filter</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">LowLevelCallable</span><span class="p">(</span><span class="n">nbmin</span><span class="o">.</span><span class="n">ctypes</span><span class="p">),</span> <span class="n">footprint</span><span class="o">=</span><span class="n">footprint</span><span class="p">)</span>
+<span class="mi">10</span> <span class="n">loops</span><span class="p">,</span> <span class="n">best</span> <span class="n">of</span> <span class="mi">3</span><span class="p">:</span> <span class="mi">113</span> <span class="n">ms</span> <span class="n">per</span> <span class="n">loop</span>
+</pre>
+
+
 <p>That's right: it's even marginally <em>faster</em> than the pure C version! I almost cried when I ran that.</p>
-<p></p>
+
+
 <hr>
 <p>Higher-order functions, ie functions that take other functions as input, enable powerful, concise, elegant <a href="https://ilovesymposia.com/2014/06/24/a-clever-use-of-scipys-ndimage-generic_filter-for-n-dimensional-image-processing/">expressions</a> of various algorithms. Unfortunately, these have been hampered in Python for large-scale data processing because of Python's function call overhead. SciPy's latest update goes a long way towards redressing this.</p>
 </div>

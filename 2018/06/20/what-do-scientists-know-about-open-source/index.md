@@ -18,6 +18,8 @@ At the core of the issue, Matt identifies two main problems: (1) colleges and un
 
 I want to comment about this in the context of programming in science. That is, programming where the code is not the main product, but rather a useful tool to obtain a scientific result, for example in biology or physics. Here, we still see relatively little contribution to open source, for related but different cultural issues.
 
+<!-- TEASER_END -->
+
 I've sent my <a href="https://ilovesymposia.com/2015/12/26/why-scientists-should-code-in-the-open/">scientists should code in the open</a> post to a few people and the response from most remains sceptical. I hope this post will address some of their concerns.
 
 </p><h2>Scientific culture is ridiculously secretive</h2>

@@ -95,12 +95,59 @@ I recently explained how to use Fiji's Jython interpreter to open BioFormat">
 <p>The python-bioformats library lets you seamlessly read microscopy images into numpy arrays from pretty much any file format.</p>
 <p>I <a href="http://ilovesymposia.com/2014/01/15/fiji-jython">recently explained</a> how to use Fiji's Jython interpreter to open BioFormats images, do some processing, and save the result to a standard format such as TIFF. Since then, the
 <a href="http://cellprofiler.org">CellProfiler team</a> has released an incredible tool, the <a href="https://github.com/cellprofiler/python-bioformats">python-bioformats</a> library. It uses the Java Native Interface (JNI) to access the Java BioFormats library and give you back a numpy array within Python. In other words, it's magic.</p>
+<!-- TEASER_END -->
+
 <p>Some of the stuff I was doing in the Jython interpreter was not going to fly for a 400GB image file produced by Leica (namely, setting the flag <code>setOpenAllSeries(True)</code>). This file contained 3D images of multiple zebrafish embryos, obtained every 30 minutes for three days. I needed to process each image sequentially.</p>
-<p>The first problem was that even reading the metadata from the file <a href="https://github.com/CellProfiler/python-bioformats/issues/8">resulted in a Java out-of-memory error</a>! With the help of Lee Kamentsky, one of the creators of python-bioformats, I figured out that Java allocates a maximum memory footprint of just 256MB. With the raw metadata string occupying 27MB, this was not enough to contain the full structure of the parsed metadata tree. The solution was simply to set a much larger maximum memory allocation to the JVM:</p>
-<p>```https://github.com/jni/lesion/blob/c3223687d35a7f81da7305e1e041f9c5a53104b1/lesion/lifio.py#L79
-, cmap=cm.gray)
-plt.show()</p>
-<p>```</p>
+<p>The first problem was that even reading the metadata from the file <a href="https://github.com/CellProfiler/python-bioformats/issues/8">resulted in a Java out-of-memory error</a>! With the help of Lee Kamentsky, one of the creators of python-bioformats, I figured out that Java allocates a maximum memory footprint of just 256MB. With the raw metadata string occupying 27MB, this was not enough to contain the full structure of the parsed metadata tree. The solution was simply to <a href="https://github.com/jni/lesion/blob/c3223687d35a7f81da7305e1e041f9c5a53104b1/lesion/lifio.py#L27">set</a> a much larger maximum memory allocation to the JVM.</p>
+<p>Once that was done, it was straightforward enough to get an XML string of metadata to get information about all the images contained in the file:</p>
+<pre class="code literal-block"><span></span><span class="n">md</span> <span class="o">=</span> <span class="n">bf</span><span class="o">.</span><span class="n">get_omexml_metadata</span><span class="p">(</span><span class="s1">'Long time Gfap 260314.lif'</span><span class="p">)</span>
+</pre>
+
+
+<p>This was my first experience with XML, and I found the <a href="http://www.openmicroscopy.org/Schemas/OME/2011-06">official schema</a> extremely intimidating. Thankfully, as usual, Python makes common things easy, and parsing XML is a very common thing. Using the <a href="https://docs.python.org/3.7/library/xml.etree.elementtree.html"><code>xml</code></a> package from the Python standard library, it is easy enough to get the information I want from the XML string:</p>
+<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">xml.etree</span> <span class="kn">import</span> <span class="n">ElementTree</span> <span class="k">as</span> <span class="n">ETree</span>
+<span class="n">mdroot</span> <span class="o">=</span> <span class="n">ETree</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">md</span><span class="p">)</span>
+</pre>
+
+
+<p>You might have gathered that the ElementTree object contains a rooted tree with all the information about our file. Each node has a tag, attributes, and children. The root contains information about each series:</p>
+<pre class="code literal-block"><span></span>('{http://www.openmicroscopy.org/Schemas/OME/2011-06}Image', {'ID': 'Image:121', 'Name': '41h to 47.5 hpSCI/Pos021_S001'})
+</pre>
+
+
+<p>And each series contains information about its acquisition, physical measurements, and pixel measurements:</p>
+<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">mdroot</span><span class="p">[</span><span class="mi">300</span><span class="p">]:</span>
+<span class="o">...</span>     <span class="k">print</span><span class="p">((</span><span class="n">a</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">attrib</span><span class="p">))</span>
+<span class="o">...</span>
+<span class="p">(</span><span class="s1">'{http://www.openmicroscopy.org/Schemas/OME/2011-06}AcquiredDate'</span><span class="p">,</span> <span class="p">{}),</span>
+<span class="p">(</span><span class="s1">'{http://www.openmicroscopy.org/Schemas/OME/2011-06}InstrumentRef'</span><span class="p">,</span> <span class="p">{</span><span class="s1">'ID'</span><span class="p">:</span> <span class="s1">'Instrument:121'</span><span class="p">}),</span>
+<span class="p">(</span><span class="s1">'{http://www.openmicroscopy.org/Schemas/OME/2011-06}ObjectiveSettings'</span><span class="p">,</span> <span class="p">{</span><span class="s1">'RefractiveIndex'</span><span class="p">:</span> <span class="s1">'1.33'</span><span class="p">,</span> <span class="s1">'ID'</span><span class="p">:</span> <span class="s1">'Objective:121:0'</span><span class="p">}),</span>
+<span class="p">(</span><span class="s1">'{http://www.openmicroscopy.org/Schemas/OME/2011-06}Pixels'</span><span class="p">,</span> <span class="p">{</span><span class="s1">'SizeT'</span><span class="p">:</span> <span class="s1">'14'</span><span class="p">,</span> <span class="s1">'DimensionOrder'</span><span class="p">:</span> <span class="s1">'XYCZT'</span><span class="p">,</span> <span class="s1">'PhysicalSizeY'</span><span class="p">:</span> <span class="s1">'0.445197265625'</span><span class="p">,</span> <span class="s1">'PhysicalSizeX'</span><span class="p">:</span> <span class="s1">'0.445197265625'</span><span class="p">,</span> <span class="s1">'PhysicalSizeZ'</span><span class="p">:</span> <span class="s1">'1.9912714979001302'</span><span class="p">,</span> <span class="s1">'SizeX'</span><span class="p">:</span> <span class="s1">'1024'</span><span class="p">,</span> <span class="s1">'SizeY'</span><span class="p">:</span> <span class="s1">'1024'</span><span class="p">,</span> <span class="s1">'SizeZ'</span><span class="p">:</span> <span class="s1">'108'</span><span class="p">,</span> <span class="s1">'SizeC'</span><span class="p">:</span> <span class="s1">'2'</span><span class="p">,</span> <span class="s1">'Type'</span><span class="p">:</span> <span class="s1">'uint8'</span><span class="p">,</span> <span class="s1">'ID'</span><span class="p">:</span> <span class="s1">'Pixels:121'</span><span class="p">})</span>
+</pre>
+
+
+<p>I only need a fraction of this metadata, so I wrote a function, <a href="https://github.com/jni/lesion/blob/c3223687d35a7f81da7305e1e041f9c5a53104b1/lesion/lifio.py#L79"><code>parse_xml_metadata</code></a>, to parse out the image names, their size in pixels, and their physical resolution.</p>
+<p>Armed with this knowledge, it is then straightforward to preallocate a numpy array for each image and read the image from disk:</p>
+<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span><span class="p">,</span> <span class="n">cm</span>
+<span class="kn">from</span> <span class="nn">lesion.lifio</span> <span class="kn">import</span> <span class="n">parse_xml_metadata</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+
+<span class="n">filename</span> <span class="o">=</span> <span class="s1">'Long time Gfap 260314.lif'</span>
+<span class="n">rdr</span> <span class="o">=</span> <span class="n">bf</span><span class="o">.</span><span class="n">ImageReader</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">perform_init</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">names</span><span class="p">,</span> <span class="n">sizes</span><span class="p">,</span> <span class="n">resolutions</span> <span class="o">=</span> <span class="n">parse_xml_metadata</span><span class="p">(</span><span class="n">md</span><span class="p">)</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="mi">50</span> <span class="c1"># arbitrary series for demonstration</span>
+<span class="n">size</span> <span class="o">=</span> <span class="n">sizes</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+<span class="n">nt</span><span class="p">,</span> <span class="n">nz</span> <span class="o">=</span> <span class="n">size</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">image5d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nt</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nz</span><span class="p">):</span>
+        <span class="n">image5d</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span> <span class="o">=</span> <span class="n">rdr</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">series</span><span class="o">=</span><span class="n">idx</span><span class="p">,</span> <span class="n">rescale</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image5d</span><span class="p">[</span><span class="n">nt</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">nz</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+
+
 <p><img src="http://ilovesymposia.files.wordpress.com/2014/08/embryo-image.png" alt="2D slice from 5D volume"></p>
 <p>Boom. Using Python BioFormats, I've read in a small(ish) part of a quasi-terabyte image file into a numpy array, ready for further processing.</p>
 <p>Note: the dimension order here is time, z, y, x, channel, or TZYXC, which I <em>think</em> is the most efficient way to read these files in. My <a href="https://github.com/jni/lesion/blob/c3223687d35a7f81da7305e1e041f9c5a53104b1/lesion/lifio.py#L181">wrapper</a> allows arbitrary dimension order, so it'll be good to use it to figure out the fastest way to iterate through the volume.</p>

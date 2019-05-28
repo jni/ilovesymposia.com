@@ -18,6 +18,8 @@ Given the numerous options for posting code online, there's just no excuse to gi
 
 In this piece, I'll go even further: put your code there <em>from the beginning</em>. Put your code there <em>as soon as you finish reading this article</em>. Here's why:
 
+<!-- TEASER_END -->
+
 </p><h2>No, you won't get scooped</h2>
 
 Reading code is <em>hard</em>. Ask any experienced programmer: most have trouble reading code <em>they themselves wrote</em> a few months ago, let alone someone else's code. It's extremely unlikely that someone will browse your code looking for a scoop. That time is better spent doing research.

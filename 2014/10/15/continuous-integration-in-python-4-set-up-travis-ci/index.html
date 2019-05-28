@@ -26,12 +26,10 @@ MathJax.Hub.Config({
 <meta property="og:site_name" content="I Love Symposia!">
 <meta property="og:title" content="Continuous integration in Python, 4: set up Travis-CI">
 <meta property="og:url" content="https://ilovesymposia.com/2014/10/15/continuous-integration-in-python-4-set-up-travis-ci/">
-<meta property="og:description" content="Automated testing with pytest
-Measuring test coverage
-Setting up test configuration files
+<meta property="og:description" content='This is the fourth post in my Continuous integration (CI) in Python series, and the one that puts the "continuous" in CI! For the introductory three posts, see:
 
-Introduction to Travis-CI
-Once you've set up your tests locally, it does you no good if you don't remember to">
+Automated testing with pytest
+Measurin'>
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2014-10-15T04:00:59+11:00">
 <meta property="article:tag" content="continuous integration">
@@ -96,17 +94,6 @@ Once you've set up your tests locally, it does you no good if you don't remember
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
     <div>
-<ul>
-<li><a href="http://ilovesymposia.com/2014/10/01/continuous-integration-0-automated-tests-with-pytest/">Automated testing with pytest</a></li>
-<li><a href="http://ilovesymposia.com/2014/10/02/continuous-integration-1-test-coverage/">Measuring test coverage</a></li>
-<li><a href="http://ilovesymposia.com/2014/10/13/continuous-integration-in-python-3-set-up-your-test-configuration-files/">Setting up test configuration files</a></li>
-</ul>
-<h3>Introduction to Travis-CI</h3>
-<p>Once you've set up your tests locally, it does you no good if you don't remember to run them! <a href="http://travis-ci.org/">Travis-CI</a> makes this seamless, because it will check out your code and run you tests for <em>each and every commit you push to GitHub!</em> (This is even more important when you are receiving pull requests on GitHub: the tests will be run online, without you having to individually check out each PR and run the tests on your machine!)
-.. has_math: no
-.. status: published
-.. wp-status: publish
---&gt;</p>
 <p></p>
 <p>This is the fourth post in my Continuous integration (CI) in Python series, and the one that puts the "continuous" in CI! For the introductory three posts, see:</p>
 <p></p>
@@ -119,19 +106,19 @@ Once you've set up your tests locally, it does you no good if you don't remember
 
 <p>Once you've set up your tests locally, it does you no good if you don't remember to run them! <a href="http://travis-ci.org/">Travis-CI</a> makes this seamless, because it will check out your code and run you tests for <em>each and every commit you push to GitHub!</em> (This is even more important when you are receiving pull requests on GitHub: the tests will be run online, without you having to individually check out each PR and run the tests on your machine!)</p>
 <p>This is what continuous integration is all about. Once upon a time, the common practice was to pile on new features on a codebase. Then, come release time, there would be a feature freeze, and some time would be spent cleaning up code and removing bugs. In continuous integration, instead, no new feature is allowed into the codebase until it is bug free, as demonstrated by the test suite.</p>
+<!-- TEASER_END -->
+
 <h3>What to do</h3>
 
 <p>You need to first add a <code>.travis.yml</code> file to the root of your project. This tells Travis how to install your program's dependencies, install your program, and run the tests. Here's an example file to run tests and coverage on our <code>maths.py</code> sample project:</p>
-<pre class="code literal-block"><span></span><span class="k">[code lang=text]</span>
-<span class="na">language: python</span>
-<span class="na">python:</span>
-    <span class="na">- "2.7"</span>
-    <span class="na">- "3.4"</span>
-<span class="na">before_install:</span>
-    <span class="na">- pip install pytest pytest-cov</span>
-<span class="na">script:</span>
-    <span class="na">- py.test</span>
-<span class="k">[/code]</span>
+<pre class="code literal-block"><span></span><span class="l l-Scalar l-Scalar-Plain">language</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">python</span>
+<span class="l l-Scalar l-Scalar-Plain">python</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="s">"2.7"</span>
+    <span class="p p-Indicator">-</span> <span class="s">"3.4"</span>
+<span class="l l-Scalar l-Scalar-Plain">before_install</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pip install pytest pytest-cov</span>
+<span class="l l-Scalar l-Scalar-Plain">script</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">py.test</span>
 </pre>
 
 

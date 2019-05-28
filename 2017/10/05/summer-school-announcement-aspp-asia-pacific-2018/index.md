@@ -27,6 +27,8 @@
 <li>apply: https://melbournebioinformatics.org.au/aspp-asia-pacific/applications (make sure you read the FAQ on that page)</li>
 </ul>
 
+<!-- TEASER_END -->
+
 <h2>Background</h2>
 
 Two-and-a-bit years ago, Tiziano Zito asked me if I could join the faculty at the 2015 ASPP school in Munich (then in its 8th iteration). It turned out to be a fantastic teaching experience, and, more importantly, it was a fantastic experience for the students. Students selected for the school fit a certain profile, neither novice nor advanced. As such, you can be sure that if you participate in the school, you will learn a great deal. We teach tools that will immediately improve your scientific practice. I decided that I wanted to replicate the school in Australia. Now it is finally here!

@@ -18,29 +18,27 @@ The short version is that it takes about 150ns to call a function in Python (on 
 
 If you want your function to do something, such as, oh, I don't know, <em>receive an input argument</em>, this goes up to 350ns, throttling you at 2.8 million calls per second.
 
+<!-- TEASER_END -->
+
 </p><h2>Benchmarking function calls</h2>
 
 I cleaned up Ed's and my initial experiments to make a small <a href="https://github.com/jni/performance-tests/blob/master/function-calls/f.py">module</a> and <a href="https://github.com/jni/performance-tests/blob/master/function-calls/timer.py">timer</a> to measure all these values. You can clone the <a href="https://github.com/jni/performance-tests">repo</a> and run <code>python function-calls/timer.py</code> to check the numbers on your machine.
 
 The benchmarks are variations of comparing the execution time of:
 
-```
-[code lang=python]
+```python
 for i in range(n):
     pass
-[/code]
 ```
 
 and:
 
-```
-[code lang=python]
+```python
 def f():
     pass
 
 for i in range(n):
     f()
-[/code]
 ```
 
 for some suitably large <code>n</code>. As I mentioned above, that comes out to an absolute minimum of 150ns per function call.

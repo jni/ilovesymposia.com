@@ -7,18 +7,7 @@
 .. link: 
 .. description: 
 .. type: text
-.. excerpt: I just got back home from the [SciPy 2014](https://conference.scipy.org/scipy2014/) conference in Austin, TX. Here are my thoughts after this year's conference.
-
-## About SciPy in general
-
-Since my first SciPy in 2012, I've decided to prioritise programming conferences over scientific ones, because the value I get for my time is just that much higher. At a scientific conference, I certainly become aware of way-cool stuff going on in other research labs in my area. Once I get home, however, I go back to whatever I was doing. In contrast, at programming conferences, I become aware of new tools and practices that *change the way I do science.* In his [keynote](https://www.youtube.com/watch?v=1e26rp6qPbA) this year, Greg Wilson said of Software Carpentry, "We save researchers a day a week for the rest of their careers." I feel the same way about SciPy in general.
-
-In the 2012 sprints, I learned about [GitHub Pull Requests](https://help.github.com/articles/using-pull-requests) and code review, the lingua franca of open source development today. I can't express how useful that's been. I also started my ongoing collaboration with the [scikit-image](http://scikit-image.org/) project, which has enabled my research to reach far more users than I ever could have achieved on my own.
-
-No scientific conference I've been to has had such an impact on my science output, nor can I imagine one doing so.
-.. has_math: no
 .. status: published
-.. wp-status: publish
 -->
 
 <html><body><p>I just got back home from the <a href="https://conference.scipy.org/scipy2014/">SciPy 2014</a> conference in Austin, TX. Here are my thoughts after this year's conference.
@@ -30,6 +19,8 @@ Since my first SciPy in 2012, I've decided to prioritise programming conferences
 In the 2012 sprints, I learned about <a href="https://help.github.com/articles/using-pull-requests">GitHub Pull Requests</a> and code review, the lingua franca of open source development today. I can't express how useful that's been. I also started my ongoing collaboration with the <a href="http://scikit-image.org/">scikit-image</a> project, which has enabled my research to reach far more users than I ever could have achieved on my own.
 
 No scientific conference I've been to has had such an impact on my science output, nor can I imagine one doing so.
+
+<!-- TEASER_END -->
 
 <h2>This year's highlights</h2>
 

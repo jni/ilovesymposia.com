@@ -3,7 +3,7 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by/4.0/"&gt;
 &lt;img alt="Creative Commons License BY"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Wed, 01 May 2019 09:57:21 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>The road to scikit-image 1.0</title><link>https://ilovesymposia.com/2018/07/13/the-road-to-scikit-image-1-0/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;This is the first in a series of posts about the joint scikit-image, scikit-learn, and dask sprint that took place at the Berkeley Insitute of Data Science, May 28-Jun 1, 2018.&lt;/p&gt;
+src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Tue, 28 May 2019 10:34:04 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>The road to scikit-image 1.0</title><link>https://ilovesymposia.com/2018/07/13/the-road-to-scikit-image-1-0/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;This is the first in a series of posts about the joint scikit-image, scikit-learn, and dask sprint that took place at the Berkeley Insitute of Data Science, May 28-Jun 1, 2018.&lt;/p&gt;
 &lt;p&gt;In addition to the dask and scikit-learn teams, the sprint brought together three core developers of scikit-image (Emmanuelle Gouillart, Stéfan van der Walt, and myself), and two newer contributors, Kira Evans and Mark Harfouche. Since we are rarely in the same timezone, let alone in the same room, we took the opportunity to discuss some high level goals using a framework suggested by Tracy Teal (via Chris Holdgraf): &lt;em&gt;Vision, Mission, Values&lt;/em&gt;. I'll try do Chris's explanation of these ideas justice:&lt;/p&gt;
 &lt;p&gt;&lt;/p&gt;&lt;ul&gt;
 &lt;li&gt;Vision: what are we trying to achieve? What is the future that we are trying to bring about?&lt;/li&gt;
@@ -12,6 +12,8 @@ src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright>
 &lt;/ul&gt;
 &lt;p&gt;So, on the basis of this framework, I'd like to review where scikit-image is now, where I think it needs to go, and the ideas that Emma, Stéfan, and I came up with during the sprint to get scikit-image there.&lt;/p&gt;
 &lt;p&gt;I will point out, from the beginning, that one of our values is that we are &lt;em&gt;community-driven&lt;/em&gt;, and this is not a wishy-washy concept. (More below.) Therefore this blog post constitutes only a preliminary document, designed to kick-start an &lt;em&gt;official roadmap&lt;/em&gt; for scikit-image 1.0 with more than a blank canvas. The roadmap will be debated on GitHub and the mailing list, open to discussion by anyone, and when completed will appear on our webpage. &lt;em&gt;This post is not the roadmap.&lt;/em&gt;&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+
 &lt;h3&gt;Part one: where we are&lt;/h3&gt;
 
 &lt;p&gt;scikit-image is a tremendously successful project that I feel very proud to have been a part of until now. I still cherish the email I got from Stéfan inviting me to join the core team. (Five years ago now!)&lt;/p&gt;
@@ -80,6 +82,8 @@ src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright>
 
 &lt;p&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Fiji</category><category>Fiji Jython</category><category>Jython</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>Python-Bioformats</category><category>Python-Javabridge</category><category>software</category><guid>https://ilovesymposia.com/2014/03/15/an-update-on-mixing-java-and-python-with-fiji/</guid><pubDate>Fri, 14 Mar 2014 15:21:06 GMT</pubDate></item><item><title>Get the best of both worlds with Fiji's Jython interpreter</title><link>https://ilovesymposia.com/2014/02/26/fiji-jython/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;a href="http://fiji.sc"&gt;Fiji is just ImageJ&lt;/a&gt;, with batteries included. It contains plugins to do virtually anything you would want to do to an image. Since my go-to programming language is Python, my favorite feature of Fiji is its language-agnostic API, which supports a plethora of languages, including Java, Javascript, Clojure, and of course Python; 7 languages in all. (Find these under Plugins/Scripting/Script Editor.) Read on to learn more about the ins and outs of using Python to drive Fiji.
 &lt;p&gt;Among the plugin smorgasbord of Fiji is the Bio-Formats importer, which can open any proprietary microscopy file under the sun. (And there’s a lot of them!) Below I will use Jython to open some .lifs, do some processing, and output some .pngs that I can process further using Python/NumPy/scikit-image. (A .lif is a Leica Image File, because there were not enough image file formats before Leica came along.)&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+
 &lt;p&gt;The first thing to note is that Jython is not Python, and it is certainly not Python 2.7. In fact, the Fiji Jython interpreter implements Python 2.5, which means no &lt;code&gt;argparse&lt;/code&gt;. Not to worry though, as &lt;code&gt;argparse&lt;/code&gt; is implemented in a &lt;a href="https://code.google.com/p/argparse/source/browse/argparse.py"&gt;single, pure Python file&lt;/a&gt; distributed under the Python license. So:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Tip #1: copy argparse.py into your project.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;This way you’ll have access the state of the art in command line argument processing from within the Jython interpreter.&lt;/p&gt;
@@ -91,36 +95,47 @@ src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright>
     parser.add_argument('args', nargs="*", help="The input arguments.")
     args = parser.parse_args()
     for arg in args.args:
-        print(arg)&lt;/p&gt;&lt;/code&gt;&lt;/pre&gt;
+        print(arg)&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;&lt;/code&gt;&lt;/pre&gt;
 Now we can just run this:
 &lt;pre&gt;&lt;code&gt;$ fiji echo.py hello world
 hello
-world&lt;/code&gt;&lt;/pre&gt;
-But sadly, Fiji captures any -h calls, which defeats the purpose of using argparse in the first place!
+world
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;But sadly, Fiji captures any -h calls, which defeats the purpose of using argparse in the first place!&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;$ fiji echo.py -h
 Usage: /Applications/Fiji.app/Contents/MacOS/fiji-macosx [&amp;lt;Java options&amp;gt;.. --] [&amp;lt;ImageJ options&amp;gt;..] [&amp;lt;files&amp;gt;..]
-&lt;p&gt;Java options are passed to the Java Runtime, ImageJ
-options to ImageJ (or Jython, JRuby, ...).&lt;/p&gt;
-&lt;p&gt;In addition, the following options are supported by ImageJ:
+
+Java options are passed to the Java Runtime, ImageJ
+options to ImageJ (or Jython, JRuby, ...).
+
+In addition, the following options are supported by ImageJ:
 General options:
 --help, -h
     show this help
 --dry-run
     show the command line, but do not run anything
 --debug
-    verbose output&lt;/p&gt;&lt;/code&gt;&lt;/pre&gt;
-(… and so on, the output is quite huge.)
+    verbose output
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;(… and so on, the output is quite huge.)&lt;/p&gt;
 &lt;p&gt;(Note also that I aliased the Fiji binary, that long path under &lt;code&gt;/Applications&lt;/code&gt;, to a simple &lt;code&gt;fiji&lt;/code&gt; command; I recommend you do the same.)&lt;/p&gt;
-&lt;p&gt;However, we can work around this by calling help using &lt;em&gt;Python&lt;/em&gt; as the interpreter, and only using Fiji to actually run the file:
-&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ python echo.py -h
+&lt;p&gt;However, we can work around this by calling help using &lt;em&gt;Python&lt;/em&gt; as the interpreter, and only using Fiji to actually run the file:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ python echo.py -h
 usage: echo.py [-h] [args [args ...]]
-&lt;p&gt;Parrot back your arguments.&lt;/p&gt;
-&lt;p&gt;positional arguments:
-  args        The input arguments.&lt;/p&gt;
-&lt;p&gt;optional arguments:
-  -h, --help  show this help message and exit&lt;/p&gt;&lt;/code&gt;&lt;/pre&gt;
-That’s more like it! Now we can start to build something a bit more interesting, for example, something that converts arbitrary image files to png:
-&lt;pre&gt;&lt;code class="python"&gt;import argparse
+
+Parrot back your arguments.
+
+positional arguments:
+  args        The input arguments.
+
+optional arguments:
+  -h, --help  show this help message and exit&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That’s more like it! Now we can start to build something a bit more interesting, for example, something that converts arbitrary image files to png:
+&lt;/p&gt;&lt;pre&gt;&lt;code class="python"&gt;import argparse
 from ij import IJ # the IJ class has utility methods for many common tasks.
 &lt;p&gt;def convert_file(fn):
     """Convert the input file to png format.&lt;/p&gt;
@@ -142,17 +157,20 @@ IJ.saveAs(imp, 'png', fnout)
     parser.add_argument('images', nargs='+', help="Input images.")&lt;/p&gt;
 &lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;args = parser.parse_args()
 for fn in args.images:
-    convert_file(fn)&lt;span class="nt"&gt;&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&lt;/span&gt;
+    convert_file(fn)
 &lt;/pre&gt;
 
 
-&lt;p&gt;Boom, we’re done. But wait, we actually broke the Python interpreter compatibility, since ij is not a Python library!
-&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ python convert2png.py -h
+&lt;p&gt;&lt;/p&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Boom, we’re done. But wait, we actually broke the Python interpreter compatibility, since ij is not a Python library!&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ python convert2png.py -h
 Traceback (most recent call last):
   File "convert.py", line 2, in &amp;lt;module&amp;gt;
     from ij import IJ # the IJ class has utility methods for many common tasks.
-ImportError: No module named ij&lt;/code&gt;&lt;/pre&gt;
-Which brings us to:
+ImportError: No module named ij
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Which brings us to:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Tip #2: only import Java API functions within the functions that use them.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;By moving the &lt;code&gt;from ij import IJ&lt;/code&gt; statement into the &lt;code&gt;convert&lt;/code&gt; function, we maintain compatibility with Python, and can continue to use &lt;code&gt;argparse&lt;/code&gt;’s helpful documentation strings.&lt;/p&gt;
 &lt;p&gt;Next, we want to use the Bio-Formats importer, which is class &lt;code&gt;BF&lt;/code&gt; in &lt;code&gt;loci.plugins&lt;/code&gt;. Figuring out the class hierarchy for arbitrary plugins is tricky, but you can find it &lt;a href="http://rsbweb.nih.gov/ij/developer/api/index.html"&gt;here&lt;/a&gt; for core ImageJ (using lovely 1990s-style frames) and &lt;a href="http://ci.openmicroscopy.org/job/BIOFORMATS-5.0-latest/javadoc/index.html"&gt;here&lt;/a&gt; for Bio-Formats, and Curtis Rueden has made &lt;a href="http://javadoc.imagej.net/"&gt;this list&lt;/a&gt; for other common plugins.&lt;/p&gt;
@@ -161,63 +179,90 @@ Which brings us to:
 
 &lt;p&gt;That’s a lot of options, and we actually want to set some of them. If you look at the &lt;a href="http://ci.openmicroscopy.org/job/BIOFORMATS-5.0-latest/javadoc/loci/plugins/BF.html#openImagePlus(loci.plugins.in.ImporterOptions)"&gt;&lt;code&gt;BF.openImagePlus&lt;/code&gt;&lt;/a&gt; documentation, you can see that this is done through an &lt;code&gt;ImporterOptions&lt;/code&gt; class located in &lt;code&gt;loci.plugins.in&lt;/code&gt;. You’ll notice that “in” is a reserved word in Python, so &lt;code&gt;from loci.plugins.in import ImporterOptions&lt;/code&gt; is not a valid Python statement. Yay! My workaround:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Tip #3: move your Fiji imports to an external file.&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;So I have a &lt;code&gt;jython_imports.py&lt;/code&gt; file with just:
-&lt;/p&gt;&lt;pre&gt;&lt;code class="python"&gt;from ij import IJ
+&lt;p&gt;So I have a &lt;code&gt;jython_imports.py&lt;/code&gt; file with just:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="python"&gt;from ij import IJ
 from loci.plugins import BF
-from loci.plugins.in import ImporterOptions&lt;/code&gt;&lt;/pre&gt;
-Then, inside the &lt;code&gt;convert_files()&lt;/code&gt; function, we just do:
-&lt;pre&gt;&lt;code class="python"&gt;from jython_imports import IJ, BF, ImporterOptions&lt;/code&gt;&lt;/pre&gt;
-This way, the main file remains Python-compatible until the convert() function is actually called, regardless of whatever funky and unpythonic stuff is happening in &lt;code&gt;jython_imports.py&lt;/code&gt;.
+from loci.plugins.in import ImporterOptions
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then, inside the &lt;code&gt;convert_files()&lt;/code&gt; function, we just do:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="python"&gt;
+from jython_imports import IJ, BF, ImporterOptions
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This way, the main file remains Python-compatible until the convert() function is actually called, regardless of whatever funky and unpythonic stuff is happening in &lt;code&gt;jython_imports.py&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Onto the options. If you untick “Open files individually”, it will open up all matching files in a directory, regardless of your input filename! Not good. So now we play a pattern-matching game in which we match the option description in the above dialog with the &lt;a href="http://ci.openmicroscopy.org/job/BIOFORMATS-5.0-latest/javadoc/loci/plugins/in/ImporterOptions.html"&gt;ImporterOptions API&lt;/a&gt; calls. In this case, we &lt;code&gt;setUngroupFiles(True)&lt;/code&gt;. To specify a filename, we &lt;code&gt;setId(filename)&lt;/code&gt;. Additionally, because we want all of the images in the .lif file, we &lt;code&gt;setOpenAllSeries(True)&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Next, each image in the series is 3D and has three channels, but we are only interested in a summed z-projection of the first channel. There’s a set of ImporterOptions methods tantalizingly named &lt;code&gt;setCBegin&lt;/code&gt;, &lt;code&gt;setCEnd&lt;/code&gt;, and &lt;code&gt;setCStep&lt;/code&gt;, but this is where I found the &lt;a href="http://ci.openmicroscopy.org/job/BIOFORMATS-5.0-latest/javadoc/loci/plugins/in/ImporterOptions.html#setCEnd(int,%20int)"&gt;documentation&lt;/a&gt; sorely lacking. The functions take &lt;code&gt;(int s, int value)&lt;/code&gt; as arguments, but what’s &lt;code&gt;s&lt;/code&gt;??? Are the limits closed or open? Code review is a wonderful thing, and this would not have passed it. To figure things out:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Tip #4: use Fiji’s interactive Jython interpreter to figure things out quickly.&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;You can find the Jython interpreter under Plugins/Scripting/Jython Interpreter. It’s no IPython, but it is extremely helpful to answer the questions I had above. My hypothesis was that &lt;code&gt;s&lt;/code&gt; was the series, and that the intervals would be closed. So:
-&lt;/p&gt;&lt;pre&gt;&lt;code class="python"&gt;&amp;gt;&amp;gt;&amp;gt; from loci.plugins import BF
-&amp;gt;&amp;gt;&amp;gt; from loci.plugins.in import ImporterOptions
-&amp;gt;&amp;gt;&amp;gt; opts = ImporterOptions()
-&amp;gt;&amp;gt;&amp;gt; opts.setId("myFile.lif")
-&amp;gt;&amp;gt;&amp;gt; opts.setOpenAllSeries(True)
-&amp;gt;&amp;gt;&amp;gt; opts.setUngroupFiles(True)
-&amp;gt;&amp;gt;&amp;gt; imps = BF.openImagePlus(opts)&lt;/code&gt;&lt;/pre&gt;
-Now we can play around, with one slight annoyance: the interpreter won’t print the output of your last statement, so you have to specify it:
-&lt;pre&gt;&lt;code class="python"&gt;&amp;gt;&amp;gt;&amp;gt; len(imps)
-&amp;gt;&amp;gt;&amp;gt; print(len(imps))
-18&lt;/code&gt;&lt;/pre&gt;
-Which is what I expected, as there are 18 series in my .lif file. The image shape is given by the &lt;code&gt;getDimensions()&lt;/code&gt; method of the ImagePlus class:
-&lt;pre&gt;&lt;code class="python"&gt;&amp;gt;&amp;gt;&amp;gt; print(imps[0].getDimensions())
-array('i', [1024, 1024, 3, 31, 1])
-&lt;p&gt;&amp;gt;&amp;gt;&amp;gt; print(imps[1].getDimensions())
-array('i', [1024, 1024, 3, 34, 1])&lt;/p&gt;&lt;/code&gt;&lt;/pre&gt;
-That’s (x, y, channels, z, time).
-&lt;p&gt;Now, let’s try the same thing with &lt;code&gt;setCEnd&lt;/code&gt;, assuming closed interval:
-&lt;/p&gt;&lt;pre&gt;&lt;code class="python"&gt;&amp;gt;&amp;gt;&amp;gt; opts.setCEnd(0, 0) ## only read channels up to 0 for series 0?
-&amp;gt;&amp;gt;&amp;gt; opts.setCEnd(2, 0) ## only read channels up to 0 for series 2?
-&amp;gt;&amp;gt;&amp;gt; imps = BF.openImagePlus(opts)
-&amp;gt;&amp;gt;&amp;gt; print(imps[0].getDimensions())
-array('i', [1024, 1024, 1, 31, 1])
-&lt;p&gt;&amp;gt;&amp;gt;&amp;gt; print(imps[1].getDimensions())
-array('i', [1024, 1024, 3, 34, 1])&lt;/p&gt;
-&lt;p&gt;&amp;gt;&amp;gt;&amp;gt; print(imps[2].getDimensions())
-array('i', [1024, 1024, 1, 30, 1])&lt;/p&gt;&lt;/code&gt;&lt;/pre&gt;
-Nothing there to disprove my hypothesis! So we move on to the final step, which is to z-project the stack by summing the intensity over all z values. This is normally accessed via Image/Stacks/Z Project in the Fiji GUI, and I found the corresponding &lt;code&gt;ij.plugin.ZProjector&lt;/code&gt; class by searching for &lt;a href="http://rsbweb.nih.gov/ij/developer/api/ij/plugin/ZProjector.html"&gt;“proj” in the ImageJ documentation&lt;/a&gt;. A &lt;code&gt;ZProjector&lt;/code&gt; object has a &lt;code&gt;setMethod&lt;/code&gt; method that usefully takes an int as an argument, with no explanation in its docstring as to which int translates to which method (sum, average, max, etc.). A little more digging in the &lt;a href="http://rsb.info.nih.gov/ij/developer/source/ij/plugin/ZProjector.java.html"&gt;source code&lt;/a&gt; reveals some class static variables, &lt;code&gt;AVG_METHOD&lt;/code&gt;, &lt;code&gt;MAX_METHOD&lt;/code&gt;, and so on.
+&lt;p&gt;You can find the Jython interpreter under Plugins/Scripting/Jython Interpreter. It’s no IPython, but it is extremely helpful to answer the questions I had above. My hypothesis was that &lt;code&gt;s&lt;/code&gt; was the series, and that the intervals would be closed. So:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;loci.plugins&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;BF&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;loci.plugins.in&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;ImporterOptions&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;opts&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ImporterOptions&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;opts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setId&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"myFile.lif"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;opts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setOpenAllSeries&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;opts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setUngroupFiles&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;imps&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;BF&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;openImagePlus&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;opts&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Now we can play around, with one slight annoyance: the interpreter won’t print the output of your last statement, so you have to specify it:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;imps&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;imps&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="mi"&gt;18&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Which is what I expected, as there are 18 series in my .lif file. The image shape is given by the &lt;code&gt;getDimensions()&lt;/code&gt; method of the ImagePlus class:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;imps&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getDimensions&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+&lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'i'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1024&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1024&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;31&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;imps&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getDimensions&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+&lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'i'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1024&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1024&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;34&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;code&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;pre&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="n"&gt;That&lt;/span&gt;&lt;span class="err"&gt;’&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;channels&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;z&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Now, let’s try the same thing with &lt;code&gt;setCEnd&lt;/code&gt;, assuming closed interval:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;opts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setCEnd&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;## only read channels up to 0 for series 0?&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;opts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setCEnd&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;## only read channels up to 0 for series 2?&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;imps&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;BF&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;openImagePlus&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;opts&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;imps&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getDimensions&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+&lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'i'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1024&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1024&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;31&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;imps&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getDimensions&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+&lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'i'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1024&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1024&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;34&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;imps&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getDimensions&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+&lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'i'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1024&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1024&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;30&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Nothing there to disprove my hypothesis! So we move on to the final step, which is to z-project the stack by summing the intensity over all z values. This is normally accessed via Image/Stacks/Z Project in the Fiji GUI, and I found the corresponding &lt;code&gt;ij.plugin.ZProjector&lt;/code&gt; class by searching for &lt;a href="http://rsbweb.nih.gov/ij/developer/api/ij/plugin/ZProjector.html"&gt;“proj” in the ImageJ documentation&lt;/a&gt;. A &lt;code&gt;ZProjector&lt;/code&gt; object has a &lt;code&gt;setMethod&lt;/code&gt; method that usefully takes an int as an argument, with no explanation in its docstring as to which int translates to which method (sum, average, max, etc.). A little more digging in the &lt;a href="http://rsb.info.nih.gov/ij/developer/source/ij/plugin/ZProjector.java.html"&gt;source code&lt;/a&gt; reveals some class static variables, &lt;code&gt;AVG_METHOD&lt;/code&gt;, &lt;code&gt;MAX_METHOD&lt;/code&gt;, and so on.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Tip #5: don’t be afraid to look at the source code. It’s one of the main advantages of working in open-source.&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;So:
-&lt;/p&gt;&lt;pre&gt;&lt;code class="python"&gt;&amp;gt;&amp;gt;&amp;gt; from ij.plugin import ZProjector
-&amp;gt;&amp;gt;&amp;gt; proj = ZProjector()
-&amp;gt;&amp;gt;&amp;gt; proj.setMethod(ZProjector.SUM_METHOD)
-&amp;gt;&amp;gt;&amp;gt; proj.setImage(imps[0])
-&amp;gt;&amp;gt;&amp;gt; proj.doProjection()
-&amp;gt;&amp;gt;&amp;gt; impout = proj.getProjection()
-&amp;gt;&amp;gt;&amp;gt; print(impout.getDimensions())
-array('i', [1024, 1024, 1, 1, 1])&lt;/code&gt;&lt;/pre&gt;
-The output is actually a float-typed image, which will get rescaled to [0, 255] uint8 on save if we don’t fix it. So, to wrap up, we convert the image to 16 bits (making sure to &lt;a href="https://groups.google.com/d/msg/fiji-users/HfuHj0QBo40/CR9s3MQ5vUsJ"&gt;turn off scaling&lt;/a&gt;), use the series title to generate a unique filename, and save as a PNG:
-&lt;pre&gt;&lt;code class="python"&gt;&amp;gt;&amp;gt;&amp;gt; from ij.process import ImageConverter
-&amp;gt;&amp;gt;&amp;gt; ImageConverter.setDoScaling(False)
-&amp;gt;&amp;gt;&amp;gt; conv = ImageConverter(impout)
-&amp;gt;&amp;gt;&amp;gt; conv.convertToGray16()
-&amp;gt;&amp;gt;&amp;gt; title = imps[0].getTitle().rsplit(" ", 1)[-1]
-&amp;gt;&amp;gt;&amp;gt; IJ.saveAs(impout, 'png', "myFile-" + title + ".png")&lt;/code&gt;&lt;/pre&gt;
-You can see the final result of my sleuthing in &lt;a href="https://github.com/jni/lesion/blob/6f77cccd1e0f3ddf92ce35a7040ada5328fd90ff/lesion/lif2png.py"&gt;lif2png.py&lt;/a&gt; and &lt;a href="https://github.com/jni/lesion/blob/6f77cccd1e0f3ddf92ce35a7040ada5328fd90ff/lesion/jython_imports.py"&gt;jython_imports.py&lt;/a&gt;. If you would do something differently, pull requests are always welcome.
+&lt;p&gt;So:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;ij.plugin&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;ZProjector&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;proj&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ZProjector&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;proj&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setMethod&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ZProjector&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;SUM_METHOD&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;proj&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setImage&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;imps&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;proj&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;doProjection&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;impout&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;proj&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getProjection&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;impout&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getDimensions&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+&lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'i'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1024&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1024&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;The output is actually a float-typed image, which will get rescaled to [0, 255] uint8 on save if we don’t fix it. So, to wrap up, we convert the image to 16 bits (making sure to &lt;a href="https://groups.google.com/d/msg/fiji-users/HfuHj0QBo40/CR9s3MQ5vUsJ"&gt;turn off scaling&lt;/a&gt;), use the series title to generate a unique filename, and save as a PNG:
+&lt;/p&gt;&lt;pre&gt;&lt;code class="python"&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;ij.process&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;ImageConverter&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;ImageConverter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setDoScaling&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;conv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ImageConverter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;impout&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;conv&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;convertToGray16&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;title&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;imps&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getTitle&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rsplit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;" "&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;IJ&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;saveAs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;impout&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'png'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;"myFile-"&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;title&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;".png"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;You can see the final result of my sleuthing in &lt;a href="https://github.com/jni/lesion/blob/6f77cccd1e0f3ddf92ce35a7040ada5328fd90ff/lesion/lif2png.py"&gt;lif2png.py&lt;/a&gt; and &lt;a href="https://github.com/jni/lesion/blob/6f77cccd1e0f3ddf92ce35a7040ada5328fd90ff/lesion/jython_imports.py"&gt;jython_imports.py&lt;/a&gt;. If you would do something differently, pull requests are always welcome.&lt;/p&gt;
 &lt;p&gt;Before I sign off, let me recap my tips:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;
@@ -243,7 +288,59 @@ This post was possible thanks to the help of &lt;a href="http://albert.rierol.ne
 &lt;h4 id="reference"&gt;References&lt;/h4&gt;
 &lt;p&gt;&lt;span class="Z3988" title="ctx_ver=Z39.88-2004&amp;amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;amp;rft.jtitle=Nature+methods&amp;amp;rft_id=info%3Apmid%2F22743772&amp;amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;amp;rft.atitle=Fiji%3A+an+open-source+platform+for+biological-image+analysis.&amp;amp;rft.issn=1548-7091&amp;amp;rft.date=2012&amp;amp;rft.volume=9&amp;amp;rft.issue=7&amp;amp;rft.spage=676&amp;amp;rft.epage=82&amp;amp;rft.artnum=&amp;amp;rft.au=Schindelin+J&amp;amp;rft.au=Arganda-Carreras+I&amp;amp;rft.au=Frise+E&amp;amp;rft.au=Kaynig+V&amp;amp;rft.au=Longair+M&amp;amp;rft.au=Pietzsch+T&amp;amp;rft.au=Preibisch+S&amp;amp;rft.au=Rueden+C&amp;amp;rft.au=Saalfeld+S&amp;amp;rft.au=Schmid+B&amp;amp;rft.au=Tinevez+JY&amp;amp;rft.au=White+DJ&amp;amp;rft.au=Hartenstein+V&amp;amp;rft.au=Eliceiri+K&amp;amp;rft.au=Tomancak+P&amp;amp;rft.au=Cardona+A&amp;amp;rfe_dat=bpr3.included=1;bpr3.tags=Biology%2CComputer+Science+%2F+Engineering%2CComputational+Biology%2C+Bioinformatics"&gt;Schindelin J, Arganda-Carreras I, Frise E, Kaynig V, Longair M, Pietzsch T, Preibisch S, Rueden C, Saalfeld S, Schmid B, Tinevez JY, White DJ, Hartenstein V, Eliceiri K, Tomancak P, &amp;amp; Cardona A (2012). Fiji: an open-source platform for biological-image analysis. &lt;span style="font-style:italic;"&gt;Nature methods, 9&lt;/span&gt; (7), 676-82 PMID: &lt;a rev="review" href="http://www.ncbi.nlm.nih.gov/pubmed/22743772"&gt;22743772&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;span class="Z3988" title="ctx_ver=Z39.88-2004&amp;amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;amp;rft.jtitle=The+Journal+of+cell+biology&amp;amp;rft_id=info%3Apmid%2F20513764&amp;amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;amp;rft.atitle=Metadata+matters%3A+access+to+image+data+in+the+real+world.&amp;amp;rft.issn=0021-9525&amp;amp;rft.date=2010&amp;amp;rft.volume=189&amp;amp;rft.issue=5&amp;amp;rft.spage=777&amp;amp;rft.epage=82&amp;amp;rft.artnum=&amp;amp;rft.au=Linkert+M&amp;amp;rft.au=Rueden+CT&amp;amp;rft.au=Allan+C&amp;amp;rft.au=Burel+JM&amp;amp;rft.au=Moore+W&amp;amp;rft.au=Patterson+A&amp;amp;rft.au=Loranger+B&amp;amp;rft.au=Moore+J&amp;amp;rft.au=Neves+C&amp;amp;rft.au=Macdonald+D&amp;amp;rft.au=Tarkowska+A&amp;amp;rft.au=Sticco+C&amp;amp;rft.au=Hill+E&amp;amp;rft.au=Rossner+M&amp;amp;rft.au=Eliceiri+KW&amp;amp;rft.au=Swedlow+JR&amp;amp;rfe_dat=bpr3.included=1;bpr3.tags=Biology%2CComputer+Science+%2F+Engineering%2CComputational+Biology%2C+Bioinformatics"&gt;Linkert M, Rueden CT, Allan C, Burel JM, Moore W, Patterson A, Loranger B, Moore J, Neves C, Macdonald D, Tarkowska A, Sticco C, Hill E, Rossner M, Eliceiri KW, &amp;amp; Swedlow JR (2010). Metadata matters: access to image data in the real world. &lt;span style="font-style:italic;"&gt;The Journal of cell biology, 189&lt;/span&gt; (5), 777-82 PMID: &lt;a rev="review" href="http://www.ncbi.nlm.nih.gov/pubmed/20513764"&gt;20513764&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description><category>Planet SciPy</category><category>programming</category><category>Research Blogging</category><category>software</category><guid>https://ilovesymposia.com/2014/02/26/fiji-jython/</guid><pubDate>Tue, 25 Feb 2014 14:21:38 GMT</pubDate></item><item><title>OSX software watch: use Photosweeper to remove duplicates in your image collection</title><link>https://ilovesymposia.com/2013/10/15/osx-software-watch-use-photosweeper-to-remove-duplicates-in-your-image-collection/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;It's no secret that the photo management problem is a huge mess. As new cameras, software, and online storage and sharing services come and go, our collections end up strewn all over the place, often in duplicate. This eats up precious storage space and makes finding that one photo an exercise in frustration.&lt;/p&gt;&lt;p&gt;Peter Nixey has an excellent post on the &lt;a href="http://peternixey.com/post/49928526270/dear-apple-lets-talk-about-photos"&gt;disappointing&lt;/a&gt; state of affairs (to put it kindly) and an excellent follow-up on how Dropbox could &lt;a href="http://peternixey.com/post/63634127289/how-dropbox-could-beat-apple-in-photos"&gt;fix it&lt;/a&gt;. You should definitely read those.&lt;/p&gt;&lt;p&gt;But, while Apple and/or Dropbox get their act together (I'm not holding my breath), you have to make sense of your photos in your Pictures folder, in your Dropbox Photos folder, in various other Dropbox shared folders, on your Desktop, in your Lightroom, Aperture, and iPhoto collections, and so on. A lot of these might be duplicated because, for example, you were just trying out Lightroom and didn't want to commit to it so you put your pics there but also in Aperture. And by you I mean I.&lt;/p&gt;&lt;p&gt;So, the first step to photo sanity is to get rid of these duplicates. Thankfully, there is an excellent OSX app called &lt;a href="http://photosweeper.com/photosweeper/index.html"&gt;Photosweeper&lt;/a&gt; made for just this purpose. I used it yesterday to clear 34GB of wasted space on my HDD. (I was too excited to take screenshots of the process, unfortunately!)&lt;/p&gt;&lt;p&gt;There's a lot to love about Photosweeper. First, it is happy to look at all the sources I mentioned above, and compare pics across them. Second, it lets you automatically define a priority for which version of a duplicate photo to save. In my case, I told it to keep iPhoto images first (since these are most likely to have ratings, captions, and so on), then Aperture, then whatever's on my HDD somewhere. If a duplicate was found &lt;em&gt;within&lt;/em&gt; iPhoto, it should keep the most recent one.&lt;/p&gt;&lt;p&gt;But, third, what makes Photosweeper truly useful: it won't do a thing without letting you review everything, and it offers a great reviewing interface. It places duplicates side-by-side, marking which photo it will keep and which it will trash. Best of all, this view shows everything you need to make sure you're not deleting a high-res original in favour of the downscaled version you emailed your family: filename, date, resolution, DPI, and file size. Click on each file and the full path (even within an iPhoto or Aperture library) becomes visible. This is in stark contrast to iPhoto's lame "hey, this is a duplicate file" dialog that shows you two downscaled versions of the images with &lt;em&gt;no further information.&lt;/em&gt;&lt;/p&gt;&lt;p&gt;Once you bite the bullet, it does exactly the right thing with every duplicate: iPhoto duplicates get put in the iPhoto Trash, Lightroom duplicates get marked "Rejected" and put in a special "Trash (Photosweeper)" collection, and filesystem duplicates get moved to the OSX Trash. Lesser software might have moved all the iPhoto files to the OSX Trash, leaving the iPhoto library broken.&lt;/p&gt;&lt;p&gt;In all, I was really impressed with Photosweeper. 34GB is nothing to sniff at and getting rid of those duplicates is the first step to consolidating all my files. It does this in a very accountable, safe way. At no point did I get that sinking feeling of "there is no undo."&lt;/p&gt;&lt;p&gt;Finally, I should mention that Photosweeper also has a "photo similarity" mode that finds not only duplicates, but very similar series of photos. This is really good for when you snapped 15 pics of the same thing so that one might turn out ok. But I'm too much of a digital hoarder to take that step!&lt;/p&gt;&lt;p&gt;Photosweeper currently sells for $10 on the Mac App Store.&lt;/p&gt;&lt;/div&gt;</description><category>iphoto</category><category>osx</category><category>photo management</category><category>software</category><category>software review</category><guid>https://ilovesymposia.com/2013/10/15/osx-software-watch-use-photosweeper-to-remove-duplicates-in-your-image-collection/</guid><pubDate>Tue, 15 Oct 2013 12:59:53 GMT</pubDate></item><item><title>h5cat: quickly preview HDF5 file contents from the command-line</title><link>https://ilovesymposia.com/2012/05/09/h5cat-quickly-preview-hdf5-file-contents-from-the-command-line/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;As a first attempt at writing actually useful blog posts, I'll publicise a small Python script I wrote to peek inside HDF5 files when &lt;a href="http://www.hdfgroup.org/hdf-java-html/hdfview/"&gt;HDFView&lt;/a&gt; is overkill. Sometimes you just want to know how many dimensions a stored array has, or its exact path within the HDF hierarchy. &lt;/p&gt;
-&lt;p&gt;The "codebase" is currently tiny enough that it all fits below:&lt;/p&gt;
-&lt;p&gt;```python&lt;/p&gt;
-&lt;p&gt;```&lt;/p&gt;&lt;/div&gt;</description><category>Planet SciPy</category><category>programming</category><category>software</category><guid>https://ilovesymposia.com/2012/05/09/h5cat-quickly-preview-hdf5-file-contents-from-the-command-line/</guid><pubDate>Wed, 09 May 2012 06:29:05 GMT</pubDate></item><item><title>Microsoft Silverlight</title><link>https://ilovesymposia.com/2008/08/21/microsoft-silverlight/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;I have to say that despite the &lt;a href="http://en.wikipedia.org/wiki/Silverlight"&gt;bad press&lt;/a&gt; Silverlight is getting at Wikipedia, I was pretty impressed using it in the &lt;a href="http://www.nbcolympics.com/"&gt;NBC Olympics&lt;/a&gt; site. Four live feeds at once? Yes please. This is what digital television was supposed to bring us, but never did. More important, fast forward, rewind and skip were stunningly responsive, which is more than I can say for Flash-based video. Finally, over my decent but not world-class DSL connection, video quality was fantastic, even at full-screen.&lt;/p&gt;
+&lt;p&gt;The “codebase” is currently tiny enough that it all fits below:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="ch"&gt;#!/usr/bin/env python&lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;os&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="nn"&gt;argparse&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;h5py&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;array&lt;/span&gt;
+
+&lt;span class="n"&gt;arguments&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;argparse&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ArgumentParser&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;add_help&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;arggroup&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;arguments&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_argument_group&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'HDF5 cat options'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;arggroup&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_argument&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'-g'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'--group'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;metavar&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;'GROUP'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="n"&gt;help&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;'Preview only path given by GROUP'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;arggroup&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_argument&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'-v'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'--verbose'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;action&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;'store_true'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;default&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="n"&gt;help&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;'Include array printout.'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;'__main__'&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;parser&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;argparse&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ArgumentParser&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="n"&gt;description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;'Preview the contents of an HDF5 file'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;parents&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;arguments&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;parser&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_argument&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'fin'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nargs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;'+'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;help&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;'The input HDF5 files.'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="n"&gt;args&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;parser&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;parse_args&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;fin&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fin&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;'&amp;gt;&amp;gt;&amp;gt;'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fin&lt;/span&gt;
+        &lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;h5py&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;File&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fin&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'r'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="n"&gt;groups&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+        &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="n"&gt;groups&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt;
+            &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;visit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;groups&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;g&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;groups&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s1"&gt;   '&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;g&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;type&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;h5py&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;highlevel&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Dataset&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+                &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+                &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;'      shape: '&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;shape&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s1"&gt;      type: '&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dtype&lt;/span&gt;
+                &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;verbose&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+                    &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+                    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;h5cat is &lt;a href="https://github.com/jni/h5cat"&gt;available&lt;/a&gt; on GitHub under an MIT license. Here's an example use case:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;$ h5cat -v -g vi single-channel-tr3-0-0.00.lzf.h5
+&amp;gt;&amp;gt;&amp;gt; single-channel-tr3-0-0.00.lzf.h5
+
+    vi
+      shape:  &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;, &lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; 
+      type:  float64
+&lt;span class="o"&gt;[[&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;.        &lt;span class="o"&gt;]&lt;/span&gt;
+ &lt;span class="o"&gt;[&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;.06224902&lt;span class="o"&gt;]&lt;/span&gt;
+ &lt;span class="o"&gt;[&lt;/span&gt; &lt;span class="m"&gt;2&lt;/span&gt;.23062383&lt;span class="o"&gt;]]&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Planet SciPy</category><category>programming</category><category>software</category><guid>https://ilovesymposia.com/2012/05/09/h5cat-quickly-preview-hdf5-file-contents-from-the-command-line/</guid><pubDate>Wed, 09 May 2012 06:29:05 GMT</pubDate></item><item><title>Microsoft Silverlight</title><link>https://ilovesymposia.com/2008/08/21/microsoft-silverlight/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;I have to say that despite the &lt;a href="http://en.wikipedia.org/wiki/Silverlight"&gt;bad press&lt;/a&gt; Silverlight is getting at Wikipedia, I was pretty impressed using it in the &lt;a href="http://www.nbcolympics.com/"&gt;NBC Olympics&lt;/a&gt; site. Four live feeds at once? Yes please. This is what digital television was supposed to bring us, but never did. More important, fast forward, rewind and skip were stunningly responsive, which is more than I can say for Flash-based video. Finally, over my decent but not world-class DSL connection, video quality was fantastic, even at full-screen.&lt;/p&gt;
 &lt;p&gt;Yeah, Silverlight uses proprietary software and eschews open standards. Like Facebook's closed platform and data policies, this bothers me. But like Facebook, Silverlight is simply ahead of the competition. Until the alternatives catch up, you can't blame consumers for sticking to the closed (but superior) platforms.&lt;/p&gt;&lt;/div&gt;</description><category>microsoft</category><category>olympics</category><category>open-source</category><category>proprietary software</category><category>silverlight</category><category>software</category><guid>https://ilovesymposia.com/2008/08/21/microsoft-silverlight/</guid><pubDate>Wed, 20 Aug 2008 15:32:25 GMT</pubDate></item></channel></rss>

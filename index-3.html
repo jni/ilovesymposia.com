@@ -78,180 +78,12 @@ MathJax.Hub.Config({
 
         </p>
 </div>
-    </header><div class="e-content entry-content">
+    </header><div class="p-summary entry-summary">
     <div>
 <p></p>
 <a href="http://fiji.sc">Fiji is just ImageJ</a>, with batteries included. It contains plugins to do virtually anything you would want to do to an image. Since my go-to programming language is Python, my favorite feature of Fiji is its language-agnostic API, which supports a plethora of languages, including Java, Javascript, Clojure, and of course Python; 7 languages in all. (Find these under Plugins/Scripting/Script Editor.) Read on to learn more about the ins and outs of using Python to drive Fiji.
 <p>Among the plugin smorgasbord of Fiji is the Bio-Formats importer, which can open any proprietary microscopy file under the sun. (And there’s a lot of them!) Below I will use Jython to open some .lifs, do some processing, and output some .pngs that I can process further using Python/NumPy/scikit-image. (A .lif is a Leica Image File, because there were not enough image file formats before Leica came along.)</p>
-<p>The first thing to note is that Jython is not Python, and it is certainly not Python 2.7. In fact, the Fiji Jython interpreter implements Python 2.5, which means no <code>argparse</code>. Not to worry though, as <code>argparse</code> is implemented in a <a href="https://code.google.com/p/argparse/source/browse/argparse.py">single, pure Python file</a> distributed under the Python license. So:</p>
-<p><strong>Tip #1: copy argparse.py into your project.</strong></p>
-<p>This way you’ll have access the state of the art in command line argument processing from within the Jython interpreter.</p>
-<p>To get Fiji to run your code, you simply feed it your source file on the command line. So, let’s try it out with a simple example, <code>echo.py</code>:
-</p>
-<pre><code class="python">import argparse
-<p>if <strong>name</strong> == '<strong>main</strong>':
-    parser = argparse.ArgumentParser(description=
-                                     "Parrot back your arguments.")
-    parser.add_argument('args', nargs="*", help="The input arguments.")
-    args = parser.parse_args()
-    for arg in args.args:
-        print(arg)</p></code></pre>
-Now we can just run this:
-<pre><code>$ fiji echo.py hello world
-hello
-world</code></pre>
-But sadly, Fiji captures any -h calls, which defeats the purpose of using argparse in the first place!
-<pre><code>$ fiji echo.py -h
-Usage: /Applications/Fiji.app/Contents/MacOS/fiji-macosx [&lt;Java options&gt;.. --] [&lt;ImageJ options&gt;..] [&lt;files&gt;..]
-<p>Java options are passed to the Java Runtime, ImageJ
-options to ImageJ (or Jython, JRuby, ...).</p>
-<p>In addition, the following options are supported by ImageJ:
-General options:
---help, -h
-    show this help
---dry-run
-    show the command line, but do not run anything
---debug
-    verbose output</p></code></pre>
-(… and so on, the output is quite huge.)
-<p>(Note also that I aliased the Fiji binary, that long path under <code>/Applications</code>, to a simple <code>fiji</code> command; I recommend you do the same.)</p>
-<p>However, we can work around this by calling help using <em>Python</em> as the interpreter, and only using Fiji to actually run the file:
-</p>
-<pre><code>$ python echo.py -h
-usage: echo.py [-h] [args [args ...]]
-<p>Parrot back your arguments.</p>
-<p>positional arguments:
-  args        The input arguments.</p>
-<p>optional arguments:
-  -h, --help  show this help message and exit</p></code></pre>
-That’s more like it! Now we can start to build something a bit more interesting, for example, something that converts arbitrary image files to png:
-<pre><code class="python">import argparse
-from ij import IJ # the IJ class has utility methods for many common tasks.
-<p>def convert_file(fn):
-    """Convert the input file to png format.</p>
-<pre class="code literal-block"><span></span><span class="gh">Parameters</span>
-<span class="gh">----------</span>
-fn : string
-    The filename of the image to be converted.
-"""
-imp = IJ.openImage(fn)
-# imp is the common name for an ImagePlus object,
-# ImageJ's base image class
-fnout = fn.rsplit('.', 1)[0] + '.png'
-IJ.saveAs(imp, 'png', fnout)
-</pre>
-
-
-<p>if <strong>name</strong> == '<strong>main</strong>':
-    parser = argparse.ArgumentParser(description="Convert TIFF to PNG.")
-    parser.add_argument('images', nargs='+', help="Input images.")</p>
-<pre class="code literal-block"><span></span>args = parser.parse_args()
-for fn in args.images:
-    convert_file(fn)<span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</pre>
-
-
-<p>Boom, we’re done. But wait, we actually broke the Python interpreter compatibility, since ij is not a Python library!
-</p>
-<pre><code>$ python convert2png.py -h
-Traceback (most recent call last):
-  File "convert.py", line 2, in &lt;module&gt;
-    from ij import IJ # the IJ class has utility methods for many common tasks.
-ImportError: No module named ij</code></pre>
-Which brings us to:
-<p><strong>Tip #2: only import Java API functions within the functions that use them.</strong></p>
-<p>By moving the <code>from ij import IJ</code> statement into the <code>convert</code> function, we maintain compatibility with Python, and can continue to use <code>argparse</code>’s helpful documentation strings.</p>
-<p>Next, we want to use the Bio-Formats importer, which is class <code>BF</code> in <code>loci.plugins</code>. Figuring out the class hierarchy for arbitrary plugins is tricky, but you can find it <a href="http://rsbweb.nih.gov/ij/developer/api/index.html">here</a> for core ImageJ (using lovely 1990s-style frames) and <a href="http://ci.openmicroscopy.org/job/BIOFORMATS-5.0-latest/javadoc/index.html">here</a> for Bio-Formats, and Curtis Rueden has made <a href="http://javadoc.imagej.net/">this list</a> for other common plugins.</p>
-<p>When you try to open a file with Bio-Formats importer using the Fiji GUI, you get the following dialog:</p>
-<figure><img alt="BioFormats import window" src="http://ilovesymposia.files.wordpress.com/2014/02/bioformats-window.png"><figcaption>BioFormats import window</figcaption></figure><p>That’s a lot of options, and we actually want to set some of them. If you look at the <a href="http://ci.openmicroscopy.org/job/BIOFORMATS-5.0-latest/javadoc/loci/plugins/BF.html#openImagePlus(loci.plugins.in.ImporterOptions)"><code>BF.openImagePlus</code></a> documentation, you can see that this is done through an <code>ImporterOptions</code> class located in <code>loci.plugins.in</code>. You’ll notice that “in” is a reserved word in Python, so <code>from loci.plugins.in import ImporterOptions</code> is not a valid Python statement. Yay! My workaround:</p>
-<p><strong>Tip #3: move your Fiji imports to an external file.</strong></p>
-<p>So I have a <code>jython_imports.py</code> file with just:
-</p>
-<pre><code class="python">from ij import IJ
-from loci.plugins import BF
-from loci.plugins.in import ImporterOptions</code></pre>
-Then, inside the <code>convert_files()</code> function, we just do:
-<pre><code class="python">from jython_imports import IJ, BF, ImporterOptions</code></pre>
-This way, the main file remains Python-compatible until the convert() function is actually called, regardless of whatever funky and unpythonic stuff is happening in <code>jython_imports.py</code>.
-<p>Onto the options. If you untick “Open files individually”, it will open up all matching files in a directory, regardless of your input filename! Not good. So now we play a pattern-matching game in which we match the option description in the above dialog with the <a href="http://ci.openmicroscopy.org/job/BIOFORMATS-5.0-latest/javadoc/loci/plugins/in/ImporterOptions.html">ImporterOptions API</a> calls. In this case, we <code>setUngroupFiles(True)</code>. To specify a filename, we <code>setId(filename)</code>. Additionally, because we want all of the images in the .lif file, we <code>setOpenAllSeries(True)</code>.</p>
-<p>Next, each image in the series is 3D and has three channels, but we are only interested in a summed z-projection of the first channel. There’s a set of ImporterOptions methods tantalizingly named <code>setCBegin</code>, <code>setCEnd</code>, and <code>setCStep</code>, but this is where I found the <a href="http://ci.openmicroscopy.org/job/BIOFORMATS-5.0-latest/javadoc/loci/plugins/in/ImporterOptions.html#setCEnd(int,%20int)">documentation</a> sorely lacking. The functions take <code>(int s, int value)</code> as arguments, but what’s <code>s</code>??? Are the limits closed or open? Code review is a wonderful thing, and this would not have passed it. To figure things out:</p>
-<p><strong>Tip #4: use Fiji’s interactive Jython interpreter to figure things out quickly.</strong></p>
-<p>You can find the Jython interpreter under Plugins/Scripting/Jython Interpreter. It’s no IPython, but it is extremely helpful to answer the questions I had above. My hypothesis was that <code>s</code> was the series, and that the intervals would be closed. So:
-</p>
-<pre><code class="python">&gt;&gt;&gt; from loci.plugins import BF
-&gt;&gt;&gt; from loci.plugins.in import ImporterOptions
-&gt;&gt;&gt; opts = ImporterOptions()
-&gt;&gt;&gt; opts.setId("myFile.lif")
-&gt;&gt;&gt; opts.setOpenAllSeries(True)
-&gt;&gt;&gt; opts.setUngroupFiles(True)
-&gt;&gt;&gt; imps = BF.openImagePlus(opts)</code></pre>
-Now we can play around, with one slight annoyance: the interpreter won’t print the output of your last statement, so you have to specify it:
-<pre><code class="python">&gt;&gt;&gt; len(imps)
-&gt;&gt;&gt; print(len(imps))
-18</code></pre>
-Which is what I expected, as there are 18 series in my .lif file. The image shape is given by the <code>getDimensions()</code> method of the ImagePlus class:
-<pre><code class="python">&gt;&gt;&gt; print(imps[0].getDimensions())
-array('i', [1024, 1024, 3, 31, 1])
-<p>&gt;&gt;&gt; print(imps[1].getDimensions())
-array('i', [1024, 1024, 3, 34, 1])</p></code></pre>
-That’s (x, y, channels, z, time).
-<p>Now, let’s try the same thing with <code>setCEnd</code>, assuming closed interval:
-</p>
-<pre><code class="python">&gt;&gt;&gt; opts.setCEnd(0, 0) ## only read channels up to 0 for series 0?
-&gt;&gt;&gt; opts.setCEnd(2, 0) ## only read channels up to 0 for series 2?
-&gt;&gt;&gt; imps = BF.openImagePlus(opts)
-&gt;&gt;&gt; print(imps[0].getDimensions())
-array('i', [1024, 1024, 1, 31, 1])
-<p>&gt;&gt;&gt; print(imps[1].getDimensions())
-array('i', [1024, 1024, 3, 34, 1])</p>
-<p>&gt;&gt;&gt; print(imps[2].getDimensions())
-array('i', [1024, 1024, 1, 30, 1])</p></code></pre>
-Nothing there to disprove my hypothesis! So we move on to the final step, which is to z-project the stack by summing the intensity over all z values. This is normally accessed via Image/Stacks/Z Project in the Fiji GUI, and I found the corresponding <code>ij.plugin.ZProjector</code> class by searching for <a href="http://rsbweb.nih.gov/ij/developer/api/ij/plugin/ZProjector.html">“proj” in the ImageJ documentation</a>. A <code>ZProjector</code> object has a <code>setMethod</code> method that usefully takes an int as an argument, with no explanation in its docstring as to which int translates to which method (sum, average, max, etc.). A little more digging in the <a href="http://rsb.info.nih.gov/ij/developer/source/ij/plugin/ZProjector.java.html">source code</a> reveals some class static variables, <code>AVG_METHOD</code>, <code>MAX_METHOD</code>, and so on.
-<p><strong>Tip #5: don’t be afraid to look at the source code. It’s one of the main advantages of working in open-source.</strong></p>
-<p>So:
-</p>
-<pre><code class="python">&gt;&gt;&gt; from ij.plugin import ZProjector
-&gt;&gt;&gt; proj = ZProjector()
-&gt;&gt;&gt; proj.setMethod(ZProjector.SUM_METHOD)
-&gt;&gt;&gt; proj.setImage(imps[0])
-&gt;&gt;&gt; proj.doProjection()
-&gt;&gt;&gt; impout = proj.getProjection()
-&gt;&gt;&gt; print(impout.getDimensions())
-array('i', [1024, 1024, 1, 1, 1])</code></pre>
-The output is actually a float-typed image, which will get rescaled to [0, 255] uint8 on save if we don’t fix it. So, to wrap up, we convert the image to 16 bits (making sure to <a href="https://groups.google.com/d/msg/fiji-users/HfuHj0QBo40/CR9s3MQ5vUsJ">turn off scaling</a>), use the series title to generate a unique filename, and save as a PNG:
-<pre><code class="python">&gt;&gt;&gt; from ij.process import ImageConverter
-&gt;&gt;&gt; ImageConverter.setDoScaling(False)
-&gt;&gt;&gt; conv = ImageConverter(impout)
-&gt;&gt;&gt; conv.convertToGray16()
-&gt;&gt;&gt; title = imps[0].getTitle().rsplit(" ", 1)[-1]
-&gt;&gt;&gt; IJ.saveAs(impout, 'png', "myFile-" + title + ".png")</code></pre>
-You can see the final result of my sleuthing in <a href="https://github.com/jni/lesion/blob/6f77cccd1e0f3ddf92ce35a7040ada5328fd90ff/lesion/lif2png.py">lif2png.py</a> and <a href="https://github.com/jni/lesion/blob/6f77cccd1e0f3ddf92ce35a7040ada5328fd90ff/lesion/jython_imports.py">jython_imports.py</a>. If you would do something differently, pull requests are always welcome.
-<p>Before I sign off, let me recap my tips:</p>
-<ol>
-<li>
-<p>copy argparse.py into your project;</p>
-</li>
-<li>
-<p>only import Java API functions within the functions that use them;</p>
-</li>
-<li>
-<p>move your Fiji imports to an external file;</p>
-</li>
-<li>
-<p>use Fiji’s interactive Jython interpreter to figure things out quickly; and</p>
-</li>
-<li>
-<p>don’t be afraid to look at the source code.</p>
-</li>
-</ol>
-<p>And let me add a few final comments: once I started digging into all of Fiji’s plugins, I found documentation of very variable quality, and worse, virtually zero consistency between the interfaces to each plugin. Some work on “the currently active image”, some take an <code>ImagePlus</code> instance as input, and others still a filename or a directory name. Outputs are equally variable. This has been a huge pain when trying to work with these plugins.</p>
-<p>But, on the flipside, this is the most complete collection of image processing functions anywhere. Along with the seamless access to all those functions from Jython and other languages, that makes Fiji very worthy of your attention.
-</p>
-<h4 id="acknowledgements">Acknowledgements</h4>
-This post was possible thanks to the help of <a href="http://albert.rierol.net/">Albert Cardona</a>, <a href="http://loci.wisc.edu/people/johannes-schindelin">Johannes Schindelin</a>, <a href="http://loci.wisc.edu/people/wayne-rasband">Wayne Rasband</a>, and <a href="http://lammertlab.org/Jan_Eglinger">Jan Eglinger</a>, who restlessly respond to (it seems) every query on the <a href="http://imagej.1557.x6.nabble.com/">ImageJ mailing list</a>. Thanks!
-<h4 id="reference">References</h4>
-<p><span class="Z3988" title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;rft.jtitle=Nature+methods&amp;rft_id=info%3Apmid%2F22743772&amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;rft.atitle=Fiji%3A+an+open-source+platform+for+biological-image+analysis.&amp;rft.issn=1548-7091&amp;rft.date=2012&amp;rft.volume=9&amp;rft.issue=7&amp;rft.spage=676&amp;rft.epage=82&amp;rft.artnum=&amp;rft.au=Schindelin+J&amp;rft.au=Arganda-Carreras+I&amp;rft.au=Frise+E&amp;rft.au=Kaynig+V&amp;rft.au=Longair+M&amp;rft.au=Pietzsch+T&amp;rft.au=Preibisch+S&amp;rft.au=Rueden+C&amp;rft.au=Saalfeld+S&amp;rft.au=Schmid+B&amp;rft.au=Tinevez+JY&amp;rft.au=White+DJ&amp;rft.au=Hartenstein+V&amp;rft.au=Eliceiri+K&amp;rft.au=Tomancak+P&amp;rft.au=Cardona+A&amp;rfe_dat=bpr3.included=1;bpr3.tags=Biology%2CComputer+Science+%2F+Engineering%2CComputational+Biology%2C+Bioinformatics">Schindelin J, Arganda-Carreras I, Frise E, Kaynig V, Longair M, Pietzsch T, Preibisch S, Rueden C, Saalfeld S, Schmid B, Tinevez JY, White DJ, Hartenstein V, Eliceiri K, Tomancak P, &amp; Cardona A (2012). Fiji: an open-source platform for biological-image analysis. <span style="font-style:italic;">Nature methods, 9</span> (7), 676-82 PMID: <a rev="review" href="http://www.ncbi.nlm.nih.gov/pubmed/22743772">22743772</a></span></p>
-<p><span class="Z3988" title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;rft.jtitle=The+Journal+of+cell+biology&amp;rft_id=info%3Apmid%2F20513764&amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;rft.atitle=Metadata+matters%3A+access+to+image+data+in+the+real+world.&amp;rft.issn=0021-9525&amp;rft.date=2010&amp;rft.volume=189&amp;rft.issue=5&amp;rft.spage=777&amp;rft.epage=82&amp;rft.artnum=&amp;rft.au=Linkert+M&amp;rft.au=Rueden+CT&amp;rft.au=Allan+C&amp;rft.au=Burel+JM&amp;rft.au=Moore+W&amp;rft.au=Patterson+A&amp;rft.au=Loranger+B&amp;rft.au=Moore+J&amp;rft.au=Neves+C&amp;rft.au=Macdonald+D&amp;rft.au=Tarkowska+A&amp;rft.au=Sticco+C&amp;rft.au=Hill+E&amp;rft.au=Rossner+M&amp;rft.au=Eliceiri+KW&amp;rft.au=Swedlow+JR&amp;rfe_dat=bpr3.included=1;bpr3.tags=Biology%2CComputer+Science+%2F+Engineering%2CComputational+Biology%2C+Bioinformatics">Linkert M, Rueden CT, Allan C, Burel JM, Moore W, Patterson A, Loranger B, Moore J, Neves C, Macdonald D, Tarkowska A, Sticco C, Hill E, Rossner M, Eliceiri KW, &amp; Swedlow JR (2010). Metadata matters: access to image data in the real world. <span style="font-style:italic;">The Journal of cell biology, 189</span> (5), 777-82 PMID: <a rev="review" href="http://www.ncbi.nlm.nih.gov/pubmed/20513764">20513764</a></span></p></code></pre>
+<p class="more"><a href="2014/02/26/fiji-jython/">Read more…</a></p>
 </div>
     </div>
     </article><article class="post h-entry post-text"><header><h1 class="post-title p-name"><a href="2014/01/09/best-practices-addendum-find-and-follow-the-conventions-of-your-programming-community/" class="u-url">Best practices addendum: find and follow the conventions of your programming community</a></h1>
@@ -265,7 +97,7 @@ This post was possible thanks to the help of <a href="http://albert.rierol.net/"
 
         </p>
 </div>
-    </header><div class="e-content entry-content">
+    </header><div class="p-summary entry-summary">
     <div>
 <p></p>
 <p>
@@ -291,82 +123,7 @@ def scan(op, values, seed=None):
 First, this code ignores the article's own advice, <em>(1b) make names consistent, distinctive, and meaningful. </em> I would argue that "scan" here is neither distinctive (many other operations could be called "scan") nor meaningful (the function purpose is not at all clear from the name). My suggestion would be "cumulative_reduce".
 </p>
 
-<p>
-It also does not address another important piece of advice that I would add to their list, maybe as (1d): <strong>Find out, and follow, the conventions of the programming community you're joining.</strong> This will allow others to use and assess your code more readily, and you to contribute to other code libraries more easily. Here, although they have made efforts to make their advice language-agnostic, the authors have chosen Python to illustrate their point. Python happens to have strong style and documentation prescriptions in the form of Python Enhancement Proposals <a href="http://www.python.org/dev/peps/pep-0008/">PEP-8: Style Guide for Python Code</a> and <a href="http://www.python.org/dev/peps/pep-0257/">PEP-257: Docstring conventions</a>. Following PEP-8 and PEP-257, the above comments become an actual docstring (which is attached to the function automatically by documentation-generating tools):
-</p>
-
-<pre>
-def cumulative_reduce(op, values, seed=None):
-    """Apply a binary operator cumulatively to the values given.
-
-    The operator is applied from left to right.
-
-    For example, if "op" is "add" and "values" is "[1,3,5]",
-    the result is "[1, 4, 9]" (i.e., the running total of the
-    given values). The result always has the same length as
-    the input.
-
-    If "seed" is given, the result is initialized with that
-    value instead of with the first item in "values", and
-    the final item is omitted from the result.
-    Ex : scan(add, [1, 3, 5] , seed=10)
-    produces [10, 11, 14]
-    """
-    ...implementation...
-</pre>
-
-<p>
-In addition, the Scientific Python community in particular has adopted a few docstring conventions of their own, including the <a href="https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt">NumPy docstring conventions</a>, which divide the docstring into meaningful sections using ReStructured Text, and the <a href="http://docs.python.org/2/library/doctest.html">doctest</a> convention to format examples, so the documentation acts as unit tests. So, to further refine their example code:
-</p>
-
-<pre>
-def cumulative_reduce(op, values, seed=None):
-    """Apply a binary operator cumulatively to the values given.
-
-    The operator is applied from left to right.
-
-    Parameters
-    ----------
-    op : binary function
-        An operator taking as input to values of the type contained in
-        `values` and returning a value of the same type.
-    values : list
-        The list of input values.
-    seed : type contained in `values`, optional
-        A seed to start the reduce operation.
-
-    Returns
-    -------
-    reduced : list, same type as `values`
-        The accumulated list.
-
-    Examples
-    --------
-    &gt;&gt;&gt; add = lambda x, y: x + y
-    &gt;&gt;&gt; cumulative_reduce(add, [1, 3, 5])
-    [1, 4, 9]
-
-    If "seed" is given, the result is initialized with that
-    value instead of with the first item in "values", and
-    the final item is omitted from the result.
-
-    &gt;&gt;&gt; cumulative_reduce(add, [1, 3, 5], seed=10)
-    [10, 11, 14]
-    """
-    ...implementation...
-</pre>
-
-<p>
-Obviously, these conventions are specific to scientific Python. But the key is that other communities will have their own, and you should find out what those conventions are and adopt them. When in Rome, do as the Romans do. It's actually taken me quite a few years of scientific programming to realise this (and internalise it). I hope this post will help someone get up to speed more quickly than I have.
-</p>
-
-<p>
-(Incidentally, the Wordpress/Chrome/OSX spell checker doesn't bat an eye at "atwitter". That's awesome.)
-</p>
-
-<p><strong>Reference</strong></p>
-
-<p><span class="Z3988" title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;rft.jtitle=PLoS+Biol&amp;rft_id=info%3Adoi%2F10.1371%2Fjournal.pbio.1001745&amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;rft.atitle=Best+Practices+for+Scientific+Computing&amp;rft.issn=&amp;rft.date=2014&amp;rft.volume=12&amp;rft.issue=1&amp;rft.spage=0&amp;rft.epage=&amp;rft.artnum=http%3A%2F%2Fwww.plosbiology.org%2Farticle%2Finfo%3Adoi%2F10.1371%2Fjournal.pbio.1001745&amp;rft.au=Greg+Wilson&amp;rft.au=DA+Aruliah&amp;rft.au=C+Titus+Brown&amp;rft.au=Neil+P+Chue+Hong&amp;rft.au=Matt+Davis&amp;rft.au=Richard+T+Guy&amp;rft.au=Steven+HD+Haddock&amp;rft.au=Kathryn+D+Huff&amp;rft.au=Ian+M+Mitchell&amp;rft.au=Mark+D+Plumbley&amp;rft.au=Ben+Waugh&amp;rft.au=Ethan+P+White&amp;rft.au=Paul+Wilson&amp;rfe_dat=bpr3.included=1;bpr3.tags=Biology%2CComputer+Science+%2F+Engineering%2CComputational+Biology%2C+Bioinformatics%2C+Software+Engineering">Greg Wilson, DA Aruliah, C Titus Brown, Neil P Chue Hong, Matt Davis, Richard T Guy, Steven HD Haddock, Kathryn D Huff, Ian M Mitchell, Mark D Plumbley, Ben Waugh, Ethan P White, &amp; Paul Wilson (2014). Best Practices for Scientific Computing <span style="font-style:italic;">PLoS Biol, 12</span> (1) DOI: <a rev="review" href="http://dx.doi.org/10.1371/journal.pbio.1001745">10.1371/journal.pbio.1001745</a></span></p>
+<p class="more"><a href="2014/01/09/best-practices-addendum-find-and-follow-the-conventions-of-your-programming-community/">Read more…</a></p>
 </div>
     </div>
     </article><article class="post h-entry post-text"><header><h1 class="post-title p-name"><a href="2014/01/06/our-environmental-future/" class="u-url">Our environmental future</a></h1>
@@ -380,7 +137,7 @@ Obviously, these conventions are specific to scientific Python. But the key is t
 
         </p>
 </div>
-    </header><div class="e-content entry-content">
+    </header><div class="p-summary entry-summary">
     <div>
 <p></p>
 <p>Another link post, to a worthwhile <a href="http://aeon.co/magazine/nature-and-cosmos/what-swiss-flying-cows-tell-us-about-the-environmental-future/">article</a> by Veronique Greenwood for Aeon (emphases mine):
@@ -399,22 +156,12 @@ The article does suggest, however, that a change of mindset will push us to inve
 
         </p>
 </div>
-    </header><div class="e-content entry-content">
+    </header><div class="p-summary entry-summary">
     <div>
 <p></p>
 <p>In short: it's awesome; the best stand I have ever used, by a wide margin. Read on for details.</p>
 <p><a href="http://www.therooststand.com/">The Roost</a> is an ingeniously designed laptop stand that folds away to nothing, so you can always carry it with you. It's another <a href="http://www.kickstarter.com/projects/86285180/the-roost-saving-your-neck-and-back-from-your-lapt">Kickstarter</a> success story. (It's the third I've participated in, after the <a href="http://www.kickstarter.com/projects/hop/elevation-dock-the-best-dock-for-iphone">Elevate</a> iPhone dock and the <a href="http://www.kickstarter.com/projects/597507018/pebble-e-paper-watch-for-iphone-and-android">Pebble</a> watch. I absolutely love the Kickstarter economy.)</p>
-<p>Here's a picture of the Roost in its carry bag. You can see that it's just tiny:</p>
-<p><a href="http://ilovesymposia.files.wordpress.com/2013/11/2013-11-10-14-10-19.jpg"><img class="size-full wp-image" id="i-392" alt="Image" src="http://ilovesymposia.files.wordpress.com/2013/11/2013-11-10-14-10-19.jpg?w=650"></a></p>
-<p>And unwrapped:</p>
-<p><img class="size-full wp-image" id="i-398" alt="Image" src="http://ilovesymposia.files.wordpress.com/2013/11/2013-11-10-14-10-571.jpg?w=650"></p>
-<p>And yet for all its diminutive size, this stand gives my laptop wicked air:</p>
-<p><img class="aligncenter size-large wp-image-405" alt="roost-before" src="http://ilovesymposia.files.wordpress.com/2013/12/roost-before.png?w=604" width="604" height="453"><a href="http://ilovesymposia.files.wordpress.com/2013/12/roost-after.png"><img class="aligncenter size-full wp-image-406" alt="roost-after" src="http://ilovesymposia.files.wordpress.com/2013/12/roost-after.png" width="604" height="453"></a></p>
-<p>The laptop screen actually sits higher (closer to eye level) than on other stands I've used from <a href="http://www.amazon.com/Griffin-Technology-GC16034-Elevator-Laptop/dp/B0044RUSZM/">Griffin</a> or <a href="http://www.amazon.com/Xbrand-XB-1002F-US-Rotating-Laptop-Stand/dp/B000GB3E9W/">Xbrand</a>, despite the Roost being much lighter and smaller. Folding and unfolding the Roost is fantastically <a href="http://www.therooststand.com/pages/how-to-use">easy, smooth, and fast</a>. It's just excellent design.</p>
-<p>The laptop is held up by two tiny tabs that latch underneath the display's hinge:</p>
-<p><a href="http://ilovesymposia.files.wordpress.com/2013/12/2013-11-10-14-13-44.jpg"><img class="aligncenter size-full wp-image-403" alt="2013-11-10 14.13.44" src="http://ilovesymposia.files.wordpress.com/2013/12/2013-11-10-14-13-44.jpg" width="604" height="453"></a></p>
-<p>Ingenious!</p>
-<p>If you're at all thinking about purchasing a laptop stand, I can't recommend the Roost highly enough. <a href="http://www.therooststand.com/">Buy it now</a>.</p>
+<p class="more"><a href="2013/12/23/my-review-of-the-roost-laptop-stand/">Read more…</a></p>
 </div>
     </div>
     </article><article class="post h-entry post-text"><header><h1 class="post-title p-name"><a href="2013/11/20/a-high-profile-endorsement-of-f1000-research/" class="u-url">A high-profile endorsement of F1000 Research</a></h1>
@@ -428,7 +175,7 @@ The article does suggest, however, that a change of mindset will push us to inve
 
         </p>
 </div>
-    </header><div class="e-content entry-content">
+    </header><div class="p-summary entry-summary">
     <div>
 <p></p>
 <p>Michael Eisen speaking about <a href="2013/11/20/a-high-profile-endorsement-of-f1000-research/f1000research.com">F1000 Research</a> to <a href="http://www.nature.com/news/plos-profits-prompt-revamp-1.14205">Nature</a>:
@@ -447,7 +194,7 @@ I recently <a href="2013/11/20/a-high-profile-endorsement-of-f1000-research/ilov
 
         </p>
 </div>
-    </header><div class="e-content entry-content">
+    </header><div class="p-summary entry-summary">
     <div>
 <p></p>
 <p>Last year I got a 15" Retina Macbook Pro, an excellent machine. However, it was taking <em>way </em>longer than my 13" MBP to wake up from sleep. After a few months of just accepting it as a flaw of the new machines and the cost of being an early adopter, I finally decided to look into the problem. Sure enough, I came across this excellent post from OS X Daily:</p>
@@ -456,8 +203,7 @@ I recently <a href="2013/11/20/a-high-profile-endorsement-of-f1000-research/ilov
 </p>
 <pre>sudo pmset -a standbydelay 86400</pre>
 This changes the time to deep sleep to 24h. Since I rarely spend more than 24h without using my computer, I now have instant-on every time I open up my laptop!
-<p>Finally, the reason I wrote this now: upgrading to Mavericks sneakily resets your standbydelay to 4200. (Or, at least, it did for me.) Just run the above command again and you'll be set, at least until the next OS upgrade comes along!</p>
-<p><strong>Update:</strong> the original source of this tip appears to be <a href="http://www.ewal.net/2012/09/09/slow-wake-for-macbook-pro-retina/">a post</a> from Erv Walter on his site, Ewal.net. It goes into a lot more detail about the origin of this sleep mode — which indeed did not exist when I bought my previous Macbook Pro.</p>
+<p class="more"><a href="2013/11/05/speed-up-your-macs-wake-up-time-using-pmset-do-it-again-after-upgrading-to-mavericks/">Read more…</a></p>
 </div>
     </div>
     </article><article class="post h-entry post-text"><header><h1 class="post-title p-name"><a href="2013/10/15/osx-software-watch-use-photosweeper-to-remove-duplicates-in-your-image-collection/" class="u-url">OSX software watch: use Photosweeper to remove duplicates in your image collection</a></h1>
@@ -471,7 +217,7 @@ This changes the time to deep sleep to 24h. Since I rarely spend more than 24h w
 
         </p>
 </div>
-    </header><div class="e-content entry-content">
+    </header><div class="p-summary entry-summary">
     <div>
 <p></p>
 <p>It's no secret that the photo management problem is a huge mess. As new cameras, software, and online storage and sharing services come and go, our collections end up strewn all over the place, often in duplicate. This eats up precious storage space and makes finding that one photo an exercise in frustration.</p>
@@ -497,7 +243,7 @@ This changes the time to deep sleep to 24h. Since I rarely spend more than 24h w
 
         </p>
 </div>
-    </header><div class="e-content entry-content">
+    </header><div class="p-summary entry-summary">
     <div>
 <p></p>
 <p>This is just a link post. The excellent and excellently-named <a href="http://datacolada.org/">Data Colada</a> blog has a <a href="http://datacolada.org/2013/09/17/just_posting_it_works/">brilliant analysis</a> of scientific fraud exposed by the raw data. Figures can obscure flaws that are immediately obvious in the numbers. (Although, Matt Terry's awesome and hilarious <a href="https://github.com/mrterry/yoink">Yoink</a> might alleviate this.) In this case, averages of four numbers turning out to be integers <em>every single time</em><em>, </em>and two independent experiments giving almost exactly the same distribution of values. (Frankly, if you can't simulate random sampling from an underlying distribution, you don't belong in the fraud world!)</p>
@@ -516,26 +262,13 @@ This changes the time to deep sleep to 24h. Since I rarely spend more than 24h w
 
         </p>
 </div>
-    </header><div class="e-content entry-content">
+    </header><div class="p-summary entry-summary">
     <div>
 <p></p>
 <p>Time-to-publication at the world's biggest scientific journal has grown dramatically, but the nail in the coffin was its poor production policies.</p>
 <p>When PLOS ONE was announced in 2006, its charter immediately resonated with me. This would be the first journal where only scientific accuracy mattered. Judgments of "impact" and "interest" would be left to posterity, which is the right strategy when publishing is cheap and searching and filtering are easy. The whole endeavour would be a huge boon to "in-between" scientists straddling established fields — such as bioinformaticians.</p>
 <p>My first first-author paper, <a href="http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0008898">Joint Genome-Wide Profiling of miRNA and mRNA Expression in Alzheimer's Disease Cortex Reveals Altered miRNA Regulation</a>, went through a fairly standard <a href="http://www.frontiersin.org/computational_neuroscience/10.3389/fncom.2011.00055/full">journal loop</a>. We first submitted it to Genome Biology, which (editorially) deemed it uninteresting to a sufficiently broad readership; then to RNA, which (editorially) decided that our sample size was too small; and finally to PLOS ONE, where it went out to review. After a single revision loop, it was accepted for publication. It's been cited more than 15 times a year, which is modest but above the Journal Impact Factor for Genome Biology — which means that the editors made a bad call rejecting it outright. (I'm not bitter!)</p>
-<p>Overall, it was a very positive first experience at PLOS. Time to acceptance was under 3 months, time to publication under 4. The reviewers were no less harsh than in my previous experiences, so I felt (and still feel) that the reputation of PLOS ONE as a "junk" journal was (is) highly undeserved. (<em><strong>Update:</strong> There's been a big hullabaloo about a recent <a href="http://www.sciencemag.org/content/342/6154/60.full">sting</a> targeting open access journals with a fake paper. PLOS ONE came away unscathed. See also the <a href="http://www.michaeleisen.org/blog/?p=1439">take of Mike Eisen</a>, co-founder of PLOS.</em>) And the number of citations certainly vindicated PLOS ONE's approach of ignoring apparent impact.</p>
-<p>So, when looking for a home for my <a href="http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0071715">equally-awkward postdoc paper</a> (not quite computer vision, not quite neuroscience), PLOS ONE was a natural first choice.</p>
-<p>The first thing to go wrong was the time to publication, about 6 months. Still better than many top-tier journals, but no longer a crushing advantage. And it's not just me: there's been plenty of discussion about time-to-publication <a href="http://nbviewer.ipython.org/urls/gist.github.com/waltherg/6211587/raw/88dc1877ff9328898f09dc6a8f59973a9f32691f/plos_one.json">steadily increasing</a> at PLOS ONE. But I was not too worried about the publication time, since I'd put my paper up on the <a href="http://arxiv.org/abs/1303.6163">arXiv</a> (and revised it at each round of peer-review, so you can see the revision history there — but not on PLOS ONE).</p>
-<p>But, after multiple rounds of review, the time came for production, at which point they messed up two things: they did not include my present address; and they messed up Figure 1, which is supposed to be a small, single-column, illustrative figure, and which they made page-width. The effect is almost comical, and my first impression seeing page 2 would be to think that the authors are trying to mask their incompetence with giant pictures. (We're not, I swear!)</p>
-<p><a href="http://ilovesymposia.files.wordpress.com/2013/10/fig1.png"><img class="size-full wp-image-250" alt="Figure 1 of my paper on arXiv (left) and PLOS ONE (right)" src="http://ilovesymposia.files.wordpress.com/2013/10/fig1.png" width="604" height="244"></a> Figure 1 of our paper on arXiv (left) and PLOS ONE (right)</p>
-<p>Both of these mistakes could have been avoided if PLOS ONE did not have a policy of <em>not letting you see the camera-ready pdf before it is published</em>, and of <em>not allowing corrections to papers unless they are technical or scientific, regardless of fault</em>. Not to mention they could have, you know, actually looked at the dimensions embedded in the submitted TIFFs. With a $1,300 publication fee, PLOS could afford to take a little bit of extra care with production. Both of the above policies are utterly unnecessary — the added cost of sending authors a production proof is close to nil, and keeping track of revisions on online publications is also trivial (see the 22 year old arXiv for an example).</p>
-<p>We scientists live and die by our papers. We don't want the culmination of years of work to be marred by a silly, easily-fixed formatting error, ossified by an unwieldy bureaucracy. I've been an avid promoter of PLOS (and PLOS ONE in particular) over the past few years, but I'm sad to say that's not where my next paper will end up.</p>
-<p>Ultimately, PLOS ONE's model, groundbreaking though it was, is already being supplanted by newcomers. PeerJ offers everything PLOS ONE does at a fraction of the cost, and further includes a preprint service and <a href="http://svpow.com/2013/02/12/peerj-launches-today-and-were-in-it/">open peer-review</a>. Ditto for F1000 Research, which in addition offers unlimited revisions (a topic close to my heart ;). And both use the excellent <a href="http://www.mathjax.org/">MathJAX</a> to render mathematical formulas, unlike PLOS's archaic use of embedded images. They get my vote for the journals of the future.</p>
-<p>[Note: the views expressed herein are mine alone — no co-authors were <del>harmed</del> consulted in the writing of this blog post.]</p>
-<p><em>References</em></p>
-<p><span class="Z3988" title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;rft.jtitle=PloS+one&amp;rft_id=info%3Apmid%2F20126538&amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;rft.atitle=Joint+genome-wide+profiling+of+miRNA+and+mRNA+expression+in+Alzheimer%27s+disease+cortex+reveals+altered+miRNA+regulation.&amp;rft.issn=&amp;rft.date=2010&amp;rft.volume=5&amp;rft.issue=2&amp;rft.spage=&amp;rft.epage=&amp;rft.artnum=&amp;rft.au=Nunez-Iglesias+J&amp;rft.au=Liu+CC&amp;rft.au=Morgan+TE&amp;rft.au=Finch+CE&amp;rft.au=Zhou+XJ&amp;rfe_dat=bpr3.included=1;bpr3.tags=Biology%2CNeuroscience%2CGenetics%2C+Computational+Biology%2C+Bioinformatics%2C+Genetics">Nunez-Iglesias J, Liu CC, Morgan TE, Finch CE, &amp; Zhou XJ (2010). Joint genome-wide profiling of miRNA and mRNA expression in Alzheimer's disease cortex reveals altered miRNA regulation. <span style="font-style:italic;">PloS one, 5</span> (2) PMID: <a rev="review" href="http://www.ncbi.nlm.nih.gov/pubmed/20126538">20126538</a></span></p>
-<p><span class="Z3988" title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;rft.jtitle=Frontiers+in+computational+neuroscience&amp;rft_id=info%3Apmid%2F22164143&amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;rft.atitle=Toward+a+new+model+of+scientific+publishing%3A+discussion+and+a+proposal.&amp;rft.issn=&amp;rft.date=2011&amp;rft.volume=5&amp;rft.issue=&amp;rft.spage=55&amp;rft.epage=&amp;rft.artnum=&amp;rft.au=Kravitz+DJ&amp;rft.au=Baker+CI&amp;rfe_dat=bpr3.included=1;bpr3.tags=Biology%2CResearch+%2F+Scholarship%2CNeuroscience%2CComputational+Neuroscience%2C+Publishing">Kravitz DJ, &amp; Baker CI (2011). Toward a new model of scientific publishing: discussion and a proposal. <span style="font-style:italic;">Frontiers in computational neuroscience, 5</span> PMID: <a rev="review" href="http://www.ncbi.nlm.nih.gov/pubmed/22164143">22164143</a></span></p>
-<p><span class="Z3988" title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;rft.jtitle=arXiv&amp;rft_id=info%3Aarxiv%2F1303.6163v3&amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;rft.atitle=Machine+learning+of+hierarchical+clustering+to+segment+2D+and+3D+images&amp;rft.issn=&amp;rft.date=2013&amp;rft.volume=&amp;rft.issue=&amp;rft.spage=&amp;rft.epage=&amp;rft.artnum=&amp;rft.au=Juan+Nunez-Iglesias&amp;rft.au=Ryan+Kennedy&amp;rft.au=Toufiq+Parag&amp;rft.au=Jianbo+Shi&amp;rft.au=Dmitri+B.+Chklovskii&amp;rfe_dat=bpr3.included=1;bpr3.tags=Biology%2CComputer+Science+%2F+Engineering%2CNeuroscience%2CGenetics%2C+Computational+Biology%2C+Algorithms">Juan Nunez-Iglesias, Ryan Kennedy, Toufiq Parag, Jianbo Shi, &amp; Dmitri B. Chklovskii (2013). Machine learning of hierarchical clustering to segment 2D and 3D images <span style="font-style:italic;">arXiv</span> arXiv: <a rev="review" href="http://arxiv.org/abs/1303.6163v3">1303.6163v3</a></span></p>
-<p><span class="Z3988" title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;rft.jtitle=PloS+one&amp;rft_id=info%3Apmid%2F23977123&amp;rfr_id=info%3Asid%2Fresearchblogging.org&amp;rft.atitle=Machine+Learning+of+Hierarchical+Clustering+to+Segment+2D+and+3D+Images.&amp;rft.issn=&amp;rft.date=2013&amp;rft.volume=8&amp;rft.issue=8&amp;rft.spage=&amp;rft.epage=&amp;rft.artnum=&amp;rft.au=Nunez-Iglesias+J&amp;rft.au=Kennedy+R&amp;rft.au=Parag+T&amp;rft.au=Shi+J&amp;rft.au=Chklovskii+DB&amp;rfe_dat=bpr3.included=1;bpr3.tags=Biology%2CComputer+Science+%2F+Engineering%2CNeuroscience%2CComputational+Biology%2C+Algorithms%2C+Artificial+Intelligence">Nunez-Iglesias J, Kennedy R, Parag T, Shi J, &amp; Chklovskii DB (2013). Machine Learning of Hierarchical Clustering to Segment 2D and 3D Images. <span style="font-style:italic;">PloS one, 8</span> (8) PMID: <a rev="review" href="http://www.ncbi.nlm.nih.gov/pubmed/23977123">23977123</a></span></p>
+<p class="more"><a href="2013/10/04/why-plos-one-is-no-longer-my-default-journal/">Read more…</a></p>
 </div>
     </div>
     </article><article class="post h-entry post-text"><header><h1 class="post-title p-name"><a href="2013/07/20/tesla-makes-a-better-place/" class="u-url">Tesla makes a better place</a></h1>
@@ -549,7 +282,7 @@ This changes the time to deep sleep to 24h. Since I rarely spend more than 24h w
 
         </p>
 </div>
-    </header><div class="e-content entry-content">
+    </header><div class="p-summary entry-summary">
     <div>
 <p></p>
 <p>No sooner do I <a title="A sad day in the fight against climate change" href="http://ilovesymposia.com/2013/05/25/a-sad-day-in-the-fight-against-climate-change/">berate Tesla</a> for not supporting battery swapping than they go and <a href="http://www.wired.com/autopia/2013/06/tesla-battery-swap/">announce</a> battery swap stations! It'd be nice if they weren't proprietary, but I'll take it.</p>
