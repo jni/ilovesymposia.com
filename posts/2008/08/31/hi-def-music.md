@@ -18,7 +18,7 @@ Ever since I tried out first the <a href="http://www.bose.com/controller?event=v
 
 But in fact, even CD quality is nowhere near the limit of human perception. The end credits for the videogame Metal Gear Solid 2 feature a jazz piece titled <em>Can't Say Goodbye to Yesterday</em> that is fairly good, but really, nothing special. The recording, however, was in Dolby Digital 5.1 channel audio, and on my surround sound system it was a stunning experience—you are literally placed in the middle of the band, surrounded by the instruments, with the singer right in front of you. Keeping all of our music in CD and CD-like formats is short-sighted. Neil Young <a href="http://blog.wired.com/music/2008/07/neil-young-hi-r.html">recently lamented</a> the dominance of CDs and mp3s in an era in which digital storage and powerful computers are increasingly cheap.
 
-.. TEASER_END
+<!-- TEASER_END -->
 
 Which takes us to <a href="http://www.ted.com/index.php/talks/john_walker_re_creates_great_performances.html">John Walker's </a><a href="http://www.ted.com/index.php/talks/john_walker_re_creates_great_performances.html">TED talk</a>. Think of all the extraordinary music performances of the 50s, 60s, and 70s, before digital recording technology existed. John Walker has analysed those performances from analog recordings and (for piano only, so far) recreated them on a computer-controlled grand piano (built by Yamaha), to record with whatever new and sophisticated recording equipment is available currently. He has <em>decoupled</em> the performance and the recording.
 

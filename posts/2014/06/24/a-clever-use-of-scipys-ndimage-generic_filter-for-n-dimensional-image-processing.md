@@ -14,6 +14,8 @@
 
 Vighnesh is <a href="http://www.google-melange.com/gsoc/proposal/public/google/gsoc2014/vighneshbirodkar/5870670537818112">tasked</a> with implementing region adjacency graphs and graph based methods for image segmentation. He initially wrote specific functions for 2D and 3D images, and I suggested that he should merge them: either with n-dimensional code, or, at the very least, by making 2D a special case of 3D. He chose the former, and produced extremely elegant code. Three nested for loops and a large number of neighbour computations were replaced by a function call and a simple loop. Read on to find out how.
 
+<!-- TEASER_END -->
+
 Iterating over an array of unknown dimension is not trivial a priori, but thankfully, someone else has already solved that problem: NumPy’s <a href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.nditer.html"><code>nditer</code></a> and <a href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndindex.html"><code>ndindex</code></a> functions allow one to efficiently iterate through every point of an n-dimensional array. However, that still leaves the problem of finding neighbors, to determine which regions are adjacent to each other. Again, this is not trivial to do in nD.
 
 scipy.ndimage provides a suitable function, <code>generic_filter</code>. Typically, a filter is used to iterate a “selector” (called a structuring element) over an array, compute some function of all the values covered by the structuring element, and replace the central value by the output of the function. For example, using the structuring element:

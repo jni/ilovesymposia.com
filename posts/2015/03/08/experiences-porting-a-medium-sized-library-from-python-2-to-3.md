@@ -19,7 +19,7 @@
 The second hardest part is the testing. In particular, you will need to be careful with dictionary iteration, pickled objects, and file persistence in general. I'll go through these gotchas in more detail below.
 
 
-.. TEASER_END
+<!-- TEASER_END -->
 
 </p><h2>Reminder: the order of dictionary items is undefined</h2>
 

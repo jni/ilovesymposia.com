@@ -18,7 +18,7 @@
 
 First, most interesting to me, is a little bit of scientific evidence on the cliché that selflessness equals happiness: if you run language metrics on the works of suicidal poets, you find an excess of self-centred words, such as "I", "me", "my", when compared to other poetry. Focusing on things other than yourself will make you a happier person.
 
-.. TEASER_END
+<!-- TEASER_END -->
 
 Having said that, Etcoff does point out that absence of depression is not happiness, as we all know. The pain avoidance and reward-seeking systems of the brain are separate, and to be happy you need both to be in order. She mentions that people who come off anti-depressants often relapse, because only one of the systems was being treated (I forget which—watch the talk!), so as soon as the treatment stops, the symptoms of the other system become manifest again.
 

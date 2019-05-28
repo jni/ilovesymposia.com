@@ -19,6 +19,8 @@ Thank you to everyone who has already submitted, retweeted, and spread the word 
 - Preferably, nominate <em>someone else's</em> code that impressed <em>you</em>.
 - Include a scientific application on real data.
 
+<!-- TEASER_END -->
+
 Submit by one of:
 - Twitter: mention <a href="https://twitter.com/hdashnow">@hdashnow</a>, <a href="https://twitter.com/stefanvdwalt">@stefanvdwalt</a>, or <a href="https://twitter.com/jnuneziglesias">@jnuneziglesias</a>, or just use the hashtag #ElegantSciPy;
 - Email: <a href="mailto:stefanv(at)berkeley.edu">Stéfan van der Walt</a>, <a href="mailto:juan.n@unimelb.edu.au">Juan Nunez-Iglesias</a>, or <a href="mailto:harriet.dashnow@unimelb.edu.au">Harriet Dashnow</a>; or

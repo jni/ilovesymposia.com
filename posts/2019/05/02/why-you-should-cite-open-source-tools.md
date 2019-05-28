@@ -30,6 +30,8 @@ developers have easy access to funds for their work, and are at the service of
 all the other scientists, who are their users. I used to share this perception,
 but it is utterly false.
 
+<!-- TEASER_END -->
+
 I certainly hadn't thought about the funding question, but I did think of
 packages like NumPy and SciPy as being written by "pros" (whatever that means),
 whose main job was to produce these amazing libraries.

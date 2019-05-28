@@ -20,7 +20,7 @@ In <a href="http://www.ted.com/talks/shai_agassi_on_electric_cars.html">his talk
 
 Agassi gets around the problem of the limited range of electric cars by making the battery quickly and easily replaceable. Thus you'll stop at a <span style="text-decoration:line-through;">petrol</span> battery station and a robotic system will swap out the battery in less than two minutes—presto! Instant battery recharge. That's less time than it takes to fill up.
 
-.. TEASER_END
+<!-- TEASER_END -->
 
 With one trillion dollars set aside for the economic stimulus, it'll be disappointing if none of it goes to building battery change stations in the US. Ditto for China.
 

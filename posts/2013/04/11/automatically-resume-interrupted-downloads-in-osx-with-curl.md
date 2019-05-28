@@ -19,7 +19,7 @@ After typing "up, enter" more times than I care to admit, I decided to figure ou
 <code>export ec=18; while [ $ec -eq 18 ]; do /usr/bin/curl -O -C - "http://www.example.com/a-big-archive.zip"; export ec=$?; done
 </code>
 
-.. TEASER_END
+<!-- TEASER_END -->
 
 Explanation: the exit code <span style="font-family:courier new;">curl</span> chucks when a download is interrupted is 18, and <span style="font-family:courier new;">$?</span> gives you the exit code of the last command in bash. So, while the exit code is 18, keep trying to download the file, maintaining the filename (-O) and resuming where the previous download left off (-C).
 

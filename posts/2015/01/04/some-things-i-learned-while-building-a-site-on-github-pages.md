@@ -16,6 +16,8 @@
 
 If you just want to publish a static set of html files using absolute paths, you'll be fine. However, Pages uses <a href="http://jekyllrb.com">Jekyll</a>, a server that can transform collections of Markdown, HTML, and other files into full-fledged websites. The process is definitely full of gotchas, though, and you'll run into issues for anything other than single pages. I'm making this list for my own future reference, and so that I can finally close the umpteen tabs I have open on the topic! But I hope someone else will find it useful.
 
+<!-- TEASER_END -->
+
 </p><h2>1. Jekyll lets you write Markdown, but it's not GitHub-Flavored Markdown</h2>
 
 <strong>Update:</strong> This is no longer true. You can use GFM (or something very similar to it) using <code>kramdown</code> as the renderer.

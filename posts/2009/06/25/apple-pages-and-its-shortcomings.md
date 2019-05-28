@@ -18,7 +18,7 @@
 
 Pages, on the whole, is a fine piece of software. There's lots of little touches that make it stand out from MS Word, as well as Google Docs. For one, it's very snappy. My paper is loaded almost instantly, where Word takes several seconds. Word even takes several seconds to scroll past an image! (Ugh.) And Pages plays well with Spaces. If you're a Spaces user, this advantage cannot be overstated—Word '04 was already painfully clumsy with its Spaces compatibility, and '08 only turns up the pain to 11.
 
-.. TEASER_END
+<!-- TEASER_END -->
 
 The track changes interface is fantastic, a million times better than Word's. Not only does it look much cleaner (with comments and change bubbles <em>outside</em> of the page, instead of on it, messing with your layout), but it sports a very clever feature that highlights changes and comments that fall within a selection — or even better, you can make it hide all change bubbles except those within a selection. For pages that have many small changes, that's a real blessing, as it allows you to focus on exactly the changes you are working on. (As a side note, Pages and MS Word play nice with each other with respect to track changes.)
 

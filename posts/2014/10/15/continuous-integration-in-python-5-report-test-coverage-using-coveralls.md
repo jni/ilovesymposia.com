@@ -24,6 +24,8 @@ Travis runs whatever commands you tell it to run in your <code>.travis.yml</code
 
 The <a href="https://coveralls.io">Coveralls</a> service, once again free for open-source repositories, takes advantage of this: you just need to install an extra piece of software from PyPI, and run it after your tests have passed. Do so by adding the line <code>pip install coveralls</code> to your <code>before_install</code> section, and just the <code>coveralls</code> command to a new <code>after_success</code> section:
 
+<!-- TEASER_END -->
+
 ```yaml
 language: python
 python:

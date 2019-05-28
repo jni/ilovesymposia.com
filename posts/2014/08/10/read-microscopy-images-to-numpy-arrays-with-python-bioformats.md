@@ -17,6 +17,8 @@
 I <a href="http://ilovesymposia.com/2014/01/15/fiji-jython">recently explained</a> how to use Fiji's Jython interpreter to open BioFormats images, do some processing, and save the result to a standard format such as TIFF. Since then, the
 <a href="http://cellprofiler.org">CellProfiler team</a> has released an incredible tool, the <a href="https://github.com/cellprofiler/python-bioformats">python-bioformats</a> library. It uses the Java Native Interface (JNI) to access the Java BioFormats library and give you back a numpy array within Python. In other words, it's magic.
 
+<!-- TEASER_END -->
+
 Some of the stuff I was doing in the Jython interpreter was not going to fly for a 400GB image file produced by Leica (namely, setting the flag <code>setOpenAllSeries(True)</code>). This file contained 3D images of multiple zebrafish embryos, obtained every 30 minutes for three days. I needed to process each image sequentially.
 
 The first problem was that even reading the metadata from the file <a href="https://github.com/CellProfiler/python-bioformats/issues/8">resulted in a Java out-of-memory error</a>! With the help of Lee Kamentsky, one of the creators of python-bioformats, I figured out that Java allocates a maximum memory footprint of just 256MB. With the raw metadata string occupying 27MB, this was not enough to contain the full structure of the parsed metadata tree. The solution was simply to [set](https://github.com/jni/lesion/blob/c3223687d35a7f81da7305e1e041f9c5a53104b1/lesion/lifio.py#L27) a much larger maximum memory allocation to the JVM.

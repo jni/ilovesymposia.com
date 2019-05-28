@@ -29,6 +29,8 @@ Definitely don't use this post as an excuse not to cite it!!!**)
 Not surprisingly, we have had massive contributions to scikit-image since our
 2014 paper, and those contributors miss out on the citations to our paper.
 
+<!-- TEASER_END -->
+
 From a maintainer point of view, one way to deal with this is to periodically
 write “update” publications that become the preferred way to cite the
 software. This is the approach taken by the

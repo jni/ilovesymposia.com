@@ -20,7 +20,7 @@ In the 2012 sprints, I learned about <a href="https://help.github.com/articles/u
 
 No scientific conference I've been to has had such an impact on my science output, nor can I imagine one doing so.
 
-.. TEASER_END
+<!-- TEASER_END -->
 
 <h2>This year's highlights</h2>
 

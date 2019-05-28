@@ -16,7 +16,7 @@
 
 I've <a href="https://ilovesymposia.com/2015/12/10/the-cost-of-a-python-function-call/">lamented before</a> that function calls are expensive in Python, and that this severely hampers many functions that <em>should</em> be insanely useful, such as SciPy's <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.generic_filter.html#scipy.ndimage.generic_filter"><code>ndimage.generic_filter</code></a>.
 
-.. TEASER_END
+<!-- TEASER_END -->
 
 To illustrate this, let's look at image <em>erosion</em>, which is the replacement of each pixel in an image by the minimum of its neighbourhood. <code>ndimage</code> has a fast C implementation, which serves as a perfect benchmark against the generic version, using a generic filter with <code>min</code> as the operator. Let's start with a 2048 x 2048 random image:
 

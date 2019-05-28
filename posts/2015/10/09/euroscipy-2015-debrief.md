@@ -15,7 +15,7 @@
 <html><body><p>The videos from EuroSciPy 2015 are <a href="https://www.youtube.com/playlist?list=PLYx7XA2nY5GeQCCugyvtnHMVLdhYlrRxH">up</a>! This marks a good time to write up my thoughts on the conference.
 I’ve <a href="http://ilovesymposia.com/2015/03/23/go-to-scipy-2015/">mentioned before</a> that the yearly SciPy conference is stunningly useful. This year I couldn’t make it to Austin, but I did attend <a href="https://www.euroscipy.org/2015/">EuroSciPy</a>, the European version of the same conference, in Cambridge, UK. It was spectacular.
 
-.. TEASER_END
+<!-- TEASER_END -->
 
 </p><h2>Useful talks</h2>
 

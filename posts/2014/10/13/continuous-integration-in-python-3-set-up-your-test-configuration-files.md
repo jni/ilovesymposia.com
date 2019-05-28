@@ -20,6 +20,8 @@ By now, you've got a bunch of tests and doctests set up in your project, which y
 $ py.test --doctest-modules --cov . --cov-report term-missing
 ```
 
+<!-- TEASER_END -->
+
 If you happen to have a few script and setup files lying around that you don't want to test, this might expand to
 
 ```

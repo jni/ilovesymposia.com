@@ -24,6 +24,8 @@ People go to these to keep up with the latest advances in their field, and often
 
 SciPy is a different kind of conference. <em>It changes the way you do science.</em> You learn about the latest free and open source software to help you with your work. You learn to write functions and interfaces instead of scripts, and to write tests so you don't break your code. You also learn to contribute these to bigger projects, maximising the reach and impact of your work (see "sprints", below).
 
+<!-- TEASER_END -->
+
 And you learn these things by <em>doing</em> them, with the people who are the best at this, rather than by reading books and blog posts. (Which maybe I shouldn't knock, since I'm writing a book about all this and you are reading my blog!)
 
 Attendees to SciPy have scientific software in common, but come from diverse fields, including physics, pure maths, data visualisation, geosciences, climatology, and yes, biology and bioinformatics. Mingling with such a diverse group is a fantastic way to get your creative juices flowing!

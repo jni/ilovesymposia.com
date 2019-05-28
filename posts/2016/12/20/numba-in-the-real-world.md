@@ -21,6 +21,8 @@ Numba is a just-in-time compiler (JIT) for Python code focused on NumPy arrays a
 </div>
 </div>
 
+<!-- TEASER_END -->
+
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>

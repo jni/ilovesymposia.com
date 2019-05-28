@@ -16,6 +16,8 @@
 
 I have also been guiltily ommitting that the speaker and attendee diversity at SciPy is shockingly bad. Last year, for example, 15% of attendees were women, and that was an improvement over the ratio three years ago, when just 3% (!!!) were women.
 
+<!-- TEASER_END -->
+
 I rationalised continuing to promote this conference because there was <a href="https://www.youtube.com/watch?v=e0Z9-EuZJac">talk</a> from past organisers about making efforts to improve. (And indeed, the past three years have been on an upward trajectory.)<br>
 
 A couple of days ago, however, the full list of keynote speakers was announced, and lo and behold, it's three white guys. I have to acknowledge that they are extremely accomplished in the SciPy universe, and, if diversity were not more generally a problem at this conference and in tech in general, I wouldn't bat an eye. Excellent choice of speakers, really. Looking forward to it.

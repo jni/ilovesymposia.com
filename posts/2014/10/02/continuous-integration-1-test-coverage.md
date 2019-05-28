@@ -18,6 +18,8 @@ This is the second post in a series about setting up continuous integration for 
 
 After you've written some test cases for a tiny project, it's easy to check what code you have automatically tested. For even moderately big projects, you will need tools that automatically check what parts of your code are actually tested. The proportion of lines of code that are run at least once during your tests is called your <em>test coverage</em>.
 
+<!-- TEASER_END -->
+
 For the same reasons that testing is important, measuring coverage is important. Pytest can measure coverage for you with the coverage plugin, found in the <a href="https://pypi.python.org/pypi/pytest-cov">pytest-cov</a> package. Once you've installed the extension, a test coverage measurement is just a command-line option away:
 
 ```

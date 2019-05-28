@@ -25,6 +25,8 @@ That’s not very Pythonic at all. In fact, it’s positively Conic (TM). For th
 [pointers are evil](https://www.quora.com/Why-do-people-think-pointers-are-evil),
 so let’s aim to avoid their use.
 
+<!-- TEASER_END -->
+
 “But Juan!”, you are no doubt exclaiming. “Juan! Didn’t you *just* tell us how to use pointers in Numba cfuncs, and tell us how great it was because it was so fast?”
 
 Indeed I did. But it left a bad taste in my mouth. Although I felt that the tradeoff was worth it for such a phenomenal speed boost (300x!), I was unsatisfied. So I started immediately to look for a tidier solution. One that would let me write proper filter functions while still taking advantage of LowLevelCallables.

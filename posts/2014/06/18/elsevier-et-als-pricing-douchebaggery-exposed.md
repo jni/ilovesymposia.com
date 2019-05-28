@@ -18,6 +18,8 @@ This paragraph in the footnotes was particularly concise and fun to read:
 <blockquote>Elsevier contested our contract request from Washington State University on the grounds that their pricing policy was a trade secret, and brought suit against the university. The Superior Court judge ruled that Washington State University could release the contracts to us. Elsevier and Springer also contested our request for contracts from the University of Texas (UT) System. The Texas state attorney general opined that the UT System was required to release copies of all of these contracts.</blockquote>
 In other words: in the interest of full disclosure, <em>suck it, Elsevier!</em>
 
+<!-- TEASER_END -->
+
 The executive summary is that these companies will extort as much as they possibly can from individual universities, then do everything to keep that number a secret so that they can more freely extort <em>even more</em> from other universities. You can read more about it in <a href="http://news.sciencemag.org/economics/2014/06/how-much-did-your-university-pay-your-journals">Science</a>.
 
 Oh, and in the ultimate twist of irony, the paper itself is behind PNAS's paywall. How much did your university pay for that?

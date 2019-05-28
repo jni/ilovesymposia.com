@@ -16,7 +16,7 @@
 
 <a href="http://www.amazon.com/Design-Patterns-Object-Oriented-Addison-Wesley-Professional/dp/0201633612/"><img class="aligncenter" src="http://ecx.images-amazon.com/images/I/51%2BYHTzhheL._SL500_BO2,204,203,200_PIsitb-dp-500-arrow,TopRight,45,-64_OU01_AA240_SH20_.jpg" alt=""></a>
 
-.. TEASER_END
+<!-- TEASER_END -->
 
 Now, it's not like I taught myself programming and am only now beginning my formal education. I effectively completed a minor in computer science at the University of Melbourne, taking a substantial number of CS subjects every semester for three years. But I feel like a total n00b going through this book. For all the wonderful theory I'd been taught about algorithm complexity, and all the disparate programming languages (Haskell, C, Prolog, Assembly, and others), I don't remember once hearing about object-oriented (OO) programming during my undergrad at UniMelb.
 

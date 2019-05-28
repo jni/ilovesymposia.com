@@ -16,6 +16,8 @@
 
 Among the plugin smorgasbord of Fiji is the Bio-Formats importer, which can open any proprietary microscopy file under the sun. (And there’s a lot of them!) Below I will use Jython to open some .lifs, do some processing, and output some .pngs that I can process further using Python/NumPy/scikit-image. (A .lif is a Leica Image File, because there were not enough image file formats before Leica came along.)
 
+<!-- TEASER_END -->
+
 The first thing to note is that Jython is not Python, and it is certainly not Python 2.7. In fact, the Fiji Jython interpreter implements Python 2.5, which means no <code>argparse</code>. Not to worry though, as <code>argparse</code> is implemented in a <a href="https://code.google.com/p/argparse/source/browse/argparse.py">single, pure Python file</a> distributed under the Python license. So:
 
 <strong>Tip #1: copy argparse.py into your project.</strong>

@@ -15,6 +15,9 @@
 I just finished the process of setting up continuous integration <em>from scratch</em> for one of my projects, <a href="https://github.com/jni/cellom2tif">cellom2tif</a>, a simple image file converter/liberator. I thought I would write a blog post about that process, but it has slowly mutated into a hefty document that I thought would work better as a series. I'll cover automated testing, test coverage, and how to get these to run automatically for your project with <a href="https://travis-ci.org">Travis-CI</a> and <a href="https://coveralls.io">Coveralls</a>.
 
 Without further ado, here goes the first post: how to set up automated testing for your Python project using <a href="http://pytest.org/latest/">pytest</a>.
+
+<!-- TEASER_END -->
+
 <h2>Automated tests, and why you need them</h2>
 Software engineering is hard, and it's incredibly easy to mess things up, so you should write <em>tests</em> for all your functions, which ensure that nothing obviously stupid is going wrong. Tests can take a lot of different forms, but here's a really basic example. Suppose this is a function in your file, <code>maths.py</code>:
 

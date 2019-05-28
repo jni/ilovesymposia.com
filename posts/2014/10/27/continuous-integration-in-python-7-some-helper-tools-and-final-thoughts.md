@@ -19,6 +19,8 @@ Almost everything I know about good Python development I've learned from [Stéfa
 
 Almost everything I know about good Python development I've learned from <a href="https://github.com/stefanv">Stéfan van der Walt</a>, <a href="https://github.com/tonysyu">Tony Yu</a>, and the rest of the <a href="https://github.com/scikit-image/scikit-image/graphs/contributors">scikit-image team</a>. But a few weeks ago, I was trying to emulate the scikit-image CI process for my own project: <a href="https://github.com/jni/cellom2tif">cellom2tif</a>, a tool to liberate images from a <a href="http://www.openmicroscopy.org/site/support/bio-formats5/formats/cellomics.html">rather useless</a> proprietary format. (I consider this parenthetical comment sufficient fanfare to announce the <a href="https://pypi.python.org/pypi/cellom2tif/0.2.0">0.2 release!</a>) As I started copying and editing config files, I found that even from a complete template, getting started was not very straightforward. First, scikit-image has much more complicated requirements, so that a lot of the <code>.travis.yml</code> file was just noise for my purposes. And second, as detailed in the previous posts, a lot of the steps are not found or recorded anywhere in the repository, but rather must be navigated to on the webpages of GitHub, Travis, and Coveralls. I therefore decided to write this series as both a notetaking exercise and a guide for future CI novices. (Such as future me.)
 
+<!-- TEASER_END -->
+
 To recap, here are my six steps to doing continuous integration in Python with pytest, Travis, and Coveralls:
 
 </p><ul>

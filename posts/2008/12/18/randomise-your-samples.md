@@ -13,7 +13,7 @@
 
 Hyuna Yang and colleagues seem to have at least part of the answer. They had five different research centers analyse the exact same RNA samples, and collected the raw fluorescence values—before normalisation or any other kind of analysis. After a long (and, dare I say, tedious) analysis, they actually found that batch processing effects had a significant effect on the list of affected genes detected. The authors do a good job of explaining what batch effects are, so I'll open the floor to them:
 
-.. TEASER_END
+<!-- TEASER_END -->
 
 <blockquote>Due to personnel and equipment constraints, all samples may not be processed at one time. For instance, one fluidics station used for the wash and staining step, is able to process only up to four samples [at a time].</blockquote>
 Because of this, some samples are of necessity processed at different times. If the experimenters are not careful when deciding how to group the samples for processing, this can result in confounding factors:
