@@ -16,6 +16,8 @@
 
 In one of the best papers in computational biology that I have <em>ever</em> seen, <a href="http://www.ploscompbiol.org/article/info:doi/10.1371/journal.pcbi.1000028">Greg Stephens and colleagues have analysed the movements of nematode worms</a>, and found that they can be decomposed into just four fundamental shapes: virtually any shape that the worm can take is a combination of these four shapes.
 
+.. TEASER_END
+
 I'm surprised that no one at <a href="http://www.researchblogging.org">ResearchBlogging.org</a> picked up on it. I suppose the title seems innocuous enough: "Dimensionality and dynamics in the behavior of C. elegans." I suppose that, had I read just that title, I too would have overlooked it.
 
 Thankfully I subscribe to <a href="http://www.f1000biology.com/browse/">Faculty of 1000</a>, the world's largest journal club. This paper was marked "Exceptional," the highest rating available, by Leonard Maler, of the University of Ottawa. I'll reprint the first sentence of his review because it sums up the paper (and what makes it so brilliant) so nicely:

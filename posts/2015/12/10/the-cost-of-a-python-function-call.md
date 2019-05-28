@@ -24,23 +24,19 @@ I cleaned up Ed's and my initial experiments to make a small <a href="https://gi
 
 The benchmarks are variations of comparing the execution time of:
 
-```
-[code lang=python]
+```python
 for i in range(n):
     pass
-[/code]
 ```
 
 and:
 
-```
-[code lang=python]
+```python
 def f():
     pass
 
 for i in range(n):
     f()
-[/code]
 ```
 
 for some suitably large <code>n</code>. As I mentioned above, that comes out to an absolute minimum of 150ns per function call.

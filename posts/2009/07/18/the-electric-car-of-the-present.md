@@ -16,9 +16,11 @@
 
 In <a href="http://www.ted.com/talks/shai_agassi_on_electric_cars.html">his talk</a>, <a href="http://en.wikipedia.org/wiki/Shai_Agassi">Shai Agassi</a> of <a href="http://www.betterplace.com/">Better Place</a> lays out his vision for cheap electric cars running on electricity from 100% renewable sources, and using technology available <em>today</em>. If you live in Israel, Denmark, Australia or Northern California, you are first in line to try out their cars, which will be built by Renault and Nissan.
 
-[ted id=512]
+<div style="max-width:854px"><div style="position:relative;height:0;padding-bottom:56.25%"><iframe src="https://embed.ted.com/talks/shai_agassi_on_electric_cars" width="854" height="480" style="position:absolute;left:0;top:0;width:100%;height:100%" frameborder="0" scrolling="no" allowfullscreen></iframe></div></div>
 
 Agassi gets around the problem of the limited range of electric cars by making the battery quickly and easily replaceable. Thus you'll stop at a <span style="text-decoration:line-through;">petrol</span> battery station and a robotic system will swap out the battery in less than two minutes—presto! Instant battery recharge. That's less time than it takes to fill up.
+
+.. TEASER_END
 
 With one trillion dollars set aside for the economic stimulus, it'll be disappointing if none of it goes to building battery change stations in the US. Ditto for China.
 

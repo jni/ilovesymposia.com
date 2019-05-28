@@ -20,6 +20,8 @@ Oooh, sweet goodness: basically, after 1h10min asleep, your Mac goes into a "dee
 </p><pre>sudo pmset -a standbydelay 86400</pre>
 This changes the time to deep sleep to 24h. Since I rarely spend more than 24h without using my computer, I now have instant-on every time I open up my laptop!
 
+.. TEASER_END
+
 Finally, the reason I wrote this now: upgrading to Mavericks sneakily resets your standbydelay to 4200. (Or, at least, it did for me.) Just run the above command again and you'll be set, at least until the next OS upgrade comes along!
 
 <strong>Update:</strong> the original source of this tip appears to be <a href="http://www.ewal.net/2012/09/09/slow-wake-for-macbook-pro-retina/">a post</a> from Erv Walter on his site, Ewal.net. It goes into a lot more detail about the origin of this sleep mode — which indeed did not exist when I bought my previous Macbook Pro.</body></html>

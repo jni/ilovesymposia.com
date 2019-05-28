@@ -7,12 +7,7 @@
 .. link: 
 .. description: 
 .. type: text
-.. excerpt: <p>This year I am privileged to be a mentor in the <a href="https://www.google-melange.com/gsoc/homepage/google/gsoc2014">Google Summer of Code</a> for the <a href="http://scikit-image.org">scikit-image</a> project, as part of the Python Software Foundation organisation. Our student, <a href="https://github.com/vighneshbirodkar">Vighnesh Birodkar</a>, recently came up with a clever use of SciPy&#8217;s <a href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.filters.generic_filter.html"><code>ndimage.generic_filter</code></a> that is certainly worth sharing widely.</p>
-
-<p>Vighnesh is <a href="http://www.google-melange.com/gsoc/proposal/public/google/gsoc2014/vighneshbirodkar/5870670537818112">tasked</a> with implementing region adjacency graphs and graph based methods for image segmentation. He initially wrote specific functions for 2D and 3D images, and I suggested that he should merge them: either with n-dimensional code, or, at the very least, by making 2D a special case of 3D. He chose the former, and produced extremely elegant code. Three nested for loops and a large number of neighbour computations were replaced by a function call and a simple loop. Read on to find out how.</p>
-.. has_math: no
 .. status: published
-.. wp-status: publish
 -->
 
 <html><body><p>This year I am privileged to be a mentor in the <a href="https://www.google-melange.com/gsoc/homepage/google/gsoc2014">Google Summer of Code</a> for the <a href="http://scikit-image.org">scikit-image</a> project, as part of the Python Software Foundation organisation. Our student, <a href="https://github.com/vighneshbirodkar">Vighnesh Birodkar</a>, recently came up with a clever use of SciPy’s <a href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.filters.generic_filter.html"><code>ndimage.generic_filter</code></a> that is certainly worth sharing widely.
@@ -23,29 +18,24 @@ Iterating over an array of unknown dimension is not trivial a priori, but thankf
 
 scipy.ndimage provides a suitable function, <code>generic_filter</code>. Typically, a filter is used to iterate a “selector” (called a structuring element) over an array, compute some function of all the values covered by the structuring element, and replace the central value by the output of the function. For example, using the structuring element:
 
-```
-[code lang=python]
+```python
 fp = np.array([[0, 1, 0],
                [1, 1, 1],
                [0, 1, 0]], np.uint8)
-[/code]
 ```
 
 and the function <code>np.median</code> on a 2D image produces a median filter over a pixel’s immediate neighbors. That is,
 
-```
-[code lang=python]
+```python
 import functools
 median_filter = functools.partial(generic_filter,
                                   function=np.median,
                                   footprint=fp)
-[/code]
 ```
 
 Here, we don’t want to create an output array, but an output graph. What to do? As it turns out, Python’s pass-by-reference allowed Vighnesh to do this quite easily using the “extra_arguments” keyword to <code>generic_filter</code>: we can write a filter function that receives the graph and updates it when two distinct values are adjacent! <code>generic_filter</code> passes all values covered by a structuring element as a flat array, in the array order of the structuring element. So Vighnesh wrote the following function:
 
-```
-[code lang=python]
+```python
 def _add_edge_filter(values, g):
     """Add an edge between first element in `values` and
     all other elements of `values` in the graph `g`.
@@ -70,42 +60,35 @@ def _add_edge_filter(values, g):
     for value in values[1:]:
         g.add_edge(current, value)
     return 0.0
-[/code]
 ```
 
 Then, using the footprint:
 
-```
-[code lang=python]
+```python
 fp = np.array([[0, 0, 0],
                [0, 1, 1],
                [0, 1, 0]], np.uint8)
-[/code]
 ```
 
 (or its n-dimensional analog), this filter is called as follows on <code>labels</code>, the image containing the region labels:
 
-```
-[code lang=python]
+```python
 filters.generic_filter(labels,
                        function=_add_edge_filter,
                        footprint=fp,
                        mode='nearest',
                        extra_arguments=(g,))
-[/code]
 ```
 
 This is a rather unconventional use of generic_filter, which is normally used for its output array. Note how the return value of the filter function, <code>_add_edge_filter</code>, is just 0! In our case, the output array contains all 0s, but we use the filter <em>exclusively for its side-effect</em>: adding an edge to the graph g when there is more than one unique value in the footprint. That’s cool.
 
 Continuing, in this first RAG implementation, Vighnesh wanted to segment according to average color, so he further needed to iterate over each pixel/voxel/hypervoxel and keep a running total of the color and the pixel count. He used elements in the graph node dictionary for this and updated them using <code>ndindex</code>:
 
-```
-[code lang=python]
+```python
 for index in np.ndindex(labels.shape):
     current = labels[index]
     g.node[current]['pixel count'] += 1
     g.node[current]['total color'] += image[index]
-[/code]
 ```
 
 Thus, together, numpy’s <code>nditer</code>, <code>ndindex</code>, and scipy.ndimage’s <code>generic_filter</code> provide a powerful way to perform a large variety of operations on n-dimensional arrays… Much larger than I’d realised!

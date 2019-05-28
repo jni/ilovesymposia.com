@@ -22,7 +22,7 @@ I'll start with the short list.
 
 <strong>1. Freedom</strong>. Gmail has by far the most liberal approach to your email data around. You can access the account with any email client, using either POP (download only) or IMAP (2-way sync between your local data and the Gmail server), for free (Yahoo <a href="http://ilovesymposia.files.wordpress.com/2009/06/picture-1.png">charges you for a "Pro" account</a>, and <span style="text-decoration:line-through;">Hotmail only allows it using MS Outlook</span> Hotmail only <a href="http://www.liveside.net/main/archive/2009/03/13/pop3-technology-has-now-rolled-out-to-hotmail-customers-worldwide.aspx">started offering this in March</a>). This way, Gmail lets you back up your data on your computer. You can also forward your email to another account for free. (Again, Yahoo <a href="http://ilovesymposia.files.wordpress.com/2009/06/picture-1.png">only allows this with a Pro account</a>. Hotmail only recently started giving it away for free.)
 
-<!--more-->
+.. TEASER_END
 
 <strong>2. More freedom</strong>. Gmail chat uses the <a href="http://en.wikipedia.org/wiki/Jabber">Jabber instant messaging protocol</a>, a free and open standard. This means that anyone can run their own chat server and users between servers can communicate. Contrast this to MSN, Yahoo, or AIM, all of which are closed networks.
 

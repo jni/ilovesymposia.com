@@ -16,6 +16,8 @@
 
 Well, at least some of the time, the reason is that you woke up between sleep cycles rather than during slow wave sleep. So, in 2002, I had the idea of an alarm clock that would monitor your sleep cycle, and would only wake you between cycles, never during slow wave. Since cycles are regular and last about 90 minutes, if you absolutely needed to be up at a particular time, the alarm would calculate whether there is enough time left for another full cycle, and if there wasn't, it would wake you early.
 
+.. TEASER_END
+
 It was, of course, a brilliant idea. But, as they say, you snooze, you lose. By the time started to begin to think about maybe talking to someone about developing a product, it was 2005, maybe even 2006. A quick Google search turned up <a href="http://axonlabs.com/">Axon Labs</a>, a startup created in 2003 solely to develop just the kind of system I had envisioned.
 
 Missed opportunity? Maybe. But I was more excited than disappointed, because it meant that the dream (I'm just on fire today!) of better waking was closer to reality than I could have imagined. I signed up for their newsletter to be kept up to date.

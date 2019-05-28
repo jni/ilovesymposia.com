@@ -12,9 +12,14 @@
 .. wp-status: publish
 -->
 
+**Update:** Much of the information in this post is outdated (especially the part about Python 3 being slower — Python 3.7 is the fastest version of Python ever created.). Take everything you read here with a grain of salt.
+
 <html><body><p>Prompted in part by some discussions with Ed Schofield, creator of <a href="http://python-future.org">python-future.org</a>, I've been going on a bit of a porting spree to Python 3. I just finished with my gala segmentation library. (Find it on <a href="https://github.com/janelia-flyem/gala">GitHub</a> and <a href="http://gala.readthedocs.org">ReadTheDocs</a>.) Overall, the process is nowhere near as onerous as you might think it is. Getting started really is the hardest part. If you have more than yourself as a user, you should definitely just get on with it and port.
 
 The second hardest part is the testing. In particular, you will need to be careful with dictionary iteration, pickled objects, and file persistence in general. I'll go through these gotchas in more detail below.
+
+
+.. TEASER_END
 
 </p><h2>Reminder: the order of dictionary items is undefined</h2>
 
@@ -36,36 +41,32 @@ Additionally, you'll have specify a <code>encoding='bytes'</code> when loading a
 
 In Python 2:
 
-```
-[code lang=python]
-&gt;&gt;&gt; from sklearn.ensemble import RandomForestClassifier as RF
-&gt;&gt;&gt; rf = RF()
-&gt;&gt;&gt; from sklearn.datasets import load_iris
-&gt;&gt;&gt; iris = load_iris()
-&gt;&gt;&gt; rf = rf.fit(iris.data, iris.target)
-&gt;&gt;&gt; with open('rf', 'wb') as fout:
+```python
+>>> from sklearn.ensemble import RandomForestClassifier as RF
+>>> rf = RF()
+>>> from sklearn.datasets import load_iris
+>>> iris = load_iris()
+>>> rf = rf.fit(iris.data, iris.target)
+>>> with open('rf', 'wb') as fout:
 ...     pck.dump(r, fout, protocol=2)
-[/code]
 ```
 
 Then, in Python 3:
 
-```
-[code lang=python]
-&gt;&gt;&gt; with open('rf', 'rb') as fin:
+```python
+>>> with open('rf', 'rb') as fin:
 ...     rf = pck.load(fin, encoding='bytes')
 ... 
 ---------------------------------------------------------------------------
 KeyError                                  Traceback (most recent call last)
 <ipython-input-9-674ee92b354d> in <module>()
       1 with open('rf', 'rb') as fin:
-----&gt; 2     rf = pck.load(fin, encoding='bytes')
+----> 2     rf = pck.load(fin, encoding='bytes')
       3 
 
 /Users/nuneziglesiasj/anaconda/envs/py3k/lib/python3.4/site-packages/sklearn/tree/_tree.so in sklearn.tree._tree.Tree.__setstate__ (sklearn/tree/_tree.c:18115)()
 
 KeyError: 'node_count'
-[/code]
 ```
 
 <h2>When all is said and done, your code will probably run slower on Python 3</h2>
@@ -76,4 +77,4 @@ Nick Coghlan's <a href="http://python-notes.curiousefficiency.org/en/latest/pyth
 
 <h2>In conclusion...</h2>
 
-In the end, I'm glad I ported my code. I learned a few things, and I feel like a better Python "citizen" for having done it. But that's the point: those are pretty weak reasons. Most people just want to get their work done and move on. Why would they bother porting their code if it's not going to help them do that?</module></ipython-input-9-674ee92b354d></body></html>
+In the end, I'm glad I ported my code. I learned a few things, and I feel like a better Python "citizen" for having done it. But that's the point: those are pretty weak reasons. Most people just want to get their work done and move on. Why would they bother porting their code if it's not going to help them do that?</body></html>

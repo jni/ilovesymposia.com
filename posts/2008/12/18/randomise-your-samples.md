@@ -7,19 +7,14 @@
 .. link: 
 .. description: 
 .. type: text
-.. excerpt: Microarrays certainly get a lot of flak for being noisy sources of data. It's certainly a valid concern, since a single microarray usually measures the expression levels of tens of thousands of genes, and only a few biological samples are examined. There's no hope of accurately estimating the levels of that many variables with so few samples. Eric Blalock and his colleagues, however, made a compelling case in 2005 that the fault lies not with the technology itself, but with the statistical inferences drawn from the generated data. How then to reconcile the wild variability between published microarray results from different labs with the apparent validity of the technology?
-
-Hyuna Yang and colleagues seem to have at least part of the answer. They had five different research centers analyse the exact same RNA samples, and collected the raw fluorescence values—before normalisation or any other kind of analysis. 
-
-Hyuna Yang and colleagues seem to have at least part of the answer. They got five different groups to analyse the exact same RNA samples, and got back the raw fluorescence values—before normalisation or any other kind of analysis. 
-.. has_math: no
-.. status: published
-.. wp-status: publish
 -->
 
 <html><body><span><a href="http://www.researchblogging.org"><img class="alignleft" src="http://www.researchblogging.org/public/citation_icons/rb2_large_gray.png" alt="ResearchBlogging.org" width="70" height="85"></a></span>Microarrays certainly <a href="http://reproducibleresearch.org/blog/2008/12/10/three-reasons-to-distrust-microarray-results/">get a lot of flak</a> for being noisy sources of data. It's certainly a valid concern, since a single microarray usually measures the expression levels of tens of thousands of genes, and only a few biological samples are examined. There's no hope of accurately estimating the levels of that many variables with so few samples. Eric Blalock and his colleagues, however, <a href="http://dx.doi.org/10.1016/j.arr.2005.06.006">made a compelling case in 2005</a> that the fault lies not with the technology itself, but with the statistical inferences drawn from the generated data. How then to reconcile the wild variability between published microarray results from different labs with the apparent validity of the technology?
 
-Hyuna Yang and colleagues seem to have at least part of the answer. They had five different research centers analyse the exact same RNA samples, and collected the raw fluorescence values—before normalisation or any other kind of analysis. After a long (and, dare I say, tedious) analysis, they actually found that batch processing effects had a significant effect on the list of affected genes detected. The authors do a good job of explaining what batch effects are, so I'll open the floor to them:<!--more-->
+Hyuna Yang and colleagues seem to have at least part of the answer. They had five different research centers analyse the exact same RNA samples, and collected the raw fluorescence values—before normalisation or any other kind of analysis. After a long (and, dare I say, tedious) analysis, they actually found that batch processing effects had a significant effect on the list of affected genes detected. The authors do a good job of explaining what batch effects are, so I'll open the floor to them:
+
+.. TEASER_END
+
 <blockquote>Due to personnel and equipment constraints, all samples may not be processed at one time. For instance, one fluidics station used for the wash and staining step, is able to process only up to four samples [at a time].</blockquote>
 Because of this, some samples are of necessity processed at different times. If the experimenters are not careful when deciding how to group the samples for processing, this can result in confounding factors:
 <blockquote>Both centers 2 and 3 stored male arrays at 4 degrees while female samples were washed and stained. These centers have the longest lists of differentially expressed genes between sexes.</blockquote>

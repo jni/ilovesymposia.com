@@ -31,12 +31,18 @@ if __name__ == '__main__':
     parser.add_argument('args', nargs="*", help="The input arguments.")
     args = parser.parse_args()
     for arg in args.args:
-        print(arg)</code></pre>
+        print(arg)
+
+</code></pre>
 Now we can just run this:
+
 <pre><code>$ fiji echo.py hello world
 hello
-world</code></pre>
+world
+</code></pre>
+
 But sadly, Fiji captures any -h calls, which defeats the purpose of using argparse in the first place!
+
 <pre><code>$ fiji echo.py -h
 Usage: /Applications/Fiji.app/Contents/MacOS/fiji-macosx [&lt;Java options&gt;.. --] [&lt;ImageJ options&gt;..] [&lt;files&gt;..]
 
@@ -50,12 +56,15 @@ General options:
 --dry-run
 	show the command line, but do not run anything
 --debug
-	verbose output</code></pre>
+	verbose output
+</code></pre>
+
 (… and so on, the output is quite huge.)
 
 (Note also that I aliased the Fiji binary, that long path under <code>/Applications</code>, to a simple <code>fiji</code> command; I recommend you do the same.)
 
 However, we can work around this by calling help using <em>Python</em> as the interpreter, and only using Fiji to actually run the file:
+
 <pre><code>$ python echo.py -h
 usage: echo.py [-h] [args [args ...]]
 
@@ -90,13 +99,18 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     for fn in args.images:
-        convert_file(fn)</code></pre>
+        convert_file(fn)
+</code></pre>
+
 Boom, we’re done. But wait, we actually broke the Python interpreter compatibility, since ij is not a Python library!
+
 <pre><code>$ python convert2png.py -h
 Traceback (most recent call last):
   File "convert.py", line 2, in &lt;module&gt;
     from ij import IJ # the IJ class has utility methods for many common tasks.
-ImportError: No module named ij</code></pre>
+ImportError: No module named ij
+</code></pre>
+
 Which brings us to:
 
 <strong>Tip #2: only import Java API functions within the functions that use them.</strong>
@@ -107,16 +121,25 @@ Next, we want to use the Bio-Formats importer, which is class <code>BF</code> in
 
 When you try to open a file with Bio-Formats importer using the Fiji GUI, you get the following dialog:
 
-<figure><img alt="BioFormats import window" src="http://ilovesymposia.files.wordpress.com/2014/02/bioformats-window.png"> <figcaption>BioFormats import window</figcaption></figure>That’s a lot of options, and we actually want to set some of them. If you look at the <a href="http://ci.openmicroscopy.org/job/BIOFORMATS-5.0-latest/javadoc/loci/plugins/BF.html#openImagePlus(loci.plugins.in.ImporterOptions)"><code>BF.openImagePlus</code></a> documentation, you can see that this is done through an <code>ImporterOptions</code> class located in <code>loci.plugins.in</code>. You’ll notice that “in” is a reserved word in Python, so <code>from loci.plugins.in import ImporterOptions</code> is not a valid Python statement. Yay! My workaround:
+<figure><img alt="BioFormats import window" src="http://ilovesymposia.files.wordpress.com/2014/02/bioformats-window.png"> <figcaption>BioFormats import window</figcaption></figure>
+
+That’s a lot of options, and we actually want to set some of them. If you look at the <a href="http://ci.openmicroscopy.org/job/BIOFORMATS-5.0-latest/javadoc/loci/plugins/BF.html#openImagePlus(loci.plugins.in.ImporterOptions)"><code>BF.openImagePlus</code></a> documentation, you can see that this is done through an <code>ImporterOptions</code> class located in <code>loci.plugins.in</code>. You’ll notice that “in” is a reserved word in Python, so <code>from loci.plugins.in import ImporterOptions</code> is not a valid Python statement. Yay! My workaround:
 
 <strong>Tip #3: move your Fiji imports to an external file.</strong>
 
 So I have a <code>jython_imports.py</code> file with just:
+
 <pre><code class="python">from ij import IJ
 from loci.plugins import BF
-from loci.plugins.in import ImporterOptions</code></pre>
+from loci.plugins.in import ImporterOptions
+</code></pre>
+
 Then, inside the <code>convert_files()</code> function, we just do:
-<pre><code class="python">from jython_imports import IJ, BF, ImporterOptions</code></pre>
+
+<pre><code class="python">
+from jython_imports import IJ, BF, ImporterOptions
+</code></pre>
+
 This way, the main file remains Python-compatible until the convert() function is actually called, regardless of whatever funky and unpythonic stuff is happening in <code>jython_imports.py</code>.
 
 Onto the options. If you untick “Open files individually”, it will open up all matching files in a directory, regardless of your input filename! Not good. So now we play a pattern-matching game in which we match the option description in the above dialog with the <a href="http://ci.openmicroscopy.org/job/BIOFORMATS-5.0-latest/javadoc/loci/plugins/in/ImporterOptions.html">ImporterOptions API</a> calls. In this case, we <code>setUngroupFiles(True)</code>. To specify a filename, we <code>setId(filename)</code>. Additionally, because we want all of the images in the .lif file, we <code>setOpenAllSeries(True)</code>.
@@ -126,57 +149,81 @@ Next, each image in the series is 3D and has three channels, but we are only int
 <strong>Tip #4: use Fiji’s interactive Jython interpreter to figure things out quickly.</strong>
 
 You can find the Jython interpreter under Plugins/Scripting/Jython Interpreter. It’s no IPython, but it is extremely helpful to answer the questions I had above. My hypothesis was that <code>s</code> was the series, and that the intervals would be closed. So:
-<pre><code class="python">&gt;&gt;&gt; from loci.plugins import BF
-&gt;&gt;&gt; from loci.plugins.in import ImporterOptions
-&gt;&gt;&gt; opts = ImporterOptions()
-&gt;&gt;&gt; opts.setId("myFile.lif")
-&gt;&gt;&gt; opts.setOpenAllSeries(True)
-&gt;&gt;&gt; opts.setUngroupFiles(True)
-&gt;&gt;&gt; imps = BF.openImagePlus(opts)</code></pre>
+
+```python
+>>> from loci.plugins import BF
+>>> from loci.plugins.in import ImporterOptions
+>>> opts = ImporterOptions()
+>>> opts.setId("myFile.lif")
+>>> opts.setOpenAllSeries(True)
+>>> opts.setUngroupFiles(True)
+>>> imps = BF.openImagePlus(opts)
+```
+
 Now we can play around, with one slight annoyance: the interpreter won’t print the output of your last statement, so you have to specify it:
-<pre><code class="python">&gt;&gt;&gt; len(imps)
-&gt;&gt;&gt; print(len(imps))
-18</code></pre>
+
+```python
+>>> len(imps)
+>>> print(len(imps))
+18
+```
+
 Which is what I expected, as there are 18 series in my .lif file. The image shape is given by the <code>getDimensions()</code> method of the ImagePlus class:
-<pre><code class="python">&gt;&gt;&gt; print(imps[0].getDimensions())
+
+```python
+>>> print(imps[0].getDimensions())
 array('i', [1024, 1024, 3, 31, 1])
 
-&gt;&gt;&gt; print(imps[1].getDimensions())
+>>> print(imps[1].getDimensions())
 array('i', [1024, 1024, 3, 34, 1])</code></pre>
 That’s (x, y, channels, z, time).
+```
 
 Now, let’s try the same thing with <code>setCEnd</code>, assuming closed interval:
-<pre><code class="python">&gt;&gt;&gt; opts.setCEnd(0, 0) ## only read channels up to 0 for series 0?
-&gt;&gt;&gt; opts.setCEnd(2, 0) ## only read channels up to 0 for series 2?
-&gt;&gt;&gt; imps = BF.openImagePlus(opts)
-&gt;&gt;&gt; print(imps[0].getDimensions())
+
+```python
+>>> opts.setCEnd(0, 0) ## only read channels up to 0 for series 0?
+>>> opts.setCEnd(2, 0) ## only read channels up to 0 for series 2?
+>>> imps = BF.openImagePlus(opts)
+>>> print(imps[0].getDimensions())
 array('i', [1024, 1024, 1, 31, 1])
 
-&gt;&gt;&gt; print(imps[1].getDimensions())
+>>> print(imps[1].getDimensions())
 array('i', [1024, 1024, 3, 34, 1])
 
-&gt;&gt;&gt; print(imps[2].getDimensions())
-array('i', [1024, 1024, 1, 30, 1])</code></pre>
+>>> print(imps[2].getDimensions())
+array('i', [1024, 1024, 1, 30, 1])
+```
+
 Nothing there to disprove my hypothesis! So we move on to the final step, which is to z-project the stack by summing the intensity over all z values. This is normally accessed via Image/Stacks/Z Project in the Fiji GUI, and I found the corresponding <code>ij.plugin.ZProjector</code> class by searching for <a href="http://rsbweb.nih.gov/ij/developer/api/ij/plugin/ZProjector.html">“proj” in the ImageJ documentation</a>. A <code>ZProjector</code> object has a <code>setMethod</code> method that usefully takes an int as an argument, with no explanation in its docstring as to which int translates to which method (sum, average, max, etc.). A little more digging in the <a href="http://rsb.info.nih.gov/ij/developer/source/ij/plugin/ZProjector.java.html">source code</a> reveals some class static variables, <code>AVG_METHOD</code>, <code>MAX_METHOD</code>, and so on.
 
 <strong>Tip #5: don’t be afraid to look at the source code. It’s one of the main advantages of working in open-source.</strong>
 
 So:
-<pre><code class="python">&gt;&gt;&gt; from ij.plugin import ZProjector
-&gt;&gt;&gt; proj = ZProjector()
-&gt;&gt;&gt; proj.setMethod(ZProjector.SUM_METHOD)
-&gt;&gt;&gt; proj.setImage(imps[0])
-&gt;&gt;&gt; proj.doProjection()
-&gt;&gt;&gt; impout = proj.getProjection()
-&gt;&gt;&gt; print(impout.getDimensions())
-array('i', [1024, 1024, 1, 1, 1])</code></pre>
+
+```python
+>>> from ij.plugin import ZProjector
+>>> proj = ZProjector()
+>>> proj.setMethod(ZProjector.SUM_METHOD)
+>>> proj.setImage(imps[0])
+>>> proj.doProjection()
+>>> impout = proj.getProjection()
+>>> print(impout.getDimensions())
+array('i', [1024, 1024, 1, 1, 1])
+```
+
 The output is actually a float-typed image, which will get rescaled to [0, 255] uint8 on save if we don’t fix it. So, to wrap up, we convert the image to 16 bits (making sure to <a href="https://groups.google.com/d/msg/fiji-users/HfuHj0QBo40/CR9s3MQ5vUsJ">turn off scaling</a>), use the series title to generate a unique filename, and save as a PNG:
-<pre><code class="python">&gt;&gt;&gt; from ij.process import ImageConverter
-&gt;&gt;&gt; ImageConverter.setDoScaling(False)
-&gt;&gt;&gt; conv = ImageConverter(impout)
-&gt;&gt;&gt; conv.convertToGray16()
-&gt;&gt;&gt; title = imps[0].getTitle().rsplit(" ", 1)[-1]
-&gt;&gt;&gt; IJ.saveAs(impout, 'png', "myFile-" + title + ".png")</code></pre>
+<pre><code class="python">
+
+```python
+>>> from ij.process import ImageConverter
+>>> ImageConverter.setDoScaling(False)
+>>> conv = ImageConverter(impout)
+>>> conv.convertToGray16()
+>>> title = imps[0].getTitle().rsplit(" ", 1)[-1]
+>>> IJ.saveAs(impout, 'png', "myFile-" + title + ".png")
+```
+
 You can see the final result of my sleuthing in <a href="https://github.com/jni/lesion/blob/6f77cccd1e0f3ddf92ce35a7040ada5328fd90ff/lesion/lif2png.py">lif2png.py</a> and <a href="https://github.com/jni/lesion/blob/6f77cccd1e0f3ddf92ce35a7040ada5328fd90ff/lesion/jython_imports.py">jython_imports.py</a>. If you would do something differently, pull requests are always welcome.
 
 Before I sign off, let me recap my tips:
