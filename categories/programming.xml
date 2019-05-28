@@ -3,7 +3,117 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by/4.0/"&gt;
 &lt;img alt="Creative Commons License BY"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Tue, 07 May 2019 06:26:12 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Why you should cite open source tools</title><link>https://ilovesymposia.com/2019/05/02/why-you-should-cite-open-source-tools/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;Every now and then, a moment or a sentence in a conversation sticks out at you,
+src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Tue, 28 May 2019 08:39:32 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Why citations are not enough for open source software</title><link>https://ilovesymposia.com/2019/05/13/why-citations-are-not-enough-for-open-source-software/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;A few weeks ago I wrote about &lt;a href="https://ilovesymposia.com/2019/05/02/why-you-should-cite-open-source-tools/"&gt;why you should cite open source
+tools&lt;/a&gt;.
+Although I think citations important, though, there are major problems in
+relying on them &lt;em&gt;alone&lt;/em&gt; to support open source work.&lt;/p&gt;
+&lt;p&gt;The biggest problem is that papers describing a software library can only give
+credit to the contributors at the time that the paper was written. The
+preferred citation for the SciPy library is “Eric Jones, Travis Oliphant, Pearu
+Peterson, &lt;em&gt;et al&lt;/em&gt;”, 2001. The “&lt;em&gt;et al&lt;/em&gt;” is not an abbreviation here, but a
+fixed shorthand for all other contributors. Needless to say many, &lt;em&gt;many&lt;/em&gt; people
+have contributed to the SciPy library since 2001 (GitHub counts 716
+contributors as of this writing), and they are unable to get credit within the
+academic system for those contributions. (As an aside, Google counts about
+1,200 citations to SciPy, which is a breathtaking undercounting of its value
+and influence, and reinforces my earlier point: &lt;strong&gt;cite open source software!
+Definitely don't use this post as an excuse not to cite it!!!&lt;/strong&gt;)&lt;/p&gt;
+&lt;p&gt;Not surprisingly, we have had massive contributions to scikit-image since our
+2014 paper, and those contributors miss out on the citations to our paper.&lt;/p&gt;
+&lt;p&gt;From a maintainer point of view, one way to deal with this is to periodically
+write “update” publications that become the preferred way to cite the
+software. This is the approach taken by the
+&lt;a href="https://cellprofiler.org/citations/"&gt;CellProfiler&lt;/a&gt; team, for example, and the
+one we will take for scikit-image. This allows new contributors to benefit,
+while also preventing infinite returns for the original authors, which is as
+it should be.&lt;/p&gt;
+&lt;p&gt;I think this is as good as project maintainers can do now, but leaves open the
+questions of authorship, publication frequency, and the potential dilution of
+the authors' message.&lt;/p&gt;
+&lt;p&gt;A &lt;em&gt;proper&lt;/em&gt; fix requires structural change that directly recognises the value of
+open source software to science. Software papers are in fact a &lt;em&gt;hack&lt;/em&gt; of the
+academic system, a currency conversion, and as with any conversion, there are
+losses and inefficiencies involved. Indeed, the paper provides less value than
+good documentation for the software. (Last year, when someone tweeted about their
+latest software paper, many replies asked for the GitHub link in the
+abstract! People wanted to look at the software, not the paper.)&lt;/p&gt;
+&lt;p&gt;So what does open source software &lt;em&gt;really&lt;/em&gt; need, if not citations? Of course,
+it's money. Citations are useful because they can &lt;em&gt;potentially&lt;/em&gt; be translated
+into grants, promotions, and jobs, but wouldn't it be great if we could cut out
+the middleman and just have great open source translate &lt;em&gt;directly&lt;/em&gt; into
+grants, promotions, and jobs?&lt;/p&gt;
+&lt;p&gt;The insane thing is that granting bodies actually give enormous amounts of
+money to &lt;em&gt;closed source&lt;/em&gt; software developers, since grant money is routinely
+spent on software licenses. Instead of subsidising proprietary software, that
+money could be used to fund open source developers, and improve software for
+&lt;em&gt;everyone&lt;/em&gt;.&lt;/p&gt;
+&lt;h3&gt;How to fund open source&lt;/h3&gt;
+&lt;p&gt;I might have left the how for a later post, but while I was drafting this, CZI
+&lt;a href="https://twitter.com/cziscience/status/1128693937130991623"&gt;announced&lt;/a&gt; direct
+funding specifically for open source software. Needless to say I think this is
+wonderful. I am funded by an earlier closed
+&lt;a href="https://www.chanzuckerberg.com/newsroom/czi-announces-support-for-open-source-software-efforts-to-improve-biomedical-imaging"&gt;funding round&lt;/a&gt;
+to develop scikit-image, and I thought a lot at the time about all the other
+deserving, unfunded projects that I use. An open call is absolutely the right
+thing to do, and supporting &lt;em&gt;maintenance&lt;/em&gt; rather than development of hot new
+things, as this CZI call is doing, is also the right thing to do. (Others have
+flagged that a single year of support, even if renewable, makes it difficult to
+support careers, and I agree, but this is a new space, and it makes sense that
+CZI would dip its toes before jmuping in.)&lt;/p&gt;
+&lt;p&gt;The response to CZI's announcement has been absolute fire. There is enormous
+pent-up need and
+&lt;a href="https://twitter.com/amuellerml/status/1117455802598662144"&gt;frustration&lt;/a&gt; over
+funding
+&lt;a href="https://twitter.com/story645/status/1117567608222564353"&gt;maintenance and improvement&lt;/a&gt;
+for open source tools
+&lt;a href="https://twitter.com/jnuneziglesias/status/1131080022750519296"&gt;underpinning&lt;/a&gt;
+an enormous amount of science. (Even a month later, reading Andreas's tweet
+makes me want to scream in frustration in the crowded train in which I write
+this. Not impactful enough!?) Given the buzz around CZI's call, I wonder
+whether CZI has enough staff to even read through the avalanche of applications
+it will receive. My hope is that national funding bodies will take notice and
+start funding open source maintenance work, as Germany has
+&lt;a href="https://www.dfg.de/en/research_funding/programmes/infrastructure/lis/funding_opportunities/call_proposal_software/"&gt;recently done&lt;/a&gt;.
+(It's unclear to me whether Germany has repeated that call since 2016. If you
+know, please leave a comment below!)&lt;/p&gt;
+&lt;p&gt;Since I'm an academic, for a long time I was stuck in the mindset that granting
+bodies need to step up and recognise that &lt;em&gt;established&lt;/em&gt; open source is a
+valuable thing to fund, and this is certainly true. More recently though, as I
+dipped my toes into some private sector consulting, it occurred to me that the
+situation is completely ridiculous — “Hey look at this incredible thing we
+built, it's serving thousands to millions of scientists, can we get some money
+to keep it going?” “It's done and it's free, why would we give you money?” It's
+a fundamental misunderstanding at the very top of funding agencies of how
+software maintenance works.&lt;/p&gt;
+&lt;p&gt;There are plenty of people that &lt;em&gt;do&lt;/em&gt; understand the value of the software,
+though: its users, many of whom are in a position to use grant money to
+help maintain it. But open source developers have not thus far made it
+easy to &lt;del&gt;donate money to&lt;/del&gt; invest in their projects. I'm not talking about a
+little donate button on the homepage, which will never substantially support
+a project. Rather, open source projects should &lt;em&gt;sell&lt;/em&gt; a product, be it a
+maintenance contract, a support contract, or a new feature development, or even
+a &lt;em&gt;feel-good&lt;/em&gt; contract. But “buying” an open source software package should
+feel exactly like buying closed-source software, and to University purchasing
+departments it should look exactly like a normal software purchase.&lt;/p&gt;
+&lt;p&gt;As I was thinking about this idea, I moved my blog from wordpress.com, for
+which I was paying $100 per year, to &lt;a href="https://getnikola.com/"&gt;Nikola&lt;/a&gt;, an
+open source static site generator written in Python. I &lt;em&gt;love&lt;/em&gt; Nikola, and was
+ready to put my $100 towards the project, but to my surprise, even a donate
+button was absent. As Andreas Mueller and Chris Holdgraf have
+&lt;a href="https://twitter.com/choldgraf/status/1070672075692613636"&gt;pointed out&lt;/a&gt;,
+many projects haven't even &lt;em&gt;considered&lt;/em&gt; what they would do with a large influx
+of money if they got one. That needs to change.&lt;/p&gt;
+&lt;p&gt;Thankfully, organizations including
+&lt;a href="https://mail.python.org/pipermail/numpy-discussion/2019-April/079326.html"&gt;NumFOCUS&lt;/a&gt;,
+&lt;a href="https://www.quansight.com/open-source-support"&gt;QuanSight&lt;/a&gt;,
+&lt;a href="https://tidelift.com/"&gt;Tidelift&lt;/a&gt;, and others are working hard to rectify
+this situation. I'm trying to help where I can and I really look forward to
+seeing what they come up with.&lt;/p&gt;
+&lt;p&gt;If you are interested in this topic, we are
+&lt;a href="https://github.com/numfocus/scipy-2019-funding-foss-bof"&gt;organising&lt;/a&gt; a Birds
+of a Feather session to take place at the
+&lt;a href="https://www.scipy2019.scipy.org/"&gt;SciPy 2019&lt;/a&gt; in Austin in July.
+Please join us!&lt;/p&gt;&lt;/div&gt;</description><category>open-source</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>science</category><guid>https://ilovesymposia.com/2019/05/13/why-citations-are-not-enough-for-open-source-software/</guid><pubDate>Mon, 13 May 2019 09:57:59 GMT</pubDate></item><item><title>Why you should cite open source tools</title><link>https://ilovesymposia.com/2019/05/02/why-you-should-cite-open-source-tools/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;Every now and then, a moment or a sentence in a conversation sticks out at you,
 and lodges itself in the back of your brain for months or even years. In this
 case, the sentence is a tweet, and I fear that the only way to dislodge it is
 to talk about it publicly.&lt;/p&gt;
@@ -1254,33 +1364,4 @@ There's our pixel graph! Obviously, the speedup and n-d support are important fo
 &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Numba</category><category>open-source</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>Scientific Computing</category><category>SciPy</category><guid>https://ilovesymposia.com/2016/12/20/numba-in-the-real-world/</guid><pubDate>Tue, 20 Dec 2016 10:03:58 GMT</pubDate></item><item><title>Why scientists should code in the open</title><link>https://ilovesymposia.com/2015/12/26/why-scientists-should-code-in-the-open/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;All too often, I encounter &lt;em&gt;published papers&lt;/em&gt; in which the code is "available upon request", or "available in the supplementary materials" (as a zip file). This is not just poor form. It also hurts your software's future. (And, in my opinion, when results depend on software, it is inexcusable.)&lt;/p&gt;
-&lt;p&gt;Given the numerous options for posting code online, there's just no excuse to give code in a less-than-convenient format, upon publication. When you publish, put your code on &lt;a href="https://github.com"&gt;Github&lt;/a&gt; or &lt;a href="https://bitbucket.com"&gt;Bitbucket&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;In this piece, I'll go even further: put your code there &lt;em&gt;from the beginning&lt;/em&gt;. Put your code there &lt;em&gt;as soon as you finish reading this article&lt;/em&gt;. Here's why:&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;&lt;h3&gt;No, you won't get scooped&lt;/h3&gt;
-&lt;p&gt;Reading code is &lt;em&gt;hard&lt;/em&gt;. Ask any experienced programmer: most have trouble reading code &lt;em&gt;they themselves wrote&lt;/em&gt; a few months ago, let alone someone else's code. It's extremely unlikely that someone will browse your code looking for a scoop. That time is better spent doing research.&lt;/p&gt;
-&lt;h3&gt;It's never going to be ready&lt;/h3&gt;
-
-&lt;p&gt;Another thing I hear is that they &lt;em&gt;want&lt;/em&gt; to post their code, but they want to clean it up first, and remove all the "embarrassing" bits. Unfortunately, science doesn't reward time spent "cleaning up" your code, at least not yet. So the sad reality is that you probably will never actually get to the point where you are happy to post your code online.&lt;/p&gt;
-&lt;p&gt;But here's the secret: &lt;em&gt;everybody is in that boat with you&lt;/em&gt;. That's why &lt;a href="http://matt.might.net/articles/crapl/"&gt;this document&lt;/a&gt; exists. I recommend you read it in full, but this segment is particularly important:&lt;/p&gt;
-&lt;blockquote&gt;
-  When it comes time to empirically evaluate new research with respect to someone else's prior work, even a rickety implementation of their work can save grad-student-months, or even grad-student-years, of time.
-&lt;/blockquote&gt;
-
-&lt;p&gt;Matt Might himself is as thorough and high-profile as you get in computer science, and yet, he has this to say about code clean-up:&lt;/p&gt;
-&lt;blockquote&gt;
-  I kept telling myself that I'd clean it all up and release it some day.
-
-  I have to be honest with myself: this clean-up is never going to happen.
-&lt;/blockquote&gt;
-
-&lt;p&gt;Your code might not meet your standards, but, believe it or not, your code &lt;em&gt;will&lt;/em&gt; help others, and the sooner it's out there, the sooner they can be helped.&lt;/p&gt;
-&lt;h3&gt;You will gain collaborators and citations&lt;/h3&gt;
-
-&lt;p&gt;If anyone is going to be rifling through your code, they will probably end up asking for your help. This happens with even the best projects: have a look at the activity on the mailing lists for &lt;a href="http://sourceforge.net/p/scikit-learn/mailman/scikit-learn-general/"&gt;scikit-learn&lt;/a&gt; or &lt;a href="http://www.mail-archive.com/numpy-discussion@scipy.org/"&gt;NumPy&lt;/a&gt;, two of the best-maintained open-source projects out there.&lt;/p&gt;
-&lt;p&gt;When you have to go back and explain how a piece of code worked, &lt;em&gt;that's&lt;/em&gt; when you will actually take the time and clean it up. In the process, the person you help will be more likely to contribute to your project, either in code or in bug reports, improvement suggestions, or even citations.&lt;/p&gt;
-&lt;p&gt;In the case of my own &lt;a href="https://github.com/janelia-flyem/gala"&gt;gala&lt;/a&gt; project, I guess that about half of the citations it received happened because of its open-source code and open &lt;a href="http://gala.30861.n7.nabble.com"&gt;mailing list&lt;/a&gt;.&lt;/p&gt;
-&lt;h3&gt;Your coding ability will automagically improve&lt;/h3&gt;
-
-&lt;p&gt;I first heard this one from &lt;a href="http://albert.rierol.net"&gt;Albert Cardona&lt;/a&gt;. They say sunlight is the best disinfectant, and this is certainly true of code. Just the very idea that anyone can easily read their code will make most people more careful when programming. Over time, this care will become second nature, and you will develop a taste for nice, easy-to-read code.&lt;/p&gt;
-&lt;p&gt;In short, the alleged downsides of code-sharing are, at best, longshots, while there are many tangible upsides. Put your code out there. (And use a &lt;a href="http://www.astrobetter.com/blog/2014/03/10/the-whys-and-hows-of-licensing-scientific-code/"&gt;liberal open-source license&lt;/a&gt;!)&lt;/p&gt;&lt;/div&gt;</description><category>open access</category><category>open-source</category><category>Planet SciPy</category><category>programming</category><guid>https://ilovesymposia.com/2015/12/26/why-scientists-should-code-in-the-open/</guid><pubDate>Sat, 26 Dec 2015 05:17:05 GMT</pubDate></item></channel></rss>
+&lt;p&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Numba</category><category>open-source</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>Scientific Computing</category><category>SciPy</category><guid>https://ilovesymposia.com/2016/12/20/numba-in-the-real-world/</guid><pubDate>Tue, 20 Dec 2016 10:03:58 GMT</pubDate></item></channel></rss>

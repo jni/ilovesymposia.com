@@ -3,7 +3,117 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by/4.0/"&gt;
 &lt;img alt="Creative Commons License BY"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Tue, 07 May 2019 06:26:12 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Why you should cite open source tools</title><link>https://ilovesymposia.com/2019/05/02/why-you-should-cite-open-source-tools/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;Every now and then, a moment or a sentence in a conversation sticks out at you,
+src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Tue, 28 May 2019 08:39:32 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Why citations are not enough for open source software</title><link>https://ilovesymposia.com/2019/05/13/why-citations-are-not-enough-for-open-source-software/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;A few weeks ago I wrote about &lt;a href="https://ilovesymposia.com/2019/05/02/why-you-should-cite-open-source-tools/"&gt;why you should cite open source
+tools&lt;/a&gt;.
+Although I think citations important, though, there are major problems in
+relying on them &lt;em&gt;alone&lt;/em&gt; to support open source work.&lt;/p&gt;
+&lt;p&gt;The biggest problem is that papers describing a software library can only give
+credit to the contributors at the time that the paper was written. The
+preferred citation for the SciPy library is “Eric Jones, Travis Oliphant, Pearu
+Peterson, &lt;em&gt;et al&lt;/em&gt;”, 2001. The “&lt;em&gt;et al&lt;/em&gt;” is not an abbreviation here, but a
+fixed shorthand for all other contributors. Needless to say many, &lt;em&gt;many&lt;/em&gt; people
+have contributed to the SciPy library since 2001 (GitHub counts 716
+contributors as of this writing), and they are unable to get credit within the
+academic system for those contributions. (As an aside, Google counts about
+1,200 citations to SciPy, which is a breathtaking undercounting of its value
+and influence, and reinforces my earlier point: &lt;strong&gt;cite open source software!
+Definitely don't use this post as an excuse not to cite it!!!&lt;/strong&gt;)&lt;/p&gt;
+&lt;p&gt;Not surprisingly, we have had massive contributions to scikit-image since our
+2014 paper, and those contributors miss out on the citations to our paper.&lt;/p&gt;
+&lt;p&gt;From a maintainer point of view, one way to deal with this is to periodically
+write “update” publications that become the preferred way to cite the
+software. This is the approach taken by the
+&lt;a href="https://cellprofiler.org/citations/"&gt;CellProfiler&lt;/a&gt; team, for example, and the
+one we will take for scikit-image. This allows new contributors to benefit,
+while also preventing infinite returns for the original authors, which is as
+it should be.&lt;/p&gt;
+&lt;p&gt;I think this is as good as project maintainers can do now, but leaves open the
+questions of authorship, publication frequency, and the potential dilution of
+the authors' message.&lt;/p&gt;
+&lt;p&gt;A &lt;em&gt;proper&lt;/em&gt; fix requires structural change that directly recognises the value of
+open source software to science. Software papers are in fact a &lt;em&gt;hack&lt;/em&gt; of the
+academic system, a currency conversion, and as with any conversion, there are
+losses and inefficiencies involved. Indeed, the paper provides less value than
+good documentation for the software. (Last year, when someone tweeted about their
+latest software paper, many replies asked for the GitHub link in the
+abstract! People wanted to look at the software, not the paper.)&lt;/p&gt;
+&lt;p&gt;So what does open source software &lt;em&gt;really&lt;/em&gt; need, if not citations? Of course,
+it's money. Citations are useful because they can &lt;em&gt;potentially&lt;/em&gt; be translated
+into grants, promotions, and jobs, but wouldn't it be great if we could cut out
+the middleman and just have great open source translate &lt;em&gt;directly&lt;/em&gt; into
+grants, promotions, and jobs?&lt;/p&gt;
+&lt;p&gt;The insane thing is that granting bodies actually give enormous amounts of
+money to &lt;em&gt;closed source&lt;/em&gt; software developers, since grant money is routinely
+spent on software licenses. Instead of subsidising proprietary software, that
+money could be used to fund open source developers, and improve software for
+&lt;em&gt;everyone&lt;/em&gt;.&lt;/p&gt;
+&lt;h3&gt;How to fund open source&lt;/h3&gt;
+&lt;p&gt;I might have left the how for a later post, but while I was drafting this, CZI
+&lt;a href="https://twitter.com/cziscience/status/1128693937130991623"&gt;announced&lt;/a&gt; direct
+funding specifically for open source software. Needless to say I think this is
+wonderful. I am funded by an earlier closed
+&lt;a href="https://www.chanzuckerberg.com/newsroom/czi-announces-support-for-open-source-software-efforts-to-improve-biomedical-imaging"&gt;funding round&lt;/a&gt;
+to develop scikit-image, and I thought a lot at the time about all the other
+deserving, unfunded projects that I use. An open call is absolutely the right
+thing to do, and supporting &lt;em&gt;maintenance&lt;/em&gt; rather than development of hot new
+things, as this CZI call is doing, is also the right thing to do. (Others have
+flagged that a single year of support, even if renewable, makes it difficult to
+support careers, and I agree, but this is a new space, and it makes sense that
+CZI would dip its toes before jmuping in.)&lt;/p&gt;
+&lt;p&gt;The response to CZI's announcement has been absolute fire. There is enormous
+pent-up need and
+&lt;a href="https://twitter.com/amuellerml/status/1117455802598662144"&gt;frustration&lt;/a&gt; over
+funding
+&lt;a href="https://twitter.com/story645/status/1117567608222564353"&gt;maintenance and improvement&lt;/a&gt;
+for open source tools
+&lt;a href="https://twitter.com/jnuneziglesias/status/1131080022750519296"&gt;underpinning&lt;/a&gt;
+an enormous amount of science. (Even a month later, reading Andreas's tweet
+makes me want to scream in frustration in the crowded train in which I write
+this. Not impactful enough!?) Given the buzz around CZI's call, I wonder
+whether CZI has enough staff to even read through the avalanche of applications
+it will receive. My hope is that national funding bodies will take notice and
+start funding open source maintenance work, as Germany has
+&lt;a href="https://www.dfg.de/en/research_funding/programmes/infrastructure/lis/funding_opportunities/call_proposal_software/"&gt;recently done&lt;/a&gt;.
+(It's unclear to me whether Germany has repeated that call since 2016. If you
+know, please leave a comment below!)&lt;/p&gt;
+&lt;p&gt;Since I'm an academic, for a long time I was stuck in the mindset that granting
+bodies need to step up and recognise that &lt;em&gt;established&lt;/em&gt; open source is a
+valuable thing to fund, and this is certainly true. More recently though, as I
+dipped my toes into some private sector consulting, it occurred to me that the
+situation is completely ridiculous — “Hey look at this incredible thing we
+built, it's serving thousands to millions of scientists, can we get some money
+to keep it going?” “It's done and it's free, why would we give you money?” It's
+a fundamental misunderstanding at the very top of funding agencies of how
+software maintenance works.&lt;/p&gt;
+&lt;p&gt;There are plenty of people that &lt;em&gt;do&lt;/em&gt; understand the value of the software,
+though: its users, many of whom are in a position to use grant money to
+help maintain it. But open source developers have not thus far made it
+easy to &lt;del&gt;donate money to&lt;/del&gt; invest in their projects. I'm not talking about a
+little donate button on the homepage, which will never substantially support
+a project. Rather, open source projects should &lt;em&gt;sell&lt;/em&gt; a product, be it a
+maintenance contract, a support contract, or a new feature development, or even
+a &lt;em&gt;feel-good&lt;/em&gt; contract. But “buying” an open source software package should
+feel exactly like buying closed-source software, and to University purchasing
+departments it should look exactly like a normal software purchase.&lt;/p&gt;
+&lt;p&gt;As I was thinking about this idea, I moved my blog from wordpress.com, for
+which I was paying $100 per year, to &lt;a href="https://getnikola.com/"&gt;Nikola&lt;/a&gt;, an
+open source static site generator written in Python. I &lt;em&gt;love&lt;/em&gt; Nikola, and was
+ready to put my $100 towards the project, but to my surprise, even a donate
+button was absent. As Andreas Mueller and Chris Holdgraf have
+&lt;a href="https://twitter.com/choldgraf/status/1070672075692613636"&gt;pointed out&lt;/a&gt;,
+many projects haven't even &lt;em&gt;considered&lt;/em&gt; what they would do with a large influx
+of money if they got one. That needs to change.&lt;/p&gt;
+&lt;p&gt;Thankfully, organizations including
+&lt;a href="https://mail.python.org/pipermail/numpy-discussion/2019-April/079326.html"&gt;NumFOCUS&lt;/a&gt;,
+&lt;a href="https://www.quansight.com/open-source-support"&gt;QuanSight&lt;/a&gt;,
+&lt;a href="https://tidelift.com/"&gt;Tidelift&lt;/a&gt;, and others are working hard to rectify
+this situation. I'm trying to help where I can and I really look forward to
+seeing what they come up with.&lt;/p&gt;
+&lt;p&gt;If you are interested in this topic, we are
+&lt;a href="https://github.com/numfocus/scipy-2019-funding-foss-bof"&gt;organising&lt;/a&gt; a Birds
+of a Feather session to take place at the
+&lt;a href="https://www.scipy2019.scipy.org/"&gt;SciPy 2019&lt;/a&gt; in Austin in July.
+Please join us!&lt;/p&gt;&lt;/div&gt;</description><category>open-source</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>science</category><guid>https://ilovesymposia.com/2019/05/13/why-citations-are-not-enough-for-open-source-software/</guid><pubDate>Mon, 13 May 2019 09:57:59 GMT</pubDate></item><item><title>Why you should cite open source tools</title><link>https://ilovesymposia.com/2019/05/02/why-you-should-cite-open-source-tools/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;Every now and then, a moment or a sentence in a conversation sticks out at you,
 and lodges itself in the back of your brain for months or even years. In this
 case, the sentence is a tweet, and I fear that the only way to dislodge it is
 to talk about it publicly.&lt;/p&gt;
@@ -1254,42 +1364,4 @@ There's our pixel graph! Obviously, the speedup and n-d support are important fo
 &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Numba</category><category>open-source</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>Scientific Computing</category><category>SciPy</category><guid>https://ilovesymposia.com/2016/12/20/numba-in-the-real-world/</guid><pubDate>Tue, 20 Dec 2016 10:03:58 GMT</pubDate></item><item><title>Trump's win</title><link>https://ilovesymposia.com/2016/11/11/trumps-win/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;Like many of you, I watched in horror two days ago as the night unfolded, and the unthinkable slowly came to pass. After a Netflix binge to try to numb the fear, I dived into a clickhole of social media posts and news articles to try to make sense of what had happened. I hope that writing a synthesis of that will let me get on with my life in this brave new world.&lt;/p&gt;
-&lt;p&gt;I am deeply, depressingly pessimistic about the future of the planet under Trump. Let's take the very best, most ludicrously optimistic scenario: that Trump swings to the center&lt;a href="https://ilovesymposia.com/2016/11/11/trumps-win/#fn1"&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/a&gt; and doesn't make good on his many horrid promises. Even then, his election, and the Republicans' victory in the House and Senate, represent game over in the fight to avoid climate change&lt;a href="https://ilovesymposia.com/2016/11/11/trumps-win/#fn2"&gt;&lt;sup&gt;2&lt;/sup&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Like many of us, I'd buried my head in the sand about this, even after I read Michael Moore's again-famous essay predicting Trump's victory&lt;a href="https://ilovesymposia.com/2016/11/11/trumps-win/#fn3"&gt;&lt;sup&gt;3&lt;/sup&gt;&lt;/a&gt;, which is well worth a read. After that, here are some choice quotes from essays I recommend about how this nightmare came to be. From Glenn Greenwald's The Ongoing, Dangerous Refusal to Learn the Lesson of Brexit&lt;a href="https://ilovesymposia.com/2016/11/11/trumps-win/#fn4"&gt;&lt;sup&gt;4&lt;/sup&gt;&lt;/a&gt;:&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;&lt;blockquote&gt;
-  When a political party is demolished, the principle responsibility belongs to one entity: the party that got crushed. It’s the job of the party and the candidate, and nobody else, to persuade the citizenry to support them and find ways to do that. Last night, the Democrats failed, resoundingly, to do that, and any autopsy or liberal think piece or pro-Clinton pundit commentary that does not start and finish with their own behavior is one that is inherently worthless.
-&lt;/blockquote&gt;
-&lt;p&gt;Democrats got complacent and forgot a huge bloc of voters, instead catering to us upper-middle-class city dwellers. Linked from that article, Vincent Bevins's post-Brexit Facebook post&lt;a href="https://ilovesymposia.com/2016/11/11/trumps-win/#fn5"&gt;&lt;sup&gt;5&lt;/sup&gt;&lt;/a&gt; expresses the core of their failure well:&lt;/p&gt;
-&lt;blockquote&gt;
-  Both Brexit and Trumpism are the very, very, wrong answers to legitimate questions that urban elites have refused to ask for thirty years.
-
-  Questions such as - Who are the losers of globalization, and how can we spread the benefits to them and ease the transition? Is it fair that the rich can capture almost all the gains of open borders and trade, or should the process be more equitable?
-&lt;/blockquote&gt;
-
-&lt;p&gt;I also liked this paragraph from David Wong's Don't Panic&lt;a href="https://ilovesymposia.com/2016/11/11/trumps-win/#fn6"&gt;&lt;sup&gt;6&lt;/sup&gt;&lt;/a&gt;:&lt;/p&gt;
-&lt;blockquote&gt;
-  The truth is, most of Trump's voters voted for him despite the fact that he said/believes awful things, not because of it. That in no way excuses it, but I have to admit I've spent eight years quietly tuning out news stories about drone strikes blowing up weddings in Afghanistan. [...] [Trump supporters] look out their front door and see painkiller addicts and closed factories. They believe that nobody in Washington gives a shit about them, mainly because that's 100-percent correct.
-&lt;/blockquote&gt;
-
-&lt;p&gt;Now for the really depressing part: First, I don't think Trump will fix these people's problems. Despite the anti-establishment rhetoric, what he'll deliver is more tax cuts for the rich. And second, I don't see a plausible way out for the US. Its electoral system is completely ridiculous, and it's going to get worse, much worse, before it gets better. As in 2000, the popular vote went to Hillary Clinton, but the Electoral College vote went easily to Trump. The lack of preferential voting also meant that Hillary could have won in various battleground states where her loss margin was much smaller than the number of votes for third-party candidates. (Again, as in 2000.) Finally, gerrymandering has handed the House of Representatives to Republicans for the foreseeable future, despite more people voting Democrat than Republican in most elections.&lt;/p&gt;
-&lt;p&gt;But, what incentive do the people in power have to change the electoral rules?&lt;/p&gt;
-&lt;p&gt;Paul Krugman's dark closing for that night, Our Unknown Country&lt;a href="https://ilovesymposia.com/2016/11/11/trumps-win/#fn7"&gt;&lt;sup&gt;7&lt;/sup&gt;&lt;/a&gt;, summed it up best:&lt;/p&gt;
-&lt;blockquote&gt;
-  Is America a failed state and society? It looks truly possible.
-&lt;/blockquote&gt;
-
-&lt;p&gt;Finally, many of you reading this will be in other countries thinking, it could not happen &lt;em&gt;here&lt;/em&gt;. But it will, without action. Without massive change from the left-leaning parties of the world. Michael Moore's warning applies almost everywhere. Here in Australia, the Labor party has egregiously followed the right-wing Coalition in their repugnant asylum-seeker policy (our very own "build that wall" is "stop the boats"), and in their mass surveillance policies. Much like the Democrats, they have only themselves to blame for their loss in the last election, earlier this year.&lt;/p&gt;
-&lt;p&gt;The other day, the news reported on all the people who are losing their jobs here in my home town of Geelong as the Ford assembly line closes. These are the people we &lt;em&gt;cannot&lt;/em&gt; forget.&lt;/p&gt;
-&lt;p&gt;I don't yet know what I can do about all this. But it's clear that writing snarky Facebook posts either being outraged or mocking the government will solve nothing. We have to do better, and we have to really be out there, not in here.&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;&lt;a id="fn1" href="http://pic.twitter.com/DCgwxUQjdH"&gt;Trump on Hillary Clinton in 2008.&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a&gt;&lt;/a&gt; Scientists say that the next decade will require dramatic emissions reductions, worldwide, if we are to keep warming to a reasonable level. The United States accounts for an enormous proportion of these emissions, and will now spend 4-8 years, at an absolute minimum, doing absolutely nothing — indeed, probably helping the oil industry. One day after his election, Trump has already selected a climate sceptic to head the EPA: https://www.scientificamerican.com/article/trump-picks-top-climate-skeptic-to-lead-epa-transition/&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a id="fn3" title="Michael Moore: Trump will win" href="http://michaelmoore.com/trumpwillwin/"&gt;Michael Moore: Trump will win.&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a id="fn4" title="Glenn Greenwald: Democrats, Trump, and the ongoing, dangerous refusal to learn the lesson of Brexit." href="https://theintercept.com/2016/11/09/democrats-trump-and-the-ongoing-dangerous-refusal-to-learn-the-lesson-of-brexit/"&gt;Glenn Greenwald: Democrats, Trump, and the ongoing, dangerous refusal to learn the lesson of Brexit.&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a id="fn5" title="Vincent Bevins on Brexit" href="https://www.facebook.com/vincent.bevins/posts/10105426634702363"&gt;Vincent Bevins on Brexit.&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a id="fn6" title="David Wong: Don't Panic" href="http://www.cracked.com/blog/dont-panic/"&gt;David Wong: Don't Panic&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a id="fn7" title="Paul Krugman: Our Unknown Country" href="http://www.nytimes.com/interactive/projects/cp/opinion/election-night-2016/the-unknown-country"&gt;Paul Krugman: Our Unknown Country.&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;/p&gt;&lt;/div&gt;</description><category>climate change</category><category>politics</category><guid>https://ilovesymposia.com/2016/11/11/trumps-win/</guid><pubDate>Thu, 10 Nov 2016 23:25:53 GMT</pubDate></item></channel></rss>
+&lt;p&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Numba</category><category>open-source</category><category>Planet SciPy</category><category>programming</category><category>Python</category><category>Scientific Computing</category><category>SciPy</category><guid>https://ilovesymposia.com/2016/12/20/numba-in-the-real-world/</guid><pubDate>Tue, 20 Dec 2016 10:03:58 GMT</pubDate></item></channel></rss>
