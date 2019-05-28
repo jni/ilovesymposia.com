@@ -1,7 +1,7 @@
 <!--
 .. title: Why citations are not enough for open source software
 .. slug: why-citations-are-not-enough-for-open-source-software
-.. date: 2019-05-13 19:57:59 UTC+10:00
+.. date: 2019-05-28 18:41:54 UTC+10:00
 .. tags: Planet SciPy,open-source,science,programming,Python
 .. category: 
 .. link: 
@@ -135,4 +135,3 @@ If you are interested in this topic, we are
 of a Feather session to take place at the
 [SciPy 2019](https://www.scipy2019.scipy.org/) in Austin in July.
 Please join us!
-
