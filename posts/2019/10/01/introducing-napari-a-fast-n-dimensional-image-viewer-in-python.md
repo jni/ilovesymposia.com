@@ -20,8 +20,9 @@ in our daily work. I've found it *life-changing*.
 # The background
 
 I've been looking for a great nD volume viewer in Python for the better part of
-a decade. I started working on the segmentation of 3D electron microscopy (EM)
-volumes at the Janelia [Farm] Research Campus in 2009. I started out in Matlab,
+a decade. In 2009, I joined Mitya Chklovskii's lab and the FlyEM team at the
+Janelia [Farm] Research Campus to work on the segmentation of 3D electron microscopy (EM)
+volumes. I started out in Matlab,
 but moved to Python pretty quickly and it was a very smooth transition (highly
 recommended! ;). Looking at my data was always annoying though. I was either
 looking at single 2D slices using `matplotlib.pyplot.imshow`, or saving the
@@ -30,7 +31,7 @@ required me to constantly be changing terminals, and anyway was pretty
 inefficient because my disk ended up cluttered with “temporary” VTK volumes.
 
 I tried a bunch of stuff since then, including Mayavi and even building my own
-orthogonal views viewer with Matplotlib, but nothing really clicked. What's
+orthogonal views viewer with Matplotlib (which was super slow), but nothing really clicked. What's
 worse, I didn't see any movement on this — I even found a very discouraging
 thread on MNE-Python in which Gaël Varoquaux concluded, given the lack of
 support, that 3D visualisation was not mission critical to anyone and not worth
@@ -48,7 +49,7 @@ in scikit-image. In May last year, Nelle Varoquaux organised joint sprint with
 developers from scikit-learn, scikit-image, and dask at UC Berkeley, and I was
 one of the lucky invitees. I'd recently seen that Loïc Royer, a good friend
 from my Janelia days, had moved to San Francisco to start his lab at the Chan
-Zuckerberg Biohub, and I asked him if I could crash at his place for a few days
+Zuckerberg Biohub, so I asked him if I could crash at his place for a few days
 before the sprint.
 
 I knew Loïc as a Java guy. In Janelia he'd repeatedly extolled the virtues of
@@ -69,40 +70,201 @@ learning libraries (which are Python), as well as the wider scientific Python
 ecosystem, it remains challenging to use both together. It might well
 remain so, because the build, installation, and dependency tooling is so
 disparate between the two communities.
+And so, that evening, in Loïc's apartment, napari (lowercase n) was born (though
+it did not yet have a name).
 
-To name the tool, we wanted to continue
-the theme of Pacific islands begun by Fiji. With so many to choose from, we
-needed a starting point, and we chose the geographic midpoint between Loïc's
+Following on from his work on ClearVolume, Loïc and I agreed on some founding
+principles for our tool:
+- blazing fast (GPU-powered);
+- native (neither of us likes opening a browser to work);
+- n-dimensional first;
+- native 2D and 3D viewing; and
+- minimize new windows and pop-ups, choosing layering instead.
+
+When choosing a name, after playing around with some terrible acronyms, we
+instead decided to continue
+the theme of Pacific islands begun by Fiji (though Fiji itself is a spectacular
+recursive acronym, “Fiji Is Just ImageJ”). With so many to choose from, we
+needed a starting point, and we finally settled on the geographic midpoint between Loïc's
 base of San Francisco and mine of Melbourne. Of course that ends up being
 in the middle of the ocean, but not too far from that is the tiny village of
-Napari, in the Republic of Kiribati. So, that evening, in Loïc's apartment,
-napari (lowercase n) was born.
+Napari, in the Republic of Kiribati.
 
 The next week, at the Berkeley sprint, I finally met Kira Evans, a contributor to scikit-image
 who had made several incredibly technical pull requests,
 on my favourite topic of extending n-dimensional support, and whom I'd thus
-asked Nelle to invite to the sprint.
+asked Nelle to invite to the sprint. She had turned out to be a freshman at
+Northeastern University, but despite her age she was already doing great
+things in open source.
 On certain rare occasions, you make decisions that you look back on and think something like,
-hot damn that was a good decision! Inviting Kira is one of those for me.
+hot damn that was a good decision! Inviting Kira is one of those for me. (Nelle agreed.)
 
 Thanks to [VisPy](http://vispy.org/), Loïc was able to hack out a quick
 prototype that week. But starting a new lab from scratch is hard work, and he
 knew he would not have time to develop it further. He did, however, have some
-funds available for a summer intern, and he offered it to Kira, who as a result is now officially
-a college dropout and CZI software engineer. That summer, under the guidance of Loïc, Stéfan
+funds available for a summer intern, and after seeing the work she did that week, he
+offered it to Kira. (As a result, she is now officially
+a college dropout and CZI software engineer.) That summer, under the guidance of Loïc, Stéfan
 van der Walt, and myself, Kira put together the first implementation of napari as you see
 it today.
 
-By the fall, although internally napari was quite a mess, as tends to happen in
-new, fast-growing projects, functionally it was impressive enough that Jeremy Freeman and
-Nick Sofroniew, from CZI's Computational Biology division, started paying close attention. 
-Initially, Nick brought some brilliant management to napari, instituting weekly meetings
-that he drove (and continues to drive) like a champion. Pretty soon, though, he made his
-first code contribution to napari, and after that it was like seeing a racecar take off.
-No one has done more for napari than Nick, and Loïc and I owe him an enormous debt of
-gratitude for that.
+By late summer/early fall, although internally napari was quite a mess, as tends to happen in
+new, fast-growing projects, functionally it was already impressive enough that Jeremy Freeman and
+Nick Sofroniew, from CZI's Computational Biology division, started paying close attention.
+Nick, who had had similar experiences to mine working with Python and nD images, soon fell
+in love with it, and literally could not wait for us to move it forward. He took matters into
+his own hands.
+
+Initially, Nick brought some brilliant management to napari, instituting weekly
+meetings that he drove (and continues to drive) like a champion. Those meetings
+were critical to bring others into the loop, including Ahmet Can Solak, Kevin
+Yamauchi, Bryant Chunn, and Shannon Axelrod, who started to make pull requests
+to improve napari.  Pretty soon, though, Nick made his own pull request, and
+after that it was like seeing a racecar take off.  No one has done more for
+napari than Nick, and Loïc and I owe him an enormous debt of gratitude for
+that.
+
+Soon after that, the [StarFISH team](https://github.com/spacetx/starfish) at
+CZI adopted napari as their main image viewer, which again helped us to
+discover bugs, improve our UI, and add features. By February, everyone in the
+project was using it regularly, despite its warts. We started to think about
+broadening the group of people with eyes on napari.
+
+CZI was organising a meeting for grantees of its [Imaging
+Scientists](https://go.chanzuckerberg.com/imaging) and [Imaging Software
+Fellows](https://go.chanzuckerberg.com/imaging#imaging-software-fellows)
+programs in March, which we thought would be a good opportunity to grow the
+team. Among others, we invited John Kirkham (NVIDIA), Eric Perlman (then at
+Johns Hopkins). The CZI meeting was a dramatic demonstration of the power of
+bringing together people with complementary experience, as John added support
+for viewing bigger-than-RAM [dask
+arrays](https://docs.dask.org/en/stable/array.html) in about 20 minutes flat,
+and Eric massively improved the performance of our segmentation visualisation
+layer.
+
+Meanwhile, this visit, as CZI had invited me, I was staying at a hotel downtown
+rather than at Loïc's. One night, Loïc sent me an exasperated message that still
+brings a smile to my face:
+“You know, if you'd stayed at your stupid hotel a year ago, there would be no
+napari.” It does constantly amaze me how many things had to line up for napari
+to exist, let alone be where it is today.
+
+I came out of the March meeting thinking hey, this napari thing might have
+legs on it! Not only had newcomers been able to improve it quickly without
+knowing the codebase (which usually points to at least *decent* design), but we
+heard over and over from the imaging scientists that viewing and annotating
+large datasets remained a challenge for them.
+
+So, we started gently expanding the user base, but in hushed
+tones, full of caveats: “This software we're working on might be useful for
+you… If you're brave and can work around all the missing functionality… Be
+sure to report any issues…” At SciPy 2019, Nick presented napari to the
+public for the first time, because many SciPy attendees tend to not mind
+working with development versions of libraries. Indeed, we got
+contributions that week from Alex de Siqueira (from the scikit-image team)
+and Matthias Bussonnier (IPython).
+
+The biggest revelation for me, though, came immediately after SciPy, when I
+went to Jackson Lab to teach a workshop on scikit-image. I've taught
+scikit-image many times before, but for the first time, I went off-script and
+analysed new data live, on IPython, rather than using Jupyter notebooks
+pre-populated with toy data. I used napari instead of matplotlib, and found
+napari's layers model *insanely* useful to visualise every step of the
+analysis, one on top of the other, toggling their visibility on and off to
+compare them. And it was super easy to add interactivity to the mix, clicking
+on some points in napari, then grabbing those points to use as watershed seeds,
+and popping the resulting segmentation as another layer to napari.
+
+[screenshot: image, watershed seeds, watershed]
+
+In the months since then, we've spent a lot of time improving the code, and
+polishing the little edge cases, like making sure the coordinates reported by
+the cursor are pixel perfect, merging the previously separate Image (2D) and
+Volume (3D) layers, and extending 3D and multi-resolution support to all
+layers.
+
+Thanks to CZI's massive in-house investment in open source, we also
+actually got an [audit](https://github.com/napari/napari/issues/469) for
+napari's GUI from Lia Prins, a UX designer at CZI — an incredible opportunity
+that few academic projects get. And, to repeat a familiar pattern, Nick
+immediately got to work and implemented a bunch of fixes from the audit. To
+me, this update is what's most pushed me to write this post, as the UI now
+feels more like a coherent whole than the mishmash of features that results
+from organic growth of a project.
 
 # napari now
+
+As I mentioned at the start, currently, everyone on the team uses napari on a
+daily basis for their own work. Awesomely, our workflows actually look quite
+different, yet napari meets the needs of all of them, in some form or another.
+Last month we were surprised to find that Constantin Pape, at EMBL,
+was developing his own viewer, Heimdall, on top of napari, completely
+independently from us. I'm a big fan of Constantin's work, so little has
+brought me more joy than finding his
+[repo](https://github.com/constantinpape/heimdall) and reading his comment:
+
+> most of the credit goes to napari; it's so great to finally have a decent
+> python viewer.
+
+So, what are those use cases?
+
+## 1. Just *looking* at NumPy ndarrays quickly
+
+This is my most common use case. I like to think about and use 2D, 3D, and 4D
+images interchangeably. So, I often find myself calling `plt.imshow` on a 3D
+array and getting greeted by a `TypeError: Invalid dimensions for image data`,
+*after* the figure window has popped up, which now stares back at me blank and
+forlorn. No more, with `napari.view_image`. By default, napari will display the
+last two dimensions of an array, and put in as many sliders as necessary for
+the remaining dimensions.
+
+To illustrate, I'll make a synthetic 4D array of blobs using scikit-image's
+`binary_blobs` function:
+
+```python
+import numpy as np
+import toolz as tz
+from skimage import data, util
+
+
+blobs_raw = np.stack([
+    data.binary_blobs(length=64, n_dim=3, blob_size_fraction=0.05,
+                      volume_fraction=f)
+    for f in np.linspace(0.05, 0.5, 10)
+])
+
+add_noise = tz.curry(util.random_noise)
+blobs = tz.pipe(
+    blobs_raw,
+    add_noise(mode='s&p'),
+    add_noise(mode='gaussian'),
+    add_noise(mode='poisson')
+)
+
+print(blobs.shape)
+```
+
+Now, I can look at the volume in napari. Thanks to VisPy and OpenGL, the
+performance of the canvas is just blazing fast:
+
+```python
+viewer = napari.view_image(blobs)
+```
+
+[image]
+
+If I want to see a 3D volume, for moderately sized arrays, one click suffices:
+napari will change the number of displayed dimensions to 3, and remove one
+of the sliders:
+
+[image]
+
+Napari lets you explore your data quickly, which can dramatically accelerate
+your work. Looking at these blobs slice by slice in matplotlib, for example, I
+might not immediately see that they increase in number along axis 0, because I
+would typically only look at one or two slices.
+
+## 2. Overlaying computation results
 
 
 
