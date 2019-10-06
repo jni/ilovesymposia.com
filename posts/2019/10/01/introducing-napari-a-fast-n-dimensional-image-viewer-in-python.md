@@ -85,7 +85,8 @@ Fiji itself is a spectacular recursive acronym, “Fiji Is Just ImageJ”). With
 many to choose from, we needed a starting point, and we finally settled on the
 geographic midpoint between Loïc's base of San Francisco and mine of Melbourne.
 Of course that ends up being in the middle of the ocean, but not too far from
-that is the tiny village of Napari, in the Republic of Kiribati.
+that point is the tiny village of Napari, in the Republic of Kiribati. We
+both thought it had a nice ring to it, and the name stuck.
 
 The next week, at the Berkeley sprint, I finally met Kira Evans, a contributor
 to scikit-image who had made several incredibly technical pull requests, on my
@@ -101,9 +102,9 @@ prototype that week. But starting a new lab from scratch is hard work, and he
 knew he would not have time to develop it further. He did, however, have some
 funds available for a summer intern, and after seeing the work she did that
 week, he offered it to Kira. (As a result, she is now officially a college
-dropout and CZI software engineer.) That summer, under the guidance of Loïc,
-Stéfan van der Walt, and myself, Kira put together the first implementation of
-napari as you see it today.
+dropout and software engineer at CZI, the Chan Zuckerberg Initiative.) That
+summer, under the guidance of Loïc, Stéfan van der Walt, and myself, Kira
+put together the first implementation of napari as you see it today.
 
 By late summer/early fall, although internally napari was quite a mess, as
 tends to happen in new, fast-growing projects, functionally it was already
@@ -197,7 +198,7 @@ Last month we were surprised to find that Constantin Pape, at EMBL, was
 developing his own viewer, Heimdall, on top of napari, completely independently
 from us. I'm a big fan of Constantin's work, so little has brought me more joy
 than finding his [repo](https://github.com/constantinpape/heimdall) and reading
-his comment:
+this comment:
 
 > most of the credit goes to napari; it's so great to finally have a decent
 > python viewer.
