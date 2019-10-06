@@ -79,6 +79,8 @@ principles for our tool:
 - native 2D and 3D viewing; and
 - minimize new windows and pop-ups, choosing layering instead.
 
+In terms of speed, we knew it was doable, thanks to Martin Weigert's [spimagine](https://github.com/maweigert/spimagine).
+
 When choosing a name, after playing around with some terrible acronyms, we
 instead decided to continue the theme of Pacific islands begun by Fiji (though
 Fiji itself is a spectacular recursive acronym, “Fiji Is Just ImageJ”). With so
@@ -343,3 +345,5 @@ course, we encourage to you help the many open source projects we depend on,
 including NumPy, SciPy, IPython, ImageIO, scikit-image, QtPy, VisPy, and
 PyOpenGL. If you have OpenGL experience, VisPy in particular could use more
 contributors!
+
+# Acknowledgements
