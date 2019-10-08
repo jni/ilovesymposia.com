@@ -30,8 +30,8 @@ loading them into ITK-SNAP — which worked ok but required me to constantly be
 changing terminals, and anyway was pretty inefficient because my disk ended up
 cluttered with “temporary” VTK volumes.
 
-I tried a bunch of stuff since then, including Mayavi and even building my own
-orthogonal views viewer with Matplotlib (which was super slow), but nothing
+I tried a bunch of stuff after that time, including Mayavi and even building my
+own orthogonal views viewer with Matplotlib (which was super slow), but nothing
 really clicked. What's worse, I didn't see any movement on this — I even found
 a very discouraging thread on MNE-Python in which Gaël Varoquaux concluded,
 given the lack of support, that 3D visualisation was not mission critical to
@@ -45,7 +45,7 @@ chased, just because I wasn't looking at the data enough.
 # The beginning
 
 In the meantime though, I was busy improving support for n-dimensional images
-in scikit-image. In May last year, Nelle Varoquaux organised joint sprint with
+in scikit-image. In May last year, Nelle Varoquaux organised a joint sprint with
 developers from scikit-learn, scikit-image, and dask at UC Berkeley, and I was
 one of the lucky invitees. I'd recently seen that Loïc Royer, a good friend
 from my Janelia days, had moved to San Francisco to start his lab at the Chan
@@ -104,9 +104,10 @@ prototype that week. But starting a new lab from scratch is hard work, and he
 knew he would not have time to develop it further. He did, however, have some
 funds available for a summer intern, and after seeing the work she did that
 week, he offered it to Kira. (As a result, she is now officially a college
-dropout and software engineer at CZI, the Chan Zuckerberg Initiative.) That
-summer, under the guidance of Loïc, Stéfan van der Walt, and myself, Kira
-put together the first implementation of napari as you see it today.
+dropout and full-time software engineer at CZI, the Chan Zuckerberg
+Initiative.) That summer, under the guidance of Loïc, Stéfan van der Walt, and
+myself, Kira put together the first implementation of napari as you see it
+today.
 
 By late summer/early fall, although internally napari was quite a mess, as
 tends to happen in new, fast-growing projects, functionally it was already
@@ -158,7 +159,10 @@ datasets remained a challenge for them.
 So, we started gently expanding the user base, but in hushed tones, full of
 caveats: “This software we're working on might be useful for you… If you're
 brave and can work around all the missing functionality… Be sure to report any
-issues…” At SciPy 2019, Nick presented napari to the public for the first time,
+issues…” One of our most frequent requests, which was indeed part of the napari
+plan from the very beginning, was 3D volume rendering, and Pranathi Vemuri, a
+data scientist at the Biohub, implemented that just in time for SciPy 2019. At
+that conference, Nick presented napari to the public for the first time,
 because many SciPy attendees tend to not mind working with development versions
 of libraries. Indeed, we got contributions that week from Alex de Siqueira
 (from the scikit-image team) and Matthias Bussonnier (IPython).
@@ -211,7 +215,7 @@ So, what are those use cases?
 
 This is my most common use case. I like to think about and use 2D, 3D, and 4D
 images interchangeably. So, I often find myself calling `plt.imshow` on a 3D
-array and getting greeted by a `TypeError: Invalid dimensions for image data`,
+array and being greeted by a `TypeError: Invalid dimensions for image data`,
 *after* the figure window has popped up, which now stares back at me blank and
 forlorn. No more, with `napari.view_image`. By default, napari will display the
 last two dimensions of an array, and put in as many sliders as necessary for
@@ -227,8 +231,7 @@ from skimage import data, util
 
 
 blobs_raw = np.stack([
-    data.binary_blobs(length=64, n_dim=3, blob_size_fraction=0.05,
-                      volume_fraction=f)
+    data.binary_blobs(length=64, n_dim=3, volume_fraction=f)
     for f in np.linspace(0.05, 0.5, 10)
 ])
 
@@ -247,7 +250,7 @@ Now, I can look at the volume in napari. Thanks to VisPy and OpenGL, the
 performance of the canvas is just blazing fast:
 
 ```python
-viewer = napari.view_image(blobs)
+viewer = napari.view_image(blobs, name='blobs')
 ```
 
 [image]
@@ -265,9 +268,70 @@ would typically only look at one or two slices.
 
 ## 2. Overlaying computation results
 
+Now, we can try some denoising on the image. Since I know that much of the
+noise in this image is salt and pepper noise (randomly flipped bits), I can
+try an [opening]() followed by a [closing]() as a first step. Because the
+images along the 0th axis are independent, I don't want to denoise across them.
+We can make define a 3D (rather than 4D) neighbourhood as follows:
+
+```python
+from scipy import ndimage as ndi
+
+neighbors3d = ndi.generate_binary_structure(3, connectivity=1)
+neighbors = neighbors3d[np.newaxis, ...]
+
+opening, closing = map(tz.curry, [ndi.grey_opening, ndi.grey_closing])
+
+denoised = tz.pipe(
+    blobs,
+    opening(footprint=neighbors),
+    closing(footprint=neighbors)
+)
+```
+
+By default, napari will opaquely overlay one image over the next, with optional
+adjustment of the transparency. In this case, that makes it difficult to
+compare the results:
+
+```python
+denoised_layer = viewer.add_image(denoised, name='denoised')
+```
+
+Instead, we can change the *blending mode*, how different layers appear on top
+of each other, to "additive", and change the color of each layer so that
+overlaps become easy to spot. These values are also accessible from the
+`add_image` and `view_image` functions as keyword arguments.
+
+```python
+blobs_layer = viewer.layers['blobs']
+blobs_layer.blending = 'additive'
+blobs_layer.colormap = 'magenta'
+denoised_layer.blending = 'additive'
+denoised_layer.colormap = 'cyan'
+```
+
+[image]
+
+The denoised image looks much better! Now we can use some scikit-image and
+SciPy functions to threshold and label the blobs:
+
+```python
+from skimage import filters
+
+neighbors2 = np.concatenate(
+    (np.zeros_like(neighbors), neighbors, np.zeros_like(neighbors))
+)
+
+binary = filters.threshold_li(denoised) < denoised
+labels = ndi.label(binary, structure=neighbors2)[0]
+
+labels_layer = viewer.add_labels(labels, name='labeled', opacity=0.7)
+```
 
 ## 3. Annotating data
 
+Sometimes, it can be difficult to get an algorithm to exactly pick out what
+you want in an image. With the right tools, annotation can be extremely fast.
 
 ## 4. Viewing very large (dask) arrays
 
