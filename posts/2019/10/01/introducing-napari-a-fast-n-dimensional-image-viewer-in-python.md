@@ -363,6 +363,14 @@ fast, and just a little interaction can dramatically help automated algorithms.
 
 ## 4. Viewing very large (dask) arrays
 
+Thanks to John Kirkham's work, napari only loads the data that
+it needs to display. Therefore, virtual arrays such as Dask arrays, HDF5
+datasets, and zarr files can be loaded quickly and easily into napari, provided
+that the individual slices are small enough.
+
+Today's microscopes produce datasets ranging in the hundreds of GB to multiple
+TB in size. Berkeley's Gokul Upadhyayula has made his lattice light sheet data
+publicly available.
 (Gokul's LLSM)
 
 ## 5. Quickly looking at images
