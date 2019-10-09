@@ -79,7 +79,8 @@ principles for our tool:
 - native 2D and 3D viewing; and
 - minimize new windows and pop-ups, choosing layering instead.
 
-In terms of speed, we knew it was doable, thanks to Martin Weigert's [spimagine](https://github.com/maweigert/spimagine).
+In terms of speed, we knew it was doable, thanks to Martin Weigert's excellent
+3D volume viewer, [spimagine](https://github.com/maweigert/spimagine).
 
 When choosing a name, after playing around with some terrible acronyms, we
 instead decided to continue the theme of Pacific islands begun by Fiji (though
@@ -88,7 +89,7 @@ many to choose from, we needed a starting point, and we finally settled on the
 geographic midpoint between Loïc's base of San Francisco and mine of Melbourne.
 Of course that ends up being in the middle of the ocean, but not too far from
 that point is the tiny village of Napari, in the Republic of Kiribati. We
-both thought it had a nice ring to it, and the name stuck.
+thought it had a nice ring to it, and the name stuck.
 
 The next week, at the Berkeley sprint, I finally met Kira Evans, a contributor
 to scikit-image who had made several incredibly technical pull requests, on my
@@ -250,6 +251,8 @@ Now, I can look at the volume in napari. Thanks to VisPy and OpenGL, the
 performance of the canvas is just blazing fast:
 
 ```python
+import napari
+
 viewer = napari.view_image(blobs, name='blobs')
 ```
 
@@ -260,6 +263,14 @@ napari will change the number of displayed dimensions to 3, and remove one
 of the sliders:
 
 [image]
+
+(This can also be achieved programmatically by modifying the dimensionality
+model of the viewer as follows:
+
+```python
+viewer.dims.ndisplay = 3
+```
+)
 
 Napari lets you explore your data quickly, which can dramatically accelerate
 your work. Looking at these blobs slice by slice in matplotlib, for example, I
@@ -272,7 +283,7 @@ Now, we can try some denoising on the image. Since I know that much of the
 noise in this image is salt and pepper noise (randomly flipped bits), I can
 try an [opening]() followed by a [closing]() as a first step. Because the
 images along the 0th axis are independent, I don't want to denoise across them.
-We can make define a 3D (rather than 4D) neighbourhood as follows:
+We can define a 3D (rather than 4D) neighbourhood as follows:
 
 ```python
 from scipy import ndimage as ndi
@@ -291,16 +302,20 @@ denoised = tz.pipe(
 
 By default, napari will opaquely overlay one image over the next, with optional
 adjustment of the transparency. In this case, that makes it difficult to
-compare the results:
+compare the results, because both layers have very high black and white
+contrast.
 
 ```python
 denoised_layer = viewer.add_image(denoised, name='denoised')
 ```
 
+[image]
+
 Instead, we can change the *blending mode*, how different layers appear on top
 of each other, to "additive", and change the color of each layer so that
 overlaps become easy to spot. These values are also accessible from the
-`add_image` and `view_image` functions as keyword arguments.
+`add_image` and `view_image` functions as keyword arguments, as well as from
+the napari UI.
 
 ```python
 blobs_layer = viewer.layers['blobs']
@@ -310,14 +325,20 @@ denoised_layer.blending = 'additive'
 denoised_layer.colormap = 'cyan'
 ```
 
+Now, any bright pixels in the original image that are gone in the new image
+will be magenta, while bright pixels in the denoised image missing in the
+original will be cyan. White pixels are bright in both images.
+
 [image]
 
-The denoised image looks much better! Now we can use some scikit-image and
+The denoised image looks much better! We can see that a lot of the grain is
+removed in the denoised image. Now we can use some scikit-image and
 SciPy functions to threshold and label the blobs:
 
 ```python
 from skimage import filters
 
+# label needs a shape `(3,) * ndim` array
 neighbors2 = np.concatenate(
     (np.zeros_like(neighbors), neighbors, np.zeros_like(neighbors))
 )
@@ -328,10 +349,17 @@ labels = ndi.label(binary, structure=neighbors2)[0]
 labels_layer = viewer.add_labels(labels, name='labeled', opacity=0.7)
 ```
 
+[image]
+
+We can quickly visualise the data and observe a phase transition from mostly
+disconnected blobs to almost fully connected blobs as the volume fraction
+crosses ~0.3.
+
 ## 3. Annotating data
 
 Sometimes, it can be difficult to get an algorithm to exactly pick out what
-you want in an image. With the right tools, annotation can be extremely fast.
+you want in an image. With the right UI, however, annotation can be extremely
+fast, and just a little interaction can dramatically help automated algorithms.
 
 ## 4. Viewing very large (dask) arrays
 
