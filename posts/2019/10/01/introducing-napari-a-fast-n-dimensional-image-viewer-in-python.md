@@ -353,13 +353,46 @@ labels_layer = viewer.add_labels(labels, name='labeled', opacity=0.7)
 
 We can quickly visualise the data and observe a phase transition from mostly
 disconnected blobs to almost fully connected blobs as the volume fraction
-crosses ~0.3.
+crosses ~0.3. We might have missed this if only looking at one or two slices.
 
 ## 3. Annotating data
 
 Sometimes, it can be difficult to get an algorithm to exactly pick out what
 you want in an image. With the right UI, however, annotation can be extremely
 fast, and just a little interaction can dramatically help automated algorithms.
+
+```python
+from skimage import data
+from skimage import filters
+from skimage import segmentation
+
+import napari
+
+
+image = data.coins()
+
+viewer = napari.view_image(coins, name='coins')
+
+edges = filters.sobel(coins)
+
+edges_layer = viewer.add_image(edges, colormap='magenta', blending='additive')
+
+pts_layer = viewer.add_points()
+pts_layer.mode = 'add'
+# annotate the background and all the coins
+
+coordinates = pts_layer.data
+coordinates_int = np.round(coordinates).astype(int)
+
+markers = np.zeros_like(coins)
+markers[tuple(coordinates_int.T)] = 1 + np.arange(len(coordinates))
+
+segments = segmentation.watershed(edges, markers=markers)
+
+labels_layer = viewer.add_labels(segments - 1)  # make background 0
+```
+
+[image]
 
 ## 4. Viewing very large (dask) arrays
 
@@ -370,14 +403,34 @@ that the individual slices are small enough.
 
 Today's microscopes produce datasets ranging in the hundreds of GB to multiple
 TB in size. Berkeley's Gokul Upadhyayula has made his lattice light sheet data
-publicly available.
-(Gokul's LLSM)
+publicly available. Nick converted this to a
+[zarr file](https://zarr.readthedocs.io/en/stable/) for ease of access. 
+
+Now, we can use a dask array to view this 100GB array quickly and easily:
+
+```python
+from dask import array as da
+
+image = da.from_zarr('gokul-lls/aollsm-m4-560nm.zarr')
+
+viewer = napari.view_image(image, name='560nm', colormap='magma',
+                           contrast_limits=[0, 150_000])
+```
+
+[image]
 
 ## 5. Quickly looking at images
 
+When you `pip install napari`, you also get a command-line client that lets
+you quickly view image stacks. Here I quickly open a downsampled version of
+this [confocal dataset](https://figshare.com/articles/_/9985568) of
+drosophila ovarioles by Volker Hilsenstein and André Nogueira Alves:
+
 ```console
-napari image.tif
+napari ~/data/ovarioles/droso-ovarioles-downsampled.tif
 ```
+
+Or a data set of many images:
 
 ```console
 napari *.png
