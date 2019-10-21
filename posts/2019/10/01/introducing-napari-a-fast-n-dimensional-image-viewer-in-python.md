@@ -258,24 +258,34 @@ viewer = napari.view_image(blobs, name='blobs')
 
 [image]
 
+Napari lets you explore your data quickly, which can dramatically accelerate
+your work. Looking at these blobs slice by slice in matplotlib, for example, I
+might not immediately see that they increase in number along axis 0, because I
+would typically only look at one or two slices.
+
 If I want to see a 3D volume, for moderately sized arrays, one click suffices:
 napari will change the number of displayed dimensions to 3, and remove one
 of the sliders:
 
 [image]
 
-(This can also be achieved programmatically by modifying the dimensionality
-model of the viewer as follows:
+Binary images don't look too good with maximum intensity
+projection, so let's also look at a downsampled version of
+[this image](https://figshare.com/articles/_/9985568) from my colleagues,
+Volker Hilsentein and André Nogueira Alves. We can switch on the 3D viewing
+mode programmatically, and also add a "scale" argument for unequal spacing
+on the z axis compared to x and y:
 
 ```python
+from skimage import io
+
+# float32 image in 0-255
+image = io.imread('data/ovarioles/droso-ovarioles-downsampled.tif')
+
+viewer = napari.view_image(image.astype(np.uint8),
+                           name='ovarioles', scale=[2, 1, 1])
 viewer.dims.ndisplay = 3
 ```
-)
-
-Napari lets you explore your data quickly, which can dramatically accelerate
-your work. Looking at these blobs slice by slice in matplotlib, for example, I
-might not immediately see that they increase in number along axis 0, because I
-would typically only look at one or two slices.
 
 ## 2. Overlaying computation results
 
@@ -424,21 +434,53 @@ viewer = napari.view_image(image, name='560nm', colormap='magma',
 When you `pip install napari`, you also get a command-line client that lets
 you quickly view image stacks. Here I quickly open a downsampled version of
 this [confocal dataset](https://figshare.com/articles/_/9985568) of
-drosophila ovarioles by Volker Hilsenstein and André Nogueira Alves:
+drosophila ovarioles by Volker Hilsenstein and :
 
 ```console
 napari ~/data/ovarioles/droso-ovarioles-downsampled.tif
 ```
 
-Or a data set of many images:
+Or a data set of many images, such as the red blood cell spectrin network from
+my skeleton analysis paper:
 
 ```console
-napari *.png
+napari ~/data/schizonts/*.tif
 ```
 
 ## 6. Parameter sweeps
 
-https://gist.github.com/d-v-b/5dbdb7513d07e3360cbe5c0f3d5cacb6
+A hat tip to Davis Bennett at Janelia, who
+[came up](https://gist.github.com/d-v-b/5dbdb7513d07e3360cbe5c0f3d5cacb6)
+with this one. Suppose you want to manually find the best threshold for an
+image. Thanks to dask's lazy evaluation, you can attach a function call to a
+dimension slider, and use that slider to call the function with many
+different parameter choices.
+
+```python
+from skimage import data
+import dask
+
+
+coins = data.coins()
+
+def threshold(image, t):
+    arr = da.from_array(image, chunks=image.shape)
+    return arr > t
+
+all_thresholds = da.stack([threshold(coins, t) for t in np.arange(255)])
+
+napari.view_image(all_thresholds)
+```
+
+[animation: moving over thresholds]
+
+This is not just a cute demo. I actually
+[used this](https://github.com/scikit-image/scikit-image/issues/4194#issuecomment-537420178)
+recently when investigating a bug in scikit-image. By varying the threshold
+for h-minima, I could see detections blinking in and out of existence, even
+though they are supposed to only decrease as the parameter value is increased.
+
+[animation: blinking h-maxima]
 
 ## 7. More!
 
@@ -500,3 +542,5 @@ PyOpenGL. If you have OpenGL experience, VisPy in particular could use more
 contributors!
 
 # Acknowledgements
+
+
