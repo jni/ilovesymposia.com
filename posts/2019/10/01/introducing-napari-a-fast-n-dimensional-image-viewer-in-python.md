@@ -222,39 +222,45 @@ forlorn. No more, with `napari.view_image`. By default, napari will display the
 last two dimensions of an array, and put in as many sliders as necessary for
 the remaining dimensions.
 
-To illustrate, I'll make a synthetic 4D array of blobs using scikit-image's
-`binary_blobs` function:
+To illustrate, I'll create a syntethic 4D array of blobs using scikit-image's
+`binary_blobs` function.
 
 ```python
 import numpy as np
-import toolz as tz
-from skimage import data, util
+from skimage import data, filters
 
 
 blobs_raw = np.stack([
-    data.binary_blobs(length=64, n_dim=3, volume_fraction=f)
+    data.binary_blobs(length=256, n_dim=3, volume_fraction=f)
     for f in np.linspace(0.05, 0.5, 10)
 ])
 
-add_noise = tz.curry(util.random_noise)
-blobs = tz.pipe(
-    blobs_raw,
-    add_noise(mode='s&p'),
-    add_noise(mode='gaussian'),
-    add_noise(mode='poisson')
-)
-
+blobs = filters.gaussian(blobs_raw, sigma=(0, 2, 2, 2))
 print(blobs.shape)
 ```
+```
+(10, 256, 256, 256)
+```
 
-Now, I can look at the volume in napari. Thanks to VisPy and OpenGL, the
-performance of the canvas is just blazing fast:
+Now, we can look at the volume in napari:
 
 ```python
-import napari
-
-viewer = napari.view_image(blobs, name='blobs')
+viewer = napari.view_image(blobs)
 ```
+
+[image]
+
+The gif doesn't show it, but thanks to VisPy and OpenGL, the canvas is just
+blazing fast, and a joy to navigate.
+
+Using napari, we can immediately see that the blobs grow dramatically along
+the leading axis. With my previous matplotlib workflow, I might have missed
+that, as I would only look at one or two slices before continuing my workflow
+in whatever preconceived direction I'd chosen.
+
+We can click on the little cube icon to switch to a 3D view (or type
+`viewer.dims.ndisplay = 3` in our IPython terminal). Napari will remove
+one of the sliders, and display a maximum intensity projection of the volume.
 
 [image]
 
@@ -269,10 +275,41 @@ of the sliders:
 
 [image]
 
+White blobs turn out not to look great in maximum intensity, so let's look at
+the 3D view with the famous
+[mitosis dataset](http://fiji.sc/downloads/Spindly-GFP.zip) from Fiji's sample
+data (which I think comes from
+[this paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2064361/) by Griffis,
+Stuurman and Vale, but I'm not sure...):
+
+```python
+from skimage import io
+
+mitosis = io.imread('mitosis.tif')  # make sure your working directory is right
+print(mitosis.shape)
+```
+```
+(51, 5, 2, 196, 171)
+```
+
+Those axes are time, z, channels, y, and x (TZCYX).
+
+```python
+import napari
+
+viewer = napari.view_image(mitosis, name='mitosis')
+```
+
+[image]
+
+You can see the last two dimensions displayed, then sliders for the remaining
+dimensions. The sliders are proportionally sized to the number of slices along
+each axis, making it easy to figure out which axis is what. (This was one of
+Lia's recommendations that Nick implemented.) (And yes, labeled axes are in
+our roadmap!)
+
 Binary images don't look too good with maximum intensity
-projection, so let's also look at a downsampled version of
-[this image](https://figshare.com/articles/_/9985568) from my colleagues,
-Volker Hilsentein and André Nogueira Alves. We can switch on the 3D viewing
+projection,  We can switch on the 3D viewing
 mode programmatically, and also add a "scale" argument for unequal spacing
 on the z axis compared to x and y:
 
@@ -375,11 +412,12 @@ fast, and just a little interaction can dramatically help automated algorithms.
 from skimage import data
 from skimage import filters
 from skimage import segmentation
+from skimage import morphology
 
 import napari
 
 
-image = data.coins()
+coins = data.coins()
 
 viewer = napari.view_image(coins, name='coins')
 
@@ -394,8 +432,10 @@ pts_layer.mode = 'add'
 coordinates = pts_layer.data
 coordinates_int = np.round(coordinates).astype(int)
 
-markers = np.zeros_like(coins)
-markers[tuple(coordinates_int.T)] = 1 + np.arange(len(coordinates))
+markers_raw = np.zeros_like(coins)
+markers_raw[tuple(coordinates_int.T)] = 1 + np.arange(len(coordinates))
+# raw markers might be in a little watershed "well".
+markers = morphology.dilation(markers_raw, morphology.disk(5))
 
 segments = segmentation.watershed(edges, markers=markers)
 
@@ -419,9 +459,12 @@ publicly available. Nick converted this to a
 Now, we can use a dask array to view this 100GB array quickly and easily:
 
 ```python
+import os
 from dask import array as da
 
-image = da.from_zarr('gokul-lls/aollsm-m4-560nm.zarr')
+image = da.from_zarr(
+    os.path.expanduser('~/data/gokul-lls/aollsm-m4-560nm.zarr')
+)
 
 viewer = napari.view_image(image, name='560nm', colormap='magma',
                            contrast_limits=[0, 150_000])
@@ -432,16 +475,26 @@ viewer = napari.view_image(image, name='560nm', colormap='magma',
 ## 5. Quickly looking at images
 
 When you `pip install napari`, you also get a command-line client that lets
-you quickly view image stacks. Here I quickly open a downsampled version of
-this [confocal dataset](https://figshare.com/articles/_/9985568) of
-drosophila ovarioles by Volker Hilsenstein and :
+you quickly view image stacks. Here is a downsampled, isotropic version of
+[this image](https://figshare.com/articles/_/9985568) from my colleagues,
+Volker Hilsentein and André Nogueira Alves:
 
 ```console
-napari ~/data/ovarioles/droso-ovarioles-downsampled.tif
+napari ~/data/ovarioles/droso-ovarioles-isotropic.tif
+```
+
+[image]
+
+Or the [4D C. elegans embryo](https://samples.scif.io/EmbryoCE.zip) from the
+[scif.io example images](https://scif.io/images/) (unzipping gives a folder of
+images):
+
+```console
+napari ~/data/EmbryoCE
 ```
 
 Or a data set of many images, such as the red blood cell spectrin network from
-my skeleton analysis paper:
+my [skeleton analysis paper](https://peerj.com/articles/4312/):
 
 ```console
 napari ~/data/schizonts/*.tif
@@ -478,7 +531,9 @@ This is not just a cute demo. I actually
 [used this](https://github.com/scikit-image/scikit-image/issues/4194#issuecomment-537420178)
 recently when investigating a bug in scikit-image. By varying the threshold
 for h-minima, I could see detections blinking in and out of existence, even
-though they are supposed to only decrease as the parameter value is increased.
+though they are supposed to only decrease as the parameter value is increased,
+thus confirming that there is a bug in the scikit-image implementation of
+h-maxima!
 
 [animation: blinking h-maxima]
 
@@ -516,11 +571,11 @@ We are doing this in
 developers of [ImJoy](https://imjoy.io/) to make our plugins cross-compatible.
 
 In addition to applying functions and seeing the outputs (what ImJoy's Wei
-Ouyang refers to as *functional* plugins), we see napari as a base for more
+Ouyang refers to as *functional* plugins), we see napari as a basis for more
 complex interactivity, such as closed-loop learning in the style of
 [Ilastik](https://www.ilastik.org/), skeleton tracing, 3D annotation, and more.
-Indeed, we already provide a framework to add or modify keyboard shortcuts, and
-are working on another to modify mouse interactivity.
+Indeed, we already provide a framework to add or modify keyboard shortcuts or
+mouse interactivity.
 
 Finally, we want to use Python's powerful introspection capabilities to make
 every action recordable as valid Python. Someone once asked me whether we would
@@ -533,13 +588,12 @@ contributors.
 # Join us!
 
 In a little over a year, napari has grown beyond what I thought possible. But
-we still have [a lot of work to do!](https://github.com/napari/napari/issues)
-In addition to our [issues list](https://github.com/napari/napari/issues), we
-have an [open roadmap](https://github.com/napari/napari/issues/420). And of
-course, we encourage to you help the many open source projects we depend on,
-including NumPy, SciPy, IPython, ImageIO, scikit-image, QtPy, VisPy, and
-PyOpenGL. If you have OpenGL experience, VisPy in particular could use more
-contributors!
+we still have a lot of work to do!  In addition to our [issues
+list](https://github.com/napari/napari/issues), we have an [open
+roadmap](https://github.com/napari/napari/issues/420). And of course, we
+encourage to you help the many open source projects we depend on, including
+NumPy, SciPy, IPython, ImageIO, scikit-image, QtPy, VisPy, and PyOpenGL. If you
+have OpenGL experience, VisPy in particular could use more contributors!
 
 # Acknowledgements
 
