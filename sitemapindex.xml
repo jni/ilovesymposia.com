@@ -91,7 +91,7 @@
  </sitemap>
  <sitemap>
   <loc>https://ilovesymposia.com/categories/fiji.xml</loc>
-  <lastmod>2019-05-01T09:57:00Z</lastmod>
+  <lastmod>2019-10-24T15:21:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://ilovesymposia.com/categories/gadgets.xml</loc>
@@ -186,12 +186,20 @@
   <lastmod>2019-05-01T09:57:00Z</lastmod>
  </sitemap>
  <sitemap>
+  <loc>https://ilovesymposia.com/categories/napari.xml</loc>
+  <lastmod>2019-10-24T15:21:00Z</lastmod>
+ </sitemap>
+ <sitemap>
   <loc>https://ilovesymposia.com/categories/neuroscience.xml</loc>
   <lastmod>2019-05-01T09:57:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://ilovesymposia.com/categories/numba.xml</loc>
   <lastmod>2019-05-28T10:34:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://ilovesymposia.com/categories/numpy.xml</loc>
+  <lastmod>2019-10-24T15:21:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://ilovesymposia.com/categories/object-oriented-design.xml</loc>
@@ -235,7 +243,7 @@
  </sitemap>
  <sitemap>
   <loc>https://ilovesymposia.com/categories/planet-scipy.xml</loc>
-  <lastmod>2019-05-28T10:34:00Z</lastmod>
+  <lastmod>2019-10-24T15:21:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://ilovesymposia.com/categories/plos.xml</loc>
@@ -247,7 +255,7 @@
  </sitemap>
  <sitemap>
   <loc>https://ilovesymposia.com/categories/programming.xml</loc>
-  <lastmod>2019-05-28T10:34:00Z</lastmod>
+  <lastmod>2019-10-24T15:21:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://ilovesymposia.com/categories/proprietary-software.xml</loc>
@@ -267,7 +275,7 @@
  </sitemap>
  <sitemap>
   <loc>https://ilovesymposia.com/categories/python.xml</loc>
-  <lastmod>2019-05-28T10:34:00Z</lastmod>
+  <lastmod>2019-10-24T15:21:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://ilovesymposia.com/categories/quicksilver.xml</loc>
@@ -295,7 +303,7 @@
  </sitemap>
  <sitemap>
   <loc>https://ilovesymposia.com/categories/scipy.xml</loc>
-  <lastmod>2019-05-28T10:34:00Z</lastmod>
+  <lastmod>2019-10-24T15:21:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://ilovesymposia.com/categories/search.xml</loc>
@@ -311,7 +319,7 @@
  </sitemap>
  <sitemap>
   <loc>https://ilovesymposia.com/categories/software.xml</loc>
-  <lastmod>2019-05-28T10:34:00Z</lastmod>
+  <lastmod>2019-10-24T15:21:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://ilovesymposia.com/categories/statistics.xml</loc>
@@ -379,10 +387,10 @@
  </sitemap>
  <sitemap>
   <loc>https://ilovesymposia.com/rss.xml</loc>
-  <lastmod>2019-05-28T10:34:00Z</lastmod>
+  <lastmod>2019-10-24T15:21:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://ilovesymposia.com/sitemap.xml</loc>
-  <lastmod>2019-05-28T10:34:00Z</lastmod>
+  <lastmod>2019-10-24T15:21:00Z</lastmod>
  </sitemap>
 </sitemapindex>

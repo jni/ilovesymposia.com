@@ -7,7 +7,7 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
   <loc>https://ilovesymposia.com/</loc>
-  <lastmod>2019-05-03T08:13:00Z</lastmod>
+  <lastmod>2019-10-24T13:42:00Z</lastmod>
  </url>
  <url>
   <loc>https://ilovesymposia.com/2008/05/21/a-fantastic-neuroscience-talk-by-jeff-hawkins/</loc>
@@ -274,6 +274,14 @@
   <lastmod>2019-05-28T08:44:00Z</lastmod>
  </url>
  <url>
+  <loc>https://ilovesymposia.com/2019/10/01/introducing-napari-a-fast-n-dimensional-image-viewer-in-python/</loc>
+  <lastmod>2019-10-24T13:42:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://ilovesymposia.com/2019/10/24/introducing-napari-a-fast-n-dimensional-image-viewer-in-python/</loc>
+  <lastmod>2019-10-24T15:21:00Z</lastmod>
+ </url>
+ <url>
   <loc>https://ilovesymposia.com/about-the-author/</loc>
   <lastmod>2019-05-01T09:54:00Z</lastmod>
  </url>
@@ -283,11 +291,11 @@
  </url>
  <url>
   <loc>https://ilovesymposia.com/archive.html</loc>
-  <lastmod>2019-05-28T10:34:00Z</lastmod>
+  <lastmod>2019-10-24T15:21:00Z</lastmod>
  </url>
  <url>
   <loc>https://ilovesymposia.com/categories/</loc>
-  <lastmod>2019-03-14T04:38:00Z</lastmod>
+  <lastmod>2019-10-24T15:21:00Z</lastmod>
  </url>
  <url>
   <loc>https://ilovesymposia.com/categories/biology/</loc>
@@ -470,12 +478,20 @@
   <lastmod>2019-03-14T04:38:00Z</lastmod>
  </url>
  <url>
+  <loc>https://ilovesymposia.com/categories/napari/</loc>
+  <lastmod>2019-10-24T15:21:00Z</lastmod>
+ </url>
+ <url>
   <loc>https://ilovesymposia.com/categories/neuroscience/</loc>
   <lastmod>2019-03-14T04:38:00Z</lastmod>
  </url>
  <url>
   <loc>https://ilovesymposia.com/categories/numba/</loc>
   <lastmod>2019-03-14T04:38:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://ilovesymposia.com/categories/numpy/</loc>
+  <lastmod>2019-10-24T15:21:00Z</lastmod>
  </url>
  <url>
   <loc>https://ilovesymposia.com/categories/object-oriented-design/</loc>
@@ -683,7 +699,7 @@
  </url>
  <url>
   <loc>https://ilovesymposia.com/index-6.html</loc>
-  <lastmod>2019-05-28T10:34:00Z</lastmod>
+  <lastmod>2019-10-24T13:43:00Z</lastmod>
  </url>
  <url>
   <loc>https://ilovesymposia.com/pages/about-me/</loc>

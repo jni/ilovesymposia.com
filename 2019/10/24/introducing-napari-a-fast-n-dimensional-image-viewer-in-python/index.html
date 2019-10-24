@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html prefix="" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Introducing napari: a fast n-dimensional image viewer in Python | I Love Symposia!</title>
+<link href="../../../../assets/css/all.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../../../rss.xml">
+<link rel="canonical" href="https://ilovesymposia.com/2019/10/24/introducing-napari-a-fast-n-dimensional-image-viewer-in-python/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+    },
+    displayAlign: 'center', // Change this to 'left' if you want left-aligned equations.
+    "HTML-CSS": {
+        styles: {'.MathJax_Display': {"margin": 0}}
+    }
+});
+</script><!--[if lt IE 9]><script src="../../../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Juan Nunez-Iglesias">
+<link rel="prev" href="../../../05/28/why-citations-are-not-enough-for-open-source-software/" title="Why citations are not enough for open source software" type="text/html">
+<meta property="og:site_name" content="I Love Symposia!">
+<meta property="og:title" content="Introducing napari: a fast n-dimensional image viewer in Python">
+<meta property="og:url" content="https://ilovesymposia.com/2019/10/24/introducing-napari-a-fast-n-dimensional-image-viewer-in-python/">
+<meta property="og:description" content="I'm really excited to finally, officially, share a new(ish) project called
+napari with the world.
+We have been developing napari in the open
+from the very first commit, but we didn't want to make any ">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2019-10-24T23:59:54+10:00">
+<meta property="article:tag" content="Fiji">
+<meta property="article:tag" content="napari">
+<meta property="article:tag" content="NumPy">
+<meta property="article:tag" content="Planet SciPy">
+<meta property="article:tag" content="programming">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="SciPy">
+<meta property="article:tag" content="software">
+</head>
+<body>
+    <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+            styles, `#sidebar-checkbox` for behavior. -->
+    <input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox"><!-- Toggleable sidebar --><div class="sidebar" id="sidebar">
+        <div class="sidebar-item">
+            <p>
+            A blog about Python, science, and the odd random thing I care enough about.
+            </p>
+            <p>
+            Theme modified from <a href="https://themes.getnikola.com/v7/lanyon/">Lanyon</a>.
+            Created by <a href="https://twitter.com/mdo" target="_blank">@mdo</a> for Jekyll,
+            ported to <a href="https://getnikola.com">Nikola</a> by
+            <a href="https://twitter.com/ralsina" target="_blank">@ralsina</a>.
+            </p>
+        </div>
+        
+    <nav id="menu" role="navigation" class="sidebar-nav"><a class="sidebar-nav-item" href="../../../../archive.html">Archives</a>
+        <a class="sidebar-nav-item" href="../../../../categories/index.html">Tags</a>
+        <a class="sidebar-nav-item" href="../../../../rss.xml">RSS feed</a>
+    
+    
+    </nav>
+</div>
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          
+    <h3 id="brand" class="masthead-title">
+      <a href="https://ilovesymposia.com/" title="I Love Symposia!" rel="home">I Love Symposia!</a>
+    </h3>
+
+        </div>
+      </div>
+
+      <div class="container content" id="content">
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="post-title p-name entry-title" itemprop="headline name"><a href="." class="u-url">Introducing napari: a fast n-dimensional image viewer in Python</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">Juan Nunez-Iglesias</span></p>
+            <p class="dateline"><a href="." rel="bookmark"><time class="post-date published dt-published" datetime="2019-10-24T23:59:54+10:00" itemprop="datePublished" title="2019-10-24 23:59">2019-10-24 23:59</time></a></p>
+                <p class="commentline">
+        
+    <a href="#disqus_thread" data-disqus-identifier="cache/posts/2019/10/24/introducing-napari-a-fast-n-dimensional-image-viewer-in-python.html">Comments</a>
+
+
+        </p>
+</div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>I'm really excited to finally, officially, share a new(ish) project called
+napari with the world.
+We have been developing napari <a href="https://github.com/napari/napari">in the open</a>
+from the very first commit, but we didn't want to make any premature fanfare
+about it… Until now. It's still alpha software, but for months now, both the
+core napari team and a few collaborators/early adopters have been using napari
+in our daily work. I've found it life-changing.</p>
+<h2>The background</h2>
+<p>I've been looking for a great nD volume viewer in Python for the better part of
+a decade. In 2009, I joined Mitya Chklovskii's lab and the FlyEM team at the
+Janelia [Farm] Research Campus to work on the segmentation of 3D electron
+microscopy (EM) volumes. I started out in Matlab, but moved to Python pretty
+quickly and it was a very smooth transition (highly recommended! ;). Looking at
+my data was always annoying though. I was either looking at single 2D slices
+using <code>matplotlib.pyplot.imshow</code>, or saving the volumes in VTK format and
+loading them into ITK-SNAP — which worked ok but required me to constantly be
+changing terminals, and anyway was pretty inefficient because my disk ended up
+cluttered with “temporary” VTK volumes.</p>
+<p>I tried a bunch of things after that time, including Mayavi and even building my
+own orthogonal views viewer with Matplotlib (which was super slow), but nothing
+really clicked. What's worse, I didn't see any movement on this — I even found
+a very discouraging thread on MNE-Python in which Gaël Varoquaux concluded,
+given the lack of support, that 3D visualisation was not mission critical to
+anyone and not worth pursuing further. (!) Throughout that time, I kept living
+with either manually picking out 2D slices, or going back to tools outside of
+Python, with all the context switching that entailed. The end result is
+that I was looking at my data far less than I should have been, which slowed
+down my work. I can't count the number of silly mistakes I made and dead ends I
+chased, just because I wasn't looking at the data enough.</p>
+<h2>The beginning</h2>
+<p>In the meantime though, I was busy improving support for n-dimensional images
+in scikit-image. In May last year, Nelle Varoquaux organised a joint sprint with
+developers from scikit-learn, scikit-image, and dask at UC Berkeley, and I was
+one of the lucky invitees. I'd recently seen that Loïc Royer, a good friend
+from my Janelia days, had moved to San Francisco to start his lab at the Chan
+Zuckerberg Biohub, so I asked him if I could crash at his place for a few days
+before the sprint.</p>
+<p>I knew Loïc as a Java guy. In Janelia he'd repeatedly extolled the virtues of
+Java to me, and since then he'd worked on some incredible Java software,
+including ClearVolume, a super-fast 3D viewer, and ClearControl, a super-fast
+microscope control library (you might detect a theme there ;).  In fact,
+although I love Python and its ecosystem and what we've built with
+scikit-image, I've always been intimidated by Fiji and its ecosystem and its
+<del>10,000</del> 15,000 citations. Was I deluding myself that Python was important in
+biology?</p>
+<p>So I was both shocked and delighted when Loïc casually mentioned that he needed
+a fast nD viewer in Python, and that we should build it together. Loïc had been
+pushing the state of the art of deep learning in microscopy (and continues to
+do so), and, despite the hard work of many to integrate Fiji with the major
+deep learning learning libraries (which are Python), as well as the wider
+scientific Python ecosystem, it remains challenging to use both together. It
+might well remain so, because the build, installation, and dependency tooling
+is so disparate between the two communities.  And so that evening, in Loïc's
+apartment, napari (lowercase n) was born (though it did not yet have a name).</p>
+<figure><img src="../../../../napari/loic-walking-sf.jpg" alt="Loïc walking SF" style="width:100%"><figcaption>*Loïc walking around San Francisco the weekend after I landed.*</figcaption></figure><p>Following on from his work on ClearVolume, Loïc and I agreed on some founding
+design principles for our tool:</p>
+<ul>
+<li>n-dimensional first;</li>
+<li>native (neither of us likes opening a browser to work);</li>
+<li>blazing fast (GPU-powered);</li>
+<li>native 2D and 3D viewing; and</li>
+<li>minimal new windows and pop-ups, choosing layering instead.</li>
+</ul>
+<p>In terms of speed, we knew it was doable, thanks to Martin Weigert's excellent
+3D volume viewer, <a href="https://github.com/maweigert/spimagine">spimagine</a>.</p>
+<p>The next week, at the Berkeley sprint, I finally met Kira Evans, a contributor
+to scikit-image who had made several incredibly technical pull requests, on my
+favourite topic of extending n-dimensional support, and whom I'd thus asked
+Nelle to invite to the sprint. She had turned out to be a freshman at
+Northeastern University, but despite her age she was already doing great things
+in open source. In general, life is a big accumulation of small decisions you
+don't even think about. On certain rare occasions, though, you make decisions
+on which you look back and think, hot damn that was a good decision! Inviting
+Kira is one of those for me. (Nelle agreed.)</p>
+<figure><img src="../../../../napari/kira-john-emma-me-dask.jpg" alt="John explains dask-image" style="width:100%"><figcaption>*John Kirkham explains dask-image to Kira, Emmanuelle Gouillart, and me at the Berkeley sprint.*</figcaption></figure><p>That week at the sprint, Loïc was able to hack out a quick prototype.
+Meanwhile, Kira was busy helping scikit-image with n-dimensional rotations,
+LowLevelCallables in C and Cython, and various other crazy things.</p>
+<p>I'll take a short moment to acknowledge <a href="http://vispy.org">VisPy</a>, which is the
+basis for all of napari's visualisation: napari's canvas is a VisPy canvas, its
+events are VisPy events, and its visual building blocks are VisPy Visuals. I
+don't know the history of VisPy, but I want to thank all its
+<a href="https://github.com/vispy/vispy/graphs/contributors">contributors</a>, especially
+Almar Klein, who drove it for a very long time, and David Hoese, who
+resurrected it when Almar could no longer maintain it, and who maintains
+it today. VisPy is yet another example of open source software being
+<a href="https://ilovesymposia.com/2019/05/28/why-citations-are-not-enough-for-open-source-software/">inadequately supported by academia</a>.</p>
+<p>The next weekend, on the Caltrain to the <a href="https://computerhistory.org/">Computing History
+Museum</a>, we worked on choosing a name.
+After playing around with some terrible acronyms, we
+decided to continue the theme of Pacific islands begun by Fiji (though
+Fiji itself is a spectacular recursive acronym, “Fiji Is Just ImageJ”).
+We needed a starting point, and we settled on the
+geographic midpoint between Loïc's base of San Francisco and mine of Melbourne.
+That's in the middle of the ocean, of course, but not too far from
+the tiny village of Napari, in the Republic of Kiribati. We
+thought it had a nice ring to it, and the name stuck.</p>
+<p>There was a big risk of napari never getting off the ground. Starting a new lab
+is hard work, and Loïc
+knew he would not have time to develop it further. He did, however, have some
+funds available for a summer intern, and after seeing the work Kira did that
+week, he offered her the internship. (As a result, Kira is now officially a
+college dropout and full-time software engineer at CZI, the Chan Zuckerberg
+Initiative.) That summer, under the guidance of Loïc, Stéfan van der Walt, and
+myself, Kira put together the first implementation of napari as you see it
+today.</p>
+<p>By late summer/early fall, although internally napari was quite a mess, as
+tends to happen in new, fast-growing projects, functionally it was already
+impressive enough that Jeremy Freeman and Nick Sofroniew, from CZI's
+Computational Biology division, started paying close attention. Nick, who'd
+had similar experiences to mine working with Python and nD images, fell in
+love with it, and literally could not wait for us to move it forward. He took
+matters into his own hands.</p>
+<p>Initially, Nick brought some brilliant management to napari, instituting weekly
+meetings that he drove (and continues to drive) like a champion. Those meetings
+were critical to bringing others into the loop, including Ahmet Can Solak, Kevin
+Yamauchi, Bryant Chunn, and Shannon Axelrod, who started to make pull requests
+to improve napari.  Pretty soon, though, Nick made his own pull request, and
+after that it was like seeing a racecar take off.  No one has done more for
+napari than Nick, and Loïc and I owe him an enormous debt of gratitude.</p>
+<p>Soon after that, the <a href="https://github.com/spacetx/starfish">StarFISH team</a> at
+CZI adopted napari as their main image viewer, which again helped us
+discover bugs, improve our UI, and add features. By February, everyone in the
+project was using it regularly, despite its warts. We started to think about
+broadening the group of people with eyes on napari.</p>
+<p>CZI was organising a meeting for grantees of its <a href="https://go.chanzuckerberg.com/imaging">Imaging
+Scientists</a> and <a href="https://go.chanzuckerberg.com/imaging#imaging-software-fellows">Imaging Software
+Fellows</a>
+programs in March, which we thought would be a good opportunity to grow the
+team. Among others, we invited John Kirkham (NVIDIA), Eric Perlman (then at
+Johns Hopkins, now freelancing). The CZI meeting was a dramatic demonstration of the power of
+bringing together people with complementary experience, as John added support
+for viewing bigger-than-RAM <a href="https://docs.dask.org/en/stable/array.html">dask
+arrays</a> in about 20 minutes flat,
+and Eric massively improved the performance of our segmentation visualisation
+layer.</p>
+<figure><img src="../../../../napari/loic-napari-master-class.jpg" alt="Loïc explains napari" style="width:100%"><figcaption>*Loïc explaining napari's design to John Kirkham and Wei Ouyang at the Chan Zuckerberg Biohub the day after the CZI meeting.*</figcaption></figure><p>I came out of the March meeting thinking hey, this napari thing might have legs!
+Not only had newcomers been able to improve it quickly without knowing
+the codebase (which usually points to at least <em>decent</em> design), but we heard
+over and over from the imaging scientists that viewing and annotating large
+datasets remained a challenge for them.</p>
+<p>So, we started gently expanding the user base, but in hushed tones, full of
+caveats: “This software we're working on might be useful for you… If you're
+brave and can work around all the missing functionality… Be sure to report any
+issues…” One of our most frequent requests, which was indeed part of the napari
+plan from the very beginning, was 3D volume rendering, and Pranathi Vemuri, a
+data scientist at the Biohub, implemented that just in time for SciPy 2019. At
+that conference, Nick presented napari to the public for the first time,
+because many SciPy attendees tend to not mind working with development versions
+of libraries. Indeed, we got contributions that week from Alex de Siqueira
+(from the scikit-image team) and Matthias Bussonnier (IPython).</p>
+<p>The biggest revelation for me, though, came immediately after SciPy, when I
+went to Jackson Lab to teach a workshop on scikit-image. I've taught
+scikit-image many times before, but for the first time, I went off-script and
+analysed new data live, on IPython, rather than using Jupyter notebooks
+pre-populated with toy data. I used napari instead of matplotlib, and found
+napari's layers model <em>insanely</em> useful to visualise every step of the
+analysis, one on top of the other, toggling their visibility on and off to
+compare them. And it was super easy to add interactivity to the mix, clicking
+on some points in napari, then grabbing those points to use as watershed seeds,
+and popping the resulting segmentation as another layer to napari.</p>
+<figure><img src="../../../../napari/napari-annotated-coins.png" alt="Annotated Coins" style="width:100%"><figcaption>*Combining interactive annotation and segmentation algorithms with napari.*</figcaption></figure><p>In the months since then, we've spent a lot of time improving the code, and
+polishing the little edge cases, like making sure the coordinates reported by
+the cursor are pixel perfect, merging the previously separate Image (2D) and
+Volume (3D) layers, and extending 3D and multi-resolution support to all
+layers.</p>
+<p>Thanks to CZI's massive in-house investment in open source, we also actually
+got an <a href="https://github.com/napari/napari/issues/469">audit</a> for napari's GUI
+from Lia Prins, a UX designer at CZI — an incredible opportunity that few
+academic projects get. And, to repeat a familiar pattern, Nick immediately got
+to work and implemented a bunch of fixes from the audit. To me, this update is
+what's most pushed me to write this post, as the UI now feels more like a
+coherent whole than the mishmash of features that results from organic growth
+of a project.</p>
+<h2>napari now</h2>
+<p>As I mentioned at the start, currently, everyone on the team uses napari on a
+daily basis for their own work. Our workflows actually look quite
+different, yet napari meets the needs of all of them, in some form or another.
+Last month we were surprised to find that Constantin Pape, at EMBL, was
+developing his own viewer, Heimdall, on top of napari, completely independently
+from us. I'm a big fan of Constantin's work, so little has brought me more joy
+than finding his <a href="https://github.com/constantinpape/heimdall">repo</a> and reading
+this comment:</p>
+<blockquote>
+<p>most of the credit goes to napari; it's so great to finally have a decent
+python viewer.</p>
+</blockquote>
+<p>So, what are those use cases?</p>
+<h3>1. Just <em>looking</em> at NumPy ndarrays quickly</h3>
+<p>This is my most common use case. I like to think about and use 2D, 3D, and 4D
+images interchangeably. So, I often find myself calling <code>plt.imshow</code> on a 3D
+array and being greeted by a <code>TypeError: Invalid dimensions for image data</code>,
+<em>after</em> the figure window has popped up, which now stares back at me blank and
+forlorn. No more, with <code>napari.view_image</code>. By default, napari will display the
+last two dimensions of an array, and put in as many sliders as necessary for
+the remaining dimensions.</p>
+<p>To illustrate, I'll create a syntethic 4D array of blobs using scikit-image's
+<code>binary_blobs</code> function.</p>
+<pre class="code literal-block"><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">skimage</span> <span class="kn">import</span> <span class="n">data</span><span class="p">,</span> <span class="n">filters</span>
+
+
+<span class="n">blobs_raw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">binary_blobs</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">n_dim</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">volume_fraction</span><span class="o">=</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="n">blobs</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">gaussian</span><span class="p">(</span><span class="n">blobs_raw</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">blobs</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre>
+
+
+<pre class="code literal-block"><span></span>(10, 256, 256, 256)
+</pre>
+
+
+<p>Now we can look at the volume in napari:</p>
+<pre class="code literal-block"><span></span><span class="n">viewer</span> <span class="o">=</span> <span class="n">napari</span><span class="o">.</span><span class="n">view_image</span><span class="p">(</span><span class="n">blobs</span><span class="p">)</span>
+</pre>
+
+
+<video width="90%" controls autoplay loop muted playsinline><source src="../../../../napari/napari-blobs-720p.mp4" type="video/mp4"></source><source src="../../../../napari/napari-blobs-720p.ogg" type="video/ogg"></source><img src="../../../../napari/napari-blobs-720p-frame.jpg" title="Your browser does not support the video tag."></video><p>Thanks to VisPy and OpenGL, the canvas is just
+blazing fast, and a joy to navigate.</p>
+<p>Using napari, we can immediately see that the blobs grow dramatically along
+the leading axis. With my previous matplotlib workflow, I might have missed
+that, as I would only look at one or two slices before continuing my workflow
+in whatever preconceived direction I'd chosen.</p>
+<p>We can click on the little cube icon to switch to a 3D view (or type
+<code>viewer.dims.ndisplay = 3</code> in our IPython terminal). Napari will remove
+one of the sliders, and display a maximum intensity projection of the volume.</p>
+<video width="90%" controls autoplay loop muted playsinline><source src="../../../../napari/napari-blobs-3d-720p.mp4" type="video/mp4"></source><source src="../../../../napari/napari-blobs-3d-720p.ogg" type="video/ogg"></source><img src="../../../../napari/napari-blobs-3d-720p-frame.jpg" title="Your browser does not support the video tag."></video><p>White blobs turn out to not look so great in maximum intensity, so let's look
+at the 3D view with the famous
+<a href="http://fiji.sc/downloads/Spindly-GFP.zip">mitosis dataset</a> from Fiji's sample
+data (which I think comes from
+<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2064361/">this paper</a> by Griffis,
+Stuurman and Vale, but I'm not sure...):</p>
+<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">skimage</span> <span class="kn">import</span> <span class="n">io</span>
+
+<span class="n">mitosis</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s1">'mitosis.tif'</span><span class="p">)</span>  <span class="c1"># make sure your working directory is right</span>
+<span class="k">print</span><span class="p">(</span><span class="n">mitosis</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre>
+
+
+<pre class="code literal-block"><span></span>(51, 5, 2, 196, 171)
+</pre>
+
+
+<p>Those axes are time, z, channels, y, and x (TZCYX).</p>
+<pre class="code literal-block"><span></span><span class="n">viewer</span> <span class="o">=</span> <span class="n">napari</span><span class="o">.</span><span class="n">view_image</span><span class="p">(</span><span class="n">mitosis</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'mitosis'</span><span class="p">)</span>
+</pre>
+
+
+<video width="90%" controls autoplay loop muted playsinline><source src="../../../../napari/napari-mitosis-720p.mp4" type="video/mp4"></source><source src="../../../../napari/napari-mitosis-720p.ogg" type="video/ogg"></source><img src="../../../../napari/napari-mitosis-720p-frame.jpg" title="Your browser does not support the video tag."></video><p>As above, you can see the last two dimensions displayed, then sliders for the
+remaining dimensions. The sliders are proportionally sized to the number of
+slices along each axis, making it easy to figure out which axis is what. (This
+was one of Lia's recommendations that Nick implemented.) (And yes, labeled axes
+are in our roadmap!)</p>
+<p>We want to see the two channels as individual images to overlay, rather than as
+an extra dimension.  We can do this manually with two <code>add_image</code> calls, or we
+can use the <code>view_multichannel</code> function to overlay multiple channels on one
+another. Finally, we can add a scale keyword argument to account for the
+different scales in xy and in z:</p>
+<pre class="code literal-block"><span></span><span class="n">viewer</span> <span class="o">=</span> <span class="n">napari</span><span class="o">.</span><span class="n">view_multichannel</span><span class="p">(</span>
+    <span class="n">mitosis</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="p">[</span><span class="s1">'magenta'</span><span class="p">,</span> <span class="s1">'green'</span><span class="p">],</span>
+    <span class="n">name</span><span class="o">=</span><span class="p">[</span><span class="s1">'aurora-B'</span><span class="p">,</span> <span class="s1">'tubulin'</span><span class="p">],</span> <span class="n">scale</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="n">contrast_limits</span><span class="o">=</span><span class="p">[[</span><span class="mi">1500</span><span class="p">,</span> <span class="mi">6500</span><span class="p">],</span> <span class="p">[</span><span class="mi">1600</span><span class="p">,</span> <span class="mi">16000</span><span class="p">]],</span>
+<span class="p">)</span>
+</pre>
+
+
+<video width="90%" controls autoplay loop muted playsinline><source src="../../../../napari/napari-mitosis-3d-720p.mp4" type="video/mp4"></source><source src="../../../../napari/napari-mitosis-3d-720p.ogg" type="video/ogg"></source><img src="../../../../napari/napari-mitosis-3d-720p-frame.jpg" title="Your browser does not support the video tag."></video><p>The alternate way to do this, which you'll need for more complex workflows, is:</p>
+<pre class="code literal-block"><span></span><span class="n">viewer</span> <span class="o">=</span> <span class="n">napari</span><span class="o">.</span><span class="n">Viewer</span><span class="p">()</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">add_image</span><span class="p">(</span><span class="n">mitosis</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">'magenta'</span><span class="p">,</span>
+                 <span class="n">name</span><span class="o">=</span><span class="s1">'aurora-B'</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                 <span class="n">contrast_limits</span><span class="o">=</span><span class="p">[</span><span class="mi">1500</span><span class="p">,</span> <span class="mi">6500</span><span class="p">])</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">add_image</span><span class="p">(</span><span class="n">mitosis</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">'green'</span><span class="p">,</span>
+                 <span class="n">name</span><span class="o">=</span><span class="s1">'tubulin'</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                 <span class="n">contrast_limits</span><span class="o">=</span><span class="p">[</span><span class="mi">1600</span><span class="p">,</span> <span class="mi">16000</span><span class="p">])</span>
+</pre>
+
+
+<h3>2. Overlaying computation results</h3>
+<p>As I mentioned earlier, the first time it really hit me how useful napari could
+be was when I was teaching scikit-image at Jackson lab. Napari uses a layered
+display model, so you can keep adding layers on top of each other, and change
+their opacity or visibility on the fly. This makes it really convenient to
+examine the steps of a pipeline as you process data, and maybe try different
+methods if the results don't look so great mid-pipeline.</p>
+<p>In this example, I open napari from IPython and I keep adding layers as I try
+different segmentation methods on the coins example image from scikit-image:</p>
+<video width="90%" controls autoplay loop muted playsinline><source src="../../../../napari/napari-coins-pipeline.mp4" type="video/mp4"></source><source src="../../../../napari/napari-coins-pipeline.ogg" type="video/ogg"></source><img src="../../../../napari/napari-coins-pipeline-frame.jpg" title="Your browser does not support the video tag."></video><h3>3. Annotating data</h3>
+<p>Sometimes, it can be difficult to get an algorithm to pick out exactly what
+you want in an image. With the right UI, however, annotation can be extremely
+fast, and just a little interaction can dramatically help automated algorithms.</p>
+<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">skimage</span> <span class="kn">import</span> <span class="n">data</span>
+<span class="kn">from</span> <span class="nn">skimage</span> <span class="kn">import</span> <span class="n">filters</span>
+<span class="kn">from</span> <span class="nn">skimage</span> <span class="kn">import</span> <span class="n">segmentation</span>
+<span class="kn">from</span> <span class="nn">skimage</span> <span class="kn">import</span> <span class="n">morphology</span>
+
+<span class="kn">import</span> <span class="nn">napari</span>
+
+
+<span class="n">coins</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">coins</span><span class="p">()</span>
+
+<span class="n">viewer</span> <span class="o">=</span> <span class="n">napari</span><span class="o">.</span><span class="n">view_image</span><span class="p">(</span><span class="n">coins</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'coins'</span><span class="p">)</span>
+
+<span class="n">edges</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">sobel</span><span class="p">(</span><span class="n">coins</span><span class="p">)</span>
+
+<span class="n">edges_layer</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">add_image</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">'magenta'</span><span class="p">,</span> <span class="n">blending</span><span class="o">=</span><span class="s1">'additive'</span><span class="p">)</span>
+
+<span class="n">pts_layer</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">add_points</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">pts_layer</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s1">'add'</span>
+<span class="c1"># annotate the background and all the coins, in that order</span>
+
+<span class="n">coordinates</span> <span class="o">=</span> <span class="n">pts_layer</span><span class="o">.</span><span class="n">data</span>
+<span class="n">coordinates_int</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">coordinates</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="n">markers_raw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">coins</span><span class="p">)</span>
+<span class="n">markers_raw</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">coordinates_int</span><span class="o">.</span><span class="n">T</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coordinates</span><span class="p">))</span>
+<span class="c1"># raw markers might be in a little watershed "well".</span>
+<span class="n">markers</span> <span class="o">=</span> <span class="n">morphology</span><span class="o">.</span><span class="n">dilation</span><span class="p">(</span><span class="n">markers_raw</span><span class="p">,</span> <span class="n">morphology</span><span class="o">.</span><span class="n">disk</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+
+<span class="n">segments</span> <span class="o">=</span> <span class="n">segmentation</span><span class="o">.</span><span class="n">watershed</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">markers</span><span class="o">=</span><span class="n">markers</span><span class="p">)</span>
+
+<span class="n">labels_layer</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">add_labels</span><span class="p">(</span><span class="n">segments</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># make background 0</span>
+</pre>
+
+
+<video width="90%" controls autoplay loop muted playsinline><source src="../../../../napari/napari-annotate-coins.mp4" type="video/mp4"></source><source src="../../../../napari/napari-annotate-coins.ogg" type="video/ogg"></source><img src="../../../../napari/napari-annotate-coins-frame.jpg" title="Your browser does not support the video tag."></video><h3>4. Viewing very large (dask) arrays</h3>
+<p>Thanks to John Kirkham's work, napari only loads the data that
+it needs to display. Therefore, virtual arrays such as Dask arrays, HDF5
+datasets, and zarr files can be loaded quickly and easily into napari, provided
+that the individual slices are small enough.</p>
+<p>Today's microscopes produce datasets ranging in the hundreds of GB to multiple
+TB in size. Berkeley's Gokul Upadhyayula has made his lattice light sheet data
+publicly available. Nick converted this to a
+<a href="https://zarr.readthedocs.io/en/stable/">zarr file</a> for ease of access. </p>
+<p>Now, we can use a dask array to view this 100GB array quickly and easily:</p>
+<pre class="code literal-block"><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">dask</span> <span class="kn">import</span> <span class="n">array</span> <span class="k">as</span> <span class="n">da</span>
+
+<span class="n">image</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">from_zarr</span><span class="p">(</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s1">'~/data/gokul-lls/aollsm-m4-560nm.zarr'</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">viewer</span> <span class="o">=</span> <span class="n">napari</span><span class="o">.</span><span class="n">view_image</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'560nm'</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">'magma'</span><span class="p">,</span>
+                           <span class="n">contrast_limits</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">150</span><span class="n">_000</span><span class="p">])</span>
+</pre>
+
+
+<video width="90%" controls autoplay loop muted playsinline><source src="../../../../napari/napari-gokul-lls.mp4" type="video/mp4"></source><source src="../../../../napari/napari-gokul-lls.ogg" type="video/ogg"></source><img src="../../../../napari/napari-gokul-lls-frame.jpg" title="Your browser does not support the video tag."></video><h3>5. Quickly looking at images</h3>
+<p>When you <code>pip install napari</code>, you also get a command-line client that lets
+you quickly view image stacks. Here is a
+<a href="../../../../data/droso-ovarioles-isotropic.tif">downsampled, isotropic version</a> of
+<a href="https://figshare.com/articles/_/9985568">this image</a> from my colleagues,
+Volker Hilsentein and André Nogueira Alves:</p>
+<pre class="code literal-block"><span></span><span class="go">napari ~/data/ovarioles/droso-ovarioles-isotropic.tif</span>
+</pre>
+
+
+<video width="90%" controls autoplay loop muted playsinline><source src="../../../../napari/napari-ovarioles.mp4" type="video/mp4"></source><source src="../../../../napari/napari-ovarioles.ogg" type="video/ogg"></source><img src="../../../../napari/napari-ovarioles-frame.jpg" title="Your browser does not support the video tag."></video><p>Or the <a href="https://samples.scif.io/EmbryoCE.zip">4D C. elegans embryo</a> from the
+<a href="https://scif.io/images/">scif.io example images</a> (unzipping gives a folder of
+images):</p>
+<pre class="code literal-block"><span></span><span class="go">napari ~/data/EmbryoCE</span>
+</pre>
+
+
+<video width="90%" controls autoplay loop muted playsinline><source src="../../../../napari/napari-embryo-ce.mp4" type="video/mp4"></source><source src="../../../../napari/napari-embryo-ce.ogg" type="video/ogg"></source><img src="../../../../napari/napari-embryo-ce-frame.jpg" title="Your browser does not support the video tag."></video><p>Or a data set of many images, such as the red blood cell spectrin network from
+my
+<a href="https://peerj.com/articles/4312/">work with Adam Blanch in Leann Tilley's lab</a>
+(data available from the <a href="https://osf.io">Open Science Framework</a>
+<a href="http://dx.doi.org/10.17605/OSF.IO/SVPFU">here</a>):</p>
+<pre class="code literal-block"><span></span><span class="go">napari ~/data/schizonts/*.tif</span>
+</pre>
+
+
+<video width="90%" controls autoplay loop muted playsinline><source src="../../../../napari/napari-schizonts.mp4" type="video/mp4"></source><source src="../../../../napari/napari-schizonts.ogg" type="video/ogg"></source><img src="../../../../napari/napari-schizonts-frame.jpg" title="Your browser does not support the video tag."></video><h3>6. Parameter sweeps</h3>
+<p>A hat tip to Davis Bennett at Janelia, who
+<a href="https://gist.github.com/d-v-b/5dbdb7513d07e3360cbe5c0f3d5cacb6">came up</a>
+with this one. Suppose you want to manually find the best threshold for an
+image. Thanks to dask's lazy evaluation, you can attach a function call to a
+dimension slider, and use that slider to call the function with many
+different parameter choices. And napari's dimensions model tries to mirror
+NumPy's
+<a href="https://numpy.org/devdocs/user/theory.broadcasting.html">broadcasting rules</a>,
+so that you can view data of different dimensionality together.</p>
+<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">skimage</span> <span class="kn">import</span> <span class="n">data</span>
+<span class="kn">import</span> <span class="nn">dask</span>
+
+
+<span class="n">coins</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">coins</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">threshold</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">arr</span> <span class="o">&gt;</span> <span class="n">t</span>
+
+<span class="n">all_thresholds</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">threshold</span><span class="p">(</span><span class="n">coins</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">255</span><span class="p">)])</span>
+
+<span class="n">viewer</span> <span class="o">=</span> <span class="n">napari</span><span class="o">.</span><span class="n">view_image</span><span class="p">(</span><span class="n">coins</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'coins'</span><span class="p">)</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">add_image</span><span class="p">(</span><span class="n">all_thresholds</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">'thresholded'</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">'magenta'</span><span class="p">,</span> <span class="n">blending</span><span class="o">=</span><span class="s1">'additive'</span>
+<span class="p">)</span>
+</pre>
+
+
+<p>We can even have a bit of fun at the end with 3D rendering... 🙃</p>
+<video width="90%" controls autoplay loop muted playsinline><source src="../../../../napari/napari-coins-thresholding.mp4" type="video/mp4"></source><source src="../../../../napari/napari-coins-thresholding.ogg" type="video/ogg"></source><img src="../../../../napari/napari-coins-thresholding-frame.jpg" title="Your browser does not support the video tag."></video><p>This is not just a cute demo. I actually found this trick
+<a href="https://github.com/scikit-image/scikit-image/issues/4194#issuecomment-537420178">really useful</a>
+when investigating a bug in scikit-image. By varying the threshold
+for h-maxima, I could see detections blinking in and out of existence, even
+though they are supposed to only decrease as the parameter value is increased,
+thus confirming that there is a bug in the scikit-image implementation of
+h-maxima! 😬</p>
+<p>And indeed, improving that example for this post, the broadcasting works with
+points, too, not just images!</p>
+<pre class="code literal-block"><span></span><span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">'heatmap.npy'</span><span class="p">)</span>
+
+<span class="n">viewer</span> <span class="o">=</span> <span class="n">napari</span><span class="o">.</span><span class="n">view_image</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'original'</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">'green'</span><span class="p">,</span>
+                           <span class="n">blending</span><span class="o">=</span><span class="s1">'additive'</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">hmaxima</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">100</span><span class="p">)])</span>
+<span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">add_points</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'maxima coordinates'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">result_image</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">add_image</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'result'</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">'magenta'</span><span class="p">,</span>
+                                <span class="n">blending</span><span class="o">=</span><span class="s1">'additive'</span><span class="p">)</span>
+</pre>
+
+
+<video width="90%" controls autoplay loop muted playsinline><source src="../../../../napari/napari-hmaxima-bug.mp4" type="video/mp4"></source><source src="../../../../napari/napari-hmaxima-bug.ogg" type="video/ogg"></source><img src="../../../../napari/napari-hmaxima-bug-frame.jpg" title="Your browser does not support the video tag."></video><h3>7. Overlay polygons</h3>
+<p>One of Nick's earliest contributions was one of his biggest: a vector-based
+"shapes" layer for polygons, rectangles, circles, and other annotations. This
+makes it very easy to replicate things like the <a href="https://scikit-image.org/docs/dev/auto_examples/edges/plot_active_contours.html">active
+contours</a>
+scikit-image example, without having to flip coordinates, because napari is an
+image-first library:</p>
+<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">skimage</span> <span class="kn">import</span> <span class="n">data</span>
+<span class="kn">from</span> <span class="nn">skimage</span> <span class="kn">import</span> <span class="n">filters</span>
+<span class="kn">from</span> <span class="nn">skimage.color</span> <span class="kn">import</span> <span class="n">rgb2gray</span>
+<span class="kn">from</span> <span class="nn">skimage.segmentation</span> <span class="kn">import</span> <span class="n">active_contour</span>
+
+
+<span class="n">astro</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">astronaut</span><span class="p">()</span>
+<span class="n">astro_gray</span> <span class="o">=</span> <span class="n">rgb2gray</span><span class="p">(</span><span class="n">astro</span><span class="p">)</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">+</span> <span class="mi">100</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="mi">220</span> <span class="o">+</span> <span class="mi">100</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="n">init</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+
+<span class="n">snake</span> <span class="o">=</span> <span class="n">active_contour</span><span class="p">(</span><span class="n">filters</span><span class="o">.</span><span class="n">gaussian</span><span class="p">(</span><span class="n">astro_gray</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+                       <span class="n">init</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.015</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                       <span class="n">gamma</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">coordinates</span><span class="o">=</span><span class="s1">'rc'</span><span class="p">)</span>
+
+<span class="n">viewer</span> <span class="o">=</span> <span class="n">napari</span><span class="o">.</span><span class="n">view_image</span><span class="p">(</span><span class="n">astro</span><span class="p">,</span> <span class="n">rgb</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'astro'</span><span class="p">)</span>
+
+<span class="n">viewer</span><span class="o">.</span><span class="n">add_shapes</span><span class="p">([</span><span class="n">init</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">'initial'</span><span class="p">,</span>
+                  <span class="n">face_color</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)],</span>
+                  <span class="n">edge_color</span><span class="o">=</span><span class="s1">'red'</span><span class="p">,</span> <span class="n">edge_width</span><span class="o">=</span><span class="mi">2</span>
+                  <span class="n">shape_type</span><span class="o">=</span><span class="s1">'polygon'</span><span class="p">)</span>
+
+<span class="n">viewer</span><span class="o">.</span><span class="n">add_shapes</span><span class="p">([</span><span class="n">snake</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">'snake'</span><span class="p">,</span>
+                  <span class="n">face_color</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)],</span>
+                  <span class="n">edge_color</span><span class="o">=</span><span class="s1">'blue'</span><span class="p">,</span> <span class="n">edge_width</span><span class="o">=</span><span class="mi">2</span>
+                  <span class="n">shape_type</span><span class="o">=</span><span class="s1">'polygon'</span><span class="p">)</span>
+</pre>
+
+
+<p><img alt="active contours" src="../../../../napari/astronaut-snake.png"></p>
+<h3>8. More!</h3>
+<p>Nick has been working hard to improve our
+<a href="https://github.com/napari/napari-tutorials">tutorials</a>, which will have more
+details about all of the above. Meanwhile, Ahmet Can and Bryant are busy making
+it easier to use napari to view images live from a microscope, or another
+source. We look forward to hearing more use cases from you! Your first point of
+contact to ask for help should be the <a href="https://forum.image.sc">image.sc forum</a>
+— don't forget to use the "napari" tag!  — as well as our <a href="https://github.com/napari/napari">GitHub
+issues</a> for bug reports and feature requests.</p>
+<p>This might be a good time to emphasise that <strong>napari is still in alpha</strong>, which
+means that we might change the API at any time. This is not to discourage you
+from using it, but rather to point out that you should be ready to evolve
+quickly with it, or pin to the current minor version.</p>
+<h2>Our vision for the future</h2>
+<p>At the risk of sounding like a broken record, napari has already proven itself
+insanely useful for all of us at the team, as well as a few extended members of
+our community. But we are just getting started. We want to napari to help not
+just Python practitioners, but also biologists and other scientists who want to
+access Python's enormous scientific ecosystem, but don't necessarily want to
+learn Python.</p>
+<p>We are <a href="https://github.com/napari/napari/pull/263">working</a> on a plugin system
+to allow the data from napari layers to be the input to Python functions, and
+have their outputs appear as new layers. A sneak peek:</p>
+<video width="90%" controls autoplay loop muted playsinline><source src="../../../../napari/napari-plugins-720p.mp4" type="video/mp4"></source><source src="../../../../napari/napari-plugins-720p.ogg" type="video/ogg"></source><img src="../../../../napari/napari-plugins-720p-frame.jpg" title="Your browser does not support the video tag."></video><p>We are building this in
+<a href="https://github.com/napari/napari/issues/140">collaboration</a> with the
+developers of <a href="https://imjoy.io/">ImJoy</a> to make our plugins cross-compatible.</p>
+<p>In addition to applying functions and seeing the outputs (what ImJoy's Wei
+Ouyang refers to as <em>functional</em> plugins), we see napari as a basis for more
+complex interactivity, such as closed-loop learning in the style of
+<a href="https://www.ilastik.org/">Ilastik</a>, skeleton tracing, 3D annotation, and more.
+We already provide a framework to add or modify keyboard shortcuts or
+mouse interactivity, so it's possible to write this functionality on top of
+napari <em>now</em>. But we want to provide a <em>unified</em> framework that will prevent
+plugins from clobbering each other's functionality.</p>
+<p>Our aim for the plugin framework is for every function to produce
+valid and <em>readable</em> Python code, so that path from performing a set of
+operations to producing a Python module — and thus a plugin — is perfectly
+smooth.</p>
+<p>At the March CZI meeting, someone asked me whether we would
+provide a headless mode for napari processing. Yes and no: Our motto developing
+the plugin system is that <em>napari-headless is just Python.</em>
+With the recording capability and built-in IPython console, we think that
+napari could be a platform to teach
+non-computational scientists the basics of Python, thus providing an
+accelerated loop converting scientists from users to plugin
+contributors, and then to library contributors, and improving the whole
+ecosystem in the process.</p>
+<h2>Join us!</h2>
+<p>In a little over a year, napari has grown beyond what I thought possible. But
+we still have a lot of work to do! In addition to our <a href="https://github.com/napari/napari/issues">issues
+list</a>, we have an <a href="https://github.com/napari/napari/issues/420">open
+roadmap</a>. Feel free to jump in and
+join the fray!</p>
+<p>We also encourage you to contribute to the many open source projects on which we
+depend, starting with VisPy: if you have OpenGL experience, they could really
+use your help! Other libraries we build on include
+NumPy, SciPy, IPython, QtConsole, ImageIO, scikit-image, QtPy, and PyOpenGL.</p>
+<h2>Acknowledgements</h2>
+<p>I've tried to name people's contributions to napari as they happened, but so
+many have helped to build it, it was impossible to name everyone. Our
+ever-growing <a href="https://github.com/napari/napari/graphs/contributors">committers list</a>
+can be found on GitHub, but many more have contributed in countless ways. CZI's
+Shannon Axelrod and Ambrose Carr helped us make early design decisions when they
+adopted napari as the main viewer for StarFISH. Charlotte Weaver helped us build
+a (still upcoming) binary installer, and serves on our <a href="https://github.com/napari/napari/blob/master/docs/CODE_OF_CONDUCT.md">Code of
+Conduct</a>
+(modelled after SciPy's). Greg Johnson and his team at the Allen Institute have
+used napari to build a corpus of annotated images — and helped drive
+the design of napari for that use case.</p>
+<p>At the Imaging Kickoff Meeting last March, since CZI had invited me, I was
+staying at a hotel downtown rather than at Loïc's. One night, Loïc sent me an
+exasperated message that still brings a smile to my face: “You know, if you'd
+stayed at your stupid hotel a year ago, there would be no napari.” It
+constantly amazes me how many things had to line up for napari to exist, let
+alone be where it is today.</p>
+<p>I'm so grateful to everyone who has helped napari get to get to this point. If
+I haven't mentioned your contribution, please email me and I'll make it right.
+One nice thing about blog posts is that they are easy to update!</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../../../categories/fiji/" rel="tag">Fiji</a></li>
+            <li><a class="tag p-category" href="../../../../categories/napari/" rel="tag">napari</a></li>
+            <li><a class="tag p-category" href="../../../../categories/numpy/" rel="tag">NumPy</a></li>
+            <li><a class="tag p-category" href="../../../../categories/planet-scipy/" rel="tag">Planet SciPy</a></li>
+            <li><a class="tag p-category" href="../../../../categories/programming/" rel="tag">programming</a></li>
+            <li><a class="tag p-category" href="../../../../categories/python/" rel="tag">Python</a></li>
+            <li><a class="tag p-category" href="../../../../categories/scipy/" rel="tag">SciPy</a></li>
+            <li><a class="tag p-category" href="../../../../categories/software/" rel="tag">software</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../../../05/28/why-citations-are-not-enough-for-open-source-software/" rel="prev" title="Why citations are not enough for open source software">Previous post</a>
+            </li>
+        </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
+        
+        
+        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="ilovesymposia",
+            disqus_url="https://ilovesymposia.com/2019/10/24/introducing-napari-a-fast-n-dimensional-image-viewer-in-python/",
+        disqus_title="Introducing napari: a fast n-dimensional image viewer in Python",
+        disqus_identifier="cache/posts/2019/10/24/introducing-napari-a-fast-n-dimensional-image-viewer-in-python.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section></article><script>var disqus_shortname="ilovesymposia";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><footer id="footer"><p>Contents © 2019         <a href="mailto:jni.soma@fastmail.com">Juan Nunez-Iglesias</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         
+<a rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<img alt="Creative Commons License BY" style="border-width:0; margin-bottom:12px;" src="https://i.creativecommons.org/l/by/4.0/88x31.png"></a></p>
+            
+        </footer>
+</div>
+    </div>
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+    
+    
+    
+            <script src="../../../../assets/js/all-nocdn.js"></script><!-- fancy dates --><script>
+    moment.locale("en");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates -->
+</body>
+</html>
