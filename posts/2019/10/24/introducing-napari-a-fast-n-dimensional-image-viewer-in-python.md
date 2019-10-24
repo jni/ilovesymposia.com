@@ -1,17 +1,17 @@
 <!--
 .. title: Introducing napari: a fast n-dimensional image viewer in Python
 .. slug: introducing-napari-a-fast-n-dimensional-image-viewer-in-python
-.. date: 2019-10-01 23:07:54 UTC+10:00
+.. date: 2019-10-24 23:59:54 UTC+10:00
 .. status: published
-.. tags: 
+.. tags: Planet SciPy,Python,programming,software,Fiji,SciPy,NumPy,napari
 .. category: 
 .. link: 
 .. description: 
 .. type: text
 -->
 
-I'm really excited to finally, officially, share a new(ish) project, napari,
-with the world.
+I'm really excited to finally, officially, share a new(ish) project called
+napari with the world.
 We have been developing napari [in the open](https://github.com/napari/napari)
 from the very first commit, but we didn't want to make any premature fanfare
 about it… Until now. It's still alpha software, but for months now, both the
