@@ -72,17 +72,43 @@ is so disparate between the two communities.  And so, that evening, in Loïc's
 apartment, napari (lowercase n) was born (though it did not yet have a name).
 
 Following on from his work on ClearVolume, Loïc and I agreed on some founding
-principles for our tool:
-- blazing fast (GPU-powered);
-- native (neither of us likes opening a browser to work);
+design principles for our tool:
+
 - n-dimensional first;
+- native (neither of us likes opening a browser to work);
+- blazing fast (GPU-powered);
 - native 2D and 3D viewing; and
-- minimize new windows and pop-ups, choosing layering instead.
+- minimal new windows and pop-ups, choosing layering instead.
 
 In terms of speed, we knew it was doable, thanks to Martin Weigert's excellent
 3D volume viewer, [spimagine](https://github.com/maweigert/spimagine).
 
-When choosing a name, after playing around with some terrible acronyms, we
+The next week, at the Berkeley sprint, I finally met Kira Evans, a contributor
+to scikit-image who had made several incredibly technical pull requests, on my
+favourite topic of extending n-dimensional support, and whom I'd thus asked
+Nelle to invite to the sprint. She had turned out to be a freshman at
+Northeastern University, but despite her age she was already doing great things
+in open source. In general, life is a big accumulation of small decisions you
+don't even think about. On certain rare occasions, though, you make decisions
+on which you look back and think, hot damn that was a good decision! Inviting
+Kira is one of those for me. (Nelle agreed.)
+
+That week at the sprint, Loïc was able to hack out a quick prototype.
+Meanwhile, Kira was busy helping scikit-image with n-dimensional rotations,
+LowLevelCallables in C and Cython, and various other crazy things.
+
+I'll take a short moment to acknowledge [VisPy](http://vispy.org), which is the
+basis for all of napari's visualisation: napari's canvas is a VisPy canvas, its
+events are VisPy events, and its visual building blocks are VisPy Visuals. I
+don't know the history of VisPy, but I want to thank all its
+[contributors](https://github.com/vispy/vispy/graphs/contributors), especially
+Almar Klein, who drove it for a very long time, and David Hoese, who
+resurrected when Almar was unable to continue maintaining it, and who maintains
+it today. VisPy is yet another example of open source software being
+[inadequately supported by academia](https://ilovesymposia.com/2019/05/28/why-citations-are-not-enough-for-open-source-software/).
+
+The next week, on the Caltrain
+choosing a name, after playing around with some terrible acronyms, we
 instead decided to continue the theme of Pacific islands begun by Fiji (though
 Fiji itself is a spectacular recursive acronym, “Fiji Is Just ImageJ”). With so
 many to choose from, we needed a starting point, and we finally settled on the
@@ -91,17 +117,7 @@ Of course that ends up being in the middle of the ocean, but not too far from
 that point is the tiny village of Napari, in the Republic of Kiribati. We
 thought it had a nice ring to it, and the name stuck.
 
-The next week, at the Berkeley sprint, I finally met Kira Evans, a contributor
-to scikit-image who had made several incredibly technical pull requests, on my
-favourite topic of extending n-dimensional support, and whom I'd thus asked
-Nelle to invite to the sprint. She had turned out to be a freshman at
-Northeastern University, but despite her age she was already doing great things
-in open source.  On certain rare occasions, you make decisions that you look
-back on and think something like, hot damn that was a good decision! Inviting
-Kira is one of those for me. (Nelle agreed.)
-
-Thanks to [VisPy](http://vispy.org/), Loïc was able to hack out a quick
-prototype that week. But starting a new lab from scratch is hard work, and he
+But starting a new lab from scratch is hard work, and he
 knew he would not have time to develop it further. He did, however, have some
 funds available for a summer intern, and after seeing the work she did that
 week, he offered it to Kira. (As a result, she is now officially a college
@@ -242,15 +258,20 @@ print(blobs.shape)
 (10, 256, 256, 256)
 ```
 
-Now, we can look at the volume in napari:
+Now we can look at the volume in napari:
 
 ```python
 viewer = napari.view_image(blobs)
 ```
 
-[image]
+<video width="90%" autoplay loop muted playsinline>
+  <source src="/napari/napari-blobs-720p.mp4" type="video/mp4" />
+  <source src="/napari/napari-blobs-720p.ogg" type="video/ogg" />
+  <img src="/napari/napari-blobs-720p-frame.jpg"
+      title="Your browser does not support the video tag." />
+</video>
 
-The gif doesn't show it, but thanks to VisPy and OpenGL, the canvas is just
+Thanks to VisPy and OpenGL, the canvas is just
 blazing fast, and a joy to navigate.
 
 Using napari, we can immediately see that the blobs grow dramatically along
@@ -262,21 +283,15 @@ We can click on the little cube icon to switch to a 3D view (or type
 `viewer.dims.ndisplay = 3` in our IPython terminal). Napari will remove
 one of the sliders, and display a maximum intensity projection of the volume.
 
-[image]
+<video width="90%" autoplay loop muted playsinline>
+  <source src="/napari/napari-blobs-3d-720p.mp4" type="video/mp4" />
+  <source src="/napari/napari-blobs-3d-720p.ogg" type="video/ogg" />
+  <img src="/napari/napari-blobs-3d-720p-frame.jpg"
+      title="Your browser does not support the video tag." />
+</video>
 
-Napari lets you explore your data quickly, which can dramatically accelerate
-your work. Looking at these blobs slice by slice in matplotlib, for example, I
-might not immediately see that they increase in number along axis 0, because I
-would typically only look at one or two slices.
-
-If I want to see a 3D volume, for moderately sized arrays, one click suffices:
-napari will change the number of displayed dimensions to 3, and remove one
-of the sliders:
-
-[image]
-
-White blobs turn out not to look great in maximum intensity, so let's look at
-the 3D view with the famous
+White blobs turn out to not look so great in maximum intensity, so let's look
+at the 3D view with the famous
 [mitosis dataset](http://fiji.sc/downloads/Spindly-GFP.zip) from Fiji's sample
 data (which I think comes from
 [this paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2064361/) by Griffis,
@@ -295,112 +310,73 @@ print(mitosis.shape)
 Those axes are time, z, channels, y, and x (TZCYX).
 
 ```python
-import napari
-
 viewer = napari.view_image(mitosis, name='mitosis')
 ```
 
-[image]
+<video width="90%" autoplay loop muted playsinline>
+  <source src="/napari/napari-mitosis-720p.mp4" type="video/mp4" />
+  <source src="/napari/napari-mitosis-720p.ogg" type="video/ogg" />
+  <img src="/napari/napari-mitosis-720p-frame.jpg"
+      title="Your browser does not support the video tag." />
+</video>
 
-You can see the last two dimensions displayed, then sliders for the remaining
-dimensions. The sliders are proportionally sized to the number of slices along
-each axis, making it easy to figure out which axis is what. (This was one of
-Lia's recommendations that Nick implemented.) (And yes, labeled axes are in
-our roadmap!)
+As above, you can see the last two dimensions displayed, then sliders for the
+remaining dimensions. The sliders are proportionally sized to the number of
+slices along each axis, making it easy to figure out which axis is what. (This
+was one of Lia's recommendations that Nick implemented.) (And yes, labeled axes
+are in our roadmap!)
 
-Binary images don't look too good with maximum intensity
-projection,  We can switch on the 3D viewing
-mode programmatically, and also add a "scale" argument for unequal spacing
-on the z axis compared to x and y:
+We want to see the two channels as individual images to overlay, rather than as
+an extra dimension.  We can do this manually with two `add_image` calls, or we
+can use the `view_multichannel` function to overlay multiple channels on one
+another. Finally, we can add a scale keyword argument to account for the
+different scales in xy and in z:
 
 ```python
-from skimage import io
+viewer = napari.view_multichannel(
+    mitosis, axis=2, colormap=['magenta', 'green'],
+    name=['aurora-B', 'tubulin'], scale=[1, 10, 1, 1],
+    contrast_limits=[[1500, 6500], [1600, 16000]],
+)
+```
 
-# float32 image in 0-255
-image = io.imread('data/ovarioles/droso-ovarioles-downsampled.tif')
+<video width="90%" autoplay loop muted playsinline>
+  <source src="/napari/napari-mitosis-3d-720p.mp4" type="video/mp4" />
+  <source src="/napari/napari-mitosis-3d-720p.ogg" type="video/ogg" />
+  <img src="/napari/napari-mitosis-3d-720p-frame.jpg"
+      title="Your browser does not support the video tag." />
+</video>
 
-viewer = napari.view_image(image.astype(np.uint8),
-                           name='ovarioles', scale=[2, 1, 1])
-viewer.dims.ndisplay = 3
+The alternate way to do this, which you'll need for more complex workflows, is:
+
+```python
+viewer = napari.Viewer()
+viewer.add_image(mitosis[:, :, 0, :, :], colormap='magenta',
+                 name='aurora-B', scale=[1, 10, 1, 1],
+                 contrast_limits=[1500, 6500])
+viewer.add_image(mitosis[:, :, 1, :, :], colormap='green',
+                 name='tubulin', scale=[1, 10, 1, 1],
+                 contrast_limits=[1600, 16000])
 ```
 
 ## 2. Overlaying computation results
 
-Now, we can try some denoising on the image. Since I know that much of the
-noise in this image is salt and pepper noise (randomly flipped bits), I can
-try an [opening]() followed by a [closing]() as a first step. Because the
-images along the 0th axis are independent, I don't want to denoise across them.
-We can define a 3D (rather than 4D) neighbourhood as follows:
+As I mentioned earlier, the first time it really hit me how useful napari could
+be was when I was teaching scikit-image at Jackson lab. Napari uses a layered
+display model, so you can keep adding layers on top of each other, and change
+their opacity or visibility on the fly. This makes it really convenient to
+examine the steps of a pipeline as you process data, and maybe try different
+methods if the results don't look so great mid-pipeline.
 
-```python
-from scipy import ndimage as ndi
+In this example, I open napari from IPython and I keep adding layers as I try
+different segmentation methods on the coins example image from scikit-image:
 
-neighbors3d = ndi.generate_binary_structure(3, connectivity=1)
-neighbors = neighbors3d[np.newaxis, ...]
-
-opening, closing = map(tz.curry, [ndi.grey_opening, ndi.grey_closing])
-
-denoised = tz.pipe(
-    blobs,
-    opening(footprint=neighbors),
-    closing(footprint=neighbors)
-)
-```
-
-By default, napari will opaquely overlay one image over the next, with optional
-adjustment of the transparency. In this case, that makes it difficult to
-compare the results, because both layers have very high black and white
-contrast.
-
-```python
-denoised_layer = viewer.add_image(denoised, name='denoised')
-```
-
-[image]
-
-Instead, we can change the *blending mode*, how different layers appear on top
-of each other, to "additive", and change the color of each layer so that
-overlaps become easy to spot. These values are also accessible from the
-`add_image` and `view_image` functions as keyword arguments, as well as from
-the napari UI.
-
-```python
-blobs_layer = viewer.layers['blobs']
-blobs_layer.blending = 'additive'
-blobs_layer.colormap = 'magenta'
-denoised_layer.blending = 'additive'
-denoised_layer.colormap = 'cyan'
-```
-
-Now, any bright pixels in the original image that are gone in the new image
-will be magenta, while bright pixels in the denoised image missing in the
-original will be cyan. White pixels are bright in both images.
-
-[image]
-
-The denoised image looks much better! We can see that a lot of the grain is
-removed in the denoised image. Now we can use some scikit-image and
-SciPy functions to threshold and label the blobs:
-
-```python
-from skimage import filters
-
-# label needs a shape `(3,) * ndim` array
-neighbors2 = np.concatenate(
-    (np.zeros_like(neighbors), neighbors, np.zeros_like(neighbors))
-)
-
-binary = filters.threshold_li(denoised) < denoised
-labels = ndi.label(binary, structure=neighbors2)[0]
-
-labels_layer = viewer.add_labels(labels, name='labeled', opacity=0.7)
-```
-
-[image]
-
-We can quickly visualise the data and observe a phase transition from mostly
-disconnected blobs to almost fully connected blobs as the volume fraction
-crosses ~0.3. We might have missed this if only looking at one or two slices.
+<video width="90%" autoplay loop muted playsinline>
+  <source src="/napari/napari-coins-pipeline.mp4" type="video/mp4" />
+  <source src="/napari/napari-coins-pipeline.ogg" type="video/ogg" />
+  <img src="/napari/napari-coins-pipeline-frame.jpg"
+      title="Your browser does not support the video tag." />
+</video>
 
 ## 3. Annotating data
 
@@ -425,9 +401,9 @@ edges = filters.sobel(coins)
 
 edges_layer = viewer.add_image(edges, colormap='magenta', blending='additive')
 
-pts_layer = viewer.add_points()
+pts_layer = viewer.add_points(size=5)
 pts_layer.mode = 'add'
-# annotate the background and all the coins
+# annotate the background and all the coins, in that order
 
 coordinates = pts_layer.data
 coordinates_int = np.round(coordinates).astype(int)
@@ -442,7 +418,12 @@ segments = segmentation.watershed(edges, markers=markers)
 labels_layer = viewer.add_labels(segments - 1)  # make background 0
 ```
 
-[image]
+<video width="90%" autoplay muted playsinline>
+  <source src="/napari/napari-annotate-coins.mp4" type="video/mp4" />
+  <source src="/napari/napari-annotate-coins.ogg" type="video/ogg" />
+  <img src="/napari/napari-annotate-coins-frame.jpg"
+      title="Your browser does not support the video tag." />
+</video>
 
 ## 4. Viewing very large (dask) arrays
 
@@ -470,12 +451,18 @@ viewer = napari.view_image(image, name='560nm', colormap='magma',
                            contrast_limits=[0, 150_000])
 ```
 
-[image]
+<video width="90%" autoplay loop muted playsinline>
+  <source src="/napari/napari-gokul-lls.mp4" type="video/mp4" />
+  <source src="/napari/napari-gokul-lls.ogg" type="video/ogg" />
+  <img src="/napari/napari-gokul-lls-frame.jpg"
+      title="Your browser does not support the video tag." />
+</video>
 
 ## 5. Quickly looking at images
 
 When you `pip install napari`, you also get a command-line client that lets
-you quickly view image stacks. Here is a downsampled, isotropic version of
+you quickly view image stacks. Here is a
+[downsampled, isotropic version](/data/droso-ovarioles-isotropic.tif) of
 [this image](https://figshare.com/articles/_/9985568) from my colleagues,
 Volker Hilsentein and André Nogueira Alves:
 
@@ -483,7 +470,12 @@ Volker Hilsentein and André Nogueira Alves:
 napari ~/data/ovarioles/droso-ovarioles-isotropic.tif
 ```
 
-[image]
+<video width="90%" autoplay loop muted playsinline>
+  <source src="/napari/napari-ovarioles.mp4" type="video/mp4" />
+  <source src="/napari/napari-ovarioles.ogg" type="video/ogg" />
+  <img src="/napari/napari-ovarioles-frame.jpg"
+      title="Your browser does not support the video tag." />
+</video>
 
 Or the [4D C. elegans embryo](https://samples.scif.io/EmbryoCE.zip) from the
 [scif.io example images](https://scif.io/images/) (unzipping gives a folder of
@@ -493,12 +485,30 @@ images):
 napari ~/data/EmbryoCE
 ```
 
+<video width="90%" autoplay loop muted playsinline>
+  <source src="/napari/napari-embryo-ce.mp4" type="video/mp4" />
+  <source src="/napari/napari-embryo-ce.ogg" type="video/ogg" />
+  <img src="/napari/napari-embryo-ce-frame.jpg"
+      title="Your browser does not support the video tag." />
+</video>
+
 Or a data set of many images, such as the red blood cell spectrin network from
-my [skeleton analysis paper](https://peerj.com/articles/4312/):
+my
+[work with Adam Blanch in Leann Tilley's lab](https://peerj.com/articles/4312/)
+(data available from the [Open Science Framework](https://osf.io)
+[here](http://dx.doi.org/10.17605/OSF.IO/SVPFU)):
 
 ```console
 napari ~/data/schizonts/*.tif
 ```
+
+<video width="90%" autoplay loop muted playsinline>
+  <source src="/napari/napari-schizonts.mp4" type="video/mp4" />
+  <source src="/napari/napari-schizonts.ogg" type="video/ogg" />
+  <img src="/napari/napari-schizonts-frame.jpg"
+      title="Your browser does not support the video tag." />
+</video>
+
 
 ## 6. Parameter sweeps
 
@@ -507,7 +517,10 @@ A hat tip to Davis Bennett at Janelia, who
 with this one. Suppose you want to manually find the best threshold for an
 image. Thanks to dask's lazy evaluation, you can attach a function call to a
 dimension slider, and use that slider to call the function with many
-different parameter choices.
+different parameter choices. And napari's dimensions model tries to mirror
+NumPy's
+[broadcasting rules](https://numpy.org/devdocs/user/theory.broadcasting.html),
+so that you can view data of different dimensionality together.
 
 ```python
 from skimage import data
@@ -522,22 +535,95 @@ def threshold(image, t):
 
 all_thresholds = da.stack([threshold(coins, t) for t in np.arange(255)])
 
-napari.view_image(all_thresholds)
+viewer = napari.view_image(coins, name='coins')
+viewer.add_image(all_thresholds,
+    name='thresholded', colormap='magenta', blending='additive'
+)
 ```
 
-[animation: moving over thresholds]
+We can even have a bit of fun at the end with 3D rendering... 🙃
 
-This is not just a cute demo. I actually
-[used this](https://github.com/scikit-image/scikit-image/issues/4194#issuecomment-537420178)
-recently when investigating a bug in scikit-image. By varying the threshold
-for h-minima, I could see detections blinking in and out of existence, even
+<video width="90%" autoplay loop muted playsinline>
+  <source src="/napari/napari-coins-thresholding.mp4" type="video/mp4" />
+  <source src="/napari/napari-coins-thresholding.ogg" type="video/ogg" />
+  <img src="/napari/napari-coins-thresholding-frame.jpg"
+      title="Your browser does not support the video tag." />
+</video>
+
+This is not just a cute demo. I actually found this trick
+[really useful](https://github.com/scikit-image/scikit-image/issues/4194#issuecomment-537420178)
+when investigating a bug in scikit-image. By varying the threshold
+for h-maxima, I could see detections blinking in and out of existence, even
 though they are supposed to only decrease as the parameter value is increased,
 thus confirming that there is a bug in the scikit-image implementation of
-h-maxima!
+h-maxima! 😬
 
-[animation: blinking h-maxima]
+And indeed, improving that example for this post, the broadcasting works with
+points, too, not just images!
 
-## 7. More!
+```python
+image = np.load('heatmap.npy')
+
+viewer = napari.view_image(image, name='original', colormap='green',
+                           blending='additive')
+result = np.array([hmaxima(image, f) for f in np.linspace(0.2, 100.0, num=100)])
+points = np.transpose(np.nonzero(result))
+viewer.add_points(points, name='maxima coordinates', size=3, opacity=0.5)
+result_image = viewer.add_image(result, name='result', colormap='magenta',
+                                blending='additive')
+```
+
+<video width="90%" autoplay loop muted playsinline>
+  <source src="/napari/napari-hmaxima-bug.mp4" type="video/mp4" />
+  <source src="/napari/napari-hmaxima-bug.ogg" type="video/ogg" />
+  <img src="/napari/napari-hmaxima-bug-frame.jpg"
+      title="Your browser does not support the video tag." />
+</video>
+
+## 7. Overlay polygons
+
+One of Nick's earliest contributions was one of his biggest: a vector-based
+"shapes" layer for polygons, rectangles, circles, and other annotations. This
+makes it very easy to replicate things like the [active
+contours](https://scikit-image.org/docs/dev/auto_examples/edges/plot_active_contours.html)
+scikit-image example, without having to flip coordinates, because napari is an
+image-first library:
+
+```python
+from skimage import data
+from skimage import filters
+from skimage.color import rgb2gray
+from skimage.segmentation import active_contour
+
+
+astro = data.astronaut()
+astro_gray = rgb2gray(astro)
+
+s = np.linspace(0, 2*np.pi, 400)
+r = 100 + 100*np.sin(s)
+c = 220 + 100*np.cos(s)
+init = np.array([r, c]).T
+
+snake = active_contour(filters.gaussian(astro_gray, 3),
+                       init, alpha=0.015, beta=10,
+                       gamma=0.001, coordinates='rc')
+
+viewer = napari.view_image(astro, rgb=True, name='astro')
+
+viewer.add_shapes([init], name='initial',
+                  face_color=[(0, 0, 0, 0)],
+                  edge_color='red', edge_width=2
+                  shape_type='polygon')
+
+viewer.add_shapes([snake], name='snake',
+                  face_color=[(0, 0, 0, 0)],
+                  edge_color='blue', edge_width=2
+                  shape_type='polygon')
+```
+
+![active contours](/napari/astronaut-snake.png)
+
+## 8. More!
 
 Nick has been working hard to improve our
 [tutorials](https://github.com/napari/napari-tutorials), which will have more
@@ -588,12 +674,14 @@ contributors.
 # Join us!
 
 In a little over a year, napari has grown beyond what I thought possible. But
-we still have a lot of work to do!  In addition to our [issues
+we still have a lot of work to do! In addition to our [issues
 list](https://github.com/napari/napari/issues), we have an [open
-roadmap](https://github.com/napari/napari/issues/420). And of course, we
-encourage to you help the many open source projects we depend on, including
-NumPy, SciPy, IPython, ImageIO, scikit-image, QtPy, VisPy, and PyOpenGL. If you
-have OpenGL experience, VisPy in particular could use more contributors!
+roadmap](https://github.com/napari/napari/issues/420).
+
+We of course encourage you to help the many open source projects on which we
+depend, starting with VisPy: if you have OpenGL experience, they could really
+use your help! Some of our other dependencies that could use help include
+NumPy, SciPy, IPython, QtConsole, ImageIO, scikit-image, QtPy, and PyOpenGL.
 
 # Acknowledgements
 
