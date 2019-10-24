@@ -3,7 +3,7 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by/4.0/"&gt;
 &lt;img alt="Creative Commons License BY"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Thu, 24 Oct 2019 15:21:17 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Introducing napari: a fast n-dimensional image viewer in Python</title><link>https://ilovesymposia.com/2019/10/24/introducing-napari-a-fast-n-dimensional-image-viewer-in-python/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;I'm really excited to finally, officially, share a new(ish) project called
+src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Thu, 24 Oct 2019 15:25:03 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Introducing napari: a fast n-dimensional image viewer in Python</title><link>https://ilovesymposia.com/2019/10/24/introducing-napari-a-fast-n-dimensional-image-viewer-in-python/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;I'm really excited to finally, officially, share a new(ish) project called
 napari with the world.
 We have been developing napari &lt;a href="https://github.com/napari/napari"&gt;in the open&lt;/a&gt;
 from the very first commit, but we didn't want to make any premature fanfare
@@ -59,7 +59,7 @@ is so disparate between the two communities.  And so that evening, in Loïc's
 apartment, napari (lowercase n) was born (though it did not yet have a name).&lt;/p&gt;
 &lt;figure&gt;
   &lt;img src="https://ilovesymposia.com/napari/loic-walking-sf.jpg" alt="Loïc walking SF" style="width:100%"&gt;
-  &lt;figcaption&gt;*Loïc walking around San Francisco the weekend after I landed.*&lt;/figcaption&gt;
+  &lt;figcaption&gt;&lt;em&gt;Loïc walking around San Francisco the weekend after I landed.&lt;/em&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Following on from his work on ClearVolume, Loïc and I agreed on some founding
@@ -84,7 +84,7 @@ on which you look back and think, hot damn that was a good decision! Inviting
 Kira is one of those for me. (Nelle agreed.)&lt;/p&gt;
 &lt;figure&gt;
   &lt;img src="https://ilovesymposia.com/napari/kira-john-emma-me-dask.jpg" alt="John explains dask-image" style="width:100%"&gt;
-  &lt;figcaption&gt;*John Kirkham explains dask-image to Kira, Emmanuelle Gouillart, and me at the Berkeley sprint.*&lt;/figcaption&gt;
+  &lt;figcaption&gt;&lt;em&gt;John Kirkham explains dask-image to Kira, Emmanuelle Gouillart, and me at the Berkeley sprint.&lt;/em&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;That week at the sprint, Loïc was able to hack out a quick prototype.
@@ -150,7 +150,7 @@ and Eric massively improved the performance of our segmentation visualisation
 layer.&lt;/p&gt;
 &lt;figure&gt;
   &lt;img src="https://ilovesymposia.com/napari/loic-napari-master-class.jpg" alt="Loïc explains napari" style="width:100%"&gt;
-  &lt;figcaption&gt;*Loïc explaining napari's design to John Kirkham and Wei Ouyang at the Chan Zuckerberg Biohub the day after the CZI meeting.*&lt;/figcaption&gt;
+  &lt;figcaption&gt;&lt;em&gt;Loïc explaining napari's design to John Kirkham and Wei Ouyang at the Chan Zuckerberg Biohub the day after the CZI meeting.&lt;/em&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;I came out of the March meeting thinking hey, this napari thing might have legs!
@@ -180,7 +180,7 @@ on some points in napari, then grabbing those points to use as watershed seeds,
 and popping the resulting segmentation as another layer to napari.&lt;/p&gt;
 &lt;figure&gt;
   &lt;img src="https://ilovesymposia.com/napari/napari-annotated-coins.png" alt="Annotated Coins" style="width:100%"&gt;
-  &lt;figcaption&gt;*Combining interactive annotation and segmentation algorithms with napari.*&lt;/figcaption&gt;
+  &lt;figcaption&gt;&lt;em&gt;Combining interactive annotation and segmentation algorithms with napari.&lt;/em&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;In the months since then, we've spent a lot of time improving the code, and

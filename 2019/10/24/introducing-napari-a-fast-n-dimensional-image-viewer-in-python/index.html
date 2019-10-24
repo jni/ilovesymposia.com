@@ -150,7 +150,7 @@ scientific Python ecosystem, it remains challenging to use both together. It
 might well remain so, because the build, installation, and dependency tooling
 is so disparate between the two communities.  And so that evening, in Loïc's
 apartment, napari (lowercase n) was born (though it did not yet have a name).</p>
-<figure><img src="../../../../napari/loic-walking-sf.jpg" alt="Loïc walking SF" style="width:100%"><figcaption>*Loïc walking around San Francisco the weekend after I landed.*</figcaption></figure><p>Following on from his work on ClearVolume, Loïc and I agreed on some founding
+<figure><img src="../../../../napari/loic-walking-sf.jpg" alt="Loïc walking SF" style="width:100%"><figcaption><em>Loïc walking around San Francisco the weekend after I landed.</em></figcaption></figure><p>Following on from his work on ClearVolume, Loïc and I agreed on some founding
 design principles for our tool:</p>
 <ul>
 <li>n-dimensional first;</li>
@@ -170,7 +170,7 @@ in open source. In general, life is a big accumulation of small decisions you
 don't even think about. On certain rare occasions, though, you make decisions
 on which you look back and think, hot damn that was a good decision! Inviting
 Kira is one of those for me. (Nelle agreed.)</p>
-<figure><img src="../../../../napari/kira-john-emma-me-dask.jpg" alt="John explains dask-image" style="width:100%"><figcaption>*John Kirkham explains dask-image to Kira, Emmanuelle Gouillart, and me at the Berkeley sprint.*</figcaption></figure><p>That week at the sprint, Loïc was able to hack out a quick prototype.
+<figure><img src="../../../../napari/kira-john-emma-me-dask.jpg" alt="John explains dask-image" style="width:100%"><figcaption><em>John Kirkham explains dask-image to Kira, Emmanuelle Gouillart, and me at the Berkeley sprint.</em></figcaption></figure><p>That week at the sprint, Loïc was able to hack out a quick prototype.
 Meanwhile, Kira was busy helping scikit-image with n-dimensional rotations,
 LowLevelCallables in C and Cython, and various other crazy things.</p>
 <p>I'll take a short moment to acknowledge <a href="http://vispy.org">VisPy</a>, which is the
@@ -231,7 +231,7 @@ for viewing bigger-than-RAM <a href="https://docs.dask.org/en/stable/array.html"
 arrays</a> in about 20 minutes flat,
 and Eric massively improved the performance of our segmentation visualisation
 layer.</p>
-<figure><img src="../../../../napari/loic-napari-master-class.jpg" alt="Loïc explains napari" style="width:100%"><figcaption>*Loïc explaining napari's design to John Kirkham and Wei Ouyang at the Chan Zuckerberg Biohub the day after the CZI meeting.*</figcaption></figure><p>I came out of the March meeting thinking hey, this napari thing might have legs!
+<figure><img src="../../../../napari/loic-napari-master-class.jpg" alt="Loïc explains napari" style="width:100%"><figcaption><em>Loïc explaining napari's design to John Kirkham and Wei Ouyang at the Chan Zuckerberg Biohub the day after the CZI meeting.</em></figcaption></figure><p>I came out of the March meeting thinking hey, this napari thing might have legs!
 Not only had newcomers been able to improve it quickly without knowing
 the codebase (which usually points to at least <em>decent</em> design), but we heard
 over and over from the imaging scientists that viewing and annotating large
@@ -256,7 +256,7 @@ analysis, one on top of the other, toggling their visibility on and off to
 compare them. And it was super easy to add interactivity to the mix, clicking
 on some points in napari, then grabbing those points to use as watershed seeds,
 and popping the resulting segmentation as another layer to napari.</p>
-<figure><img src="../../../../napari/napari-annotated-coins.png" alt="Annotated Coins" style="width:100%"><figcaption>*Combining interactive annotation and segmentation algorithms with napari.*</figcaption></figure><p>In the months since then, we've spent a lot of time improving the code, and
+<figure><img src="../../../../napari/napari-annotated-coins.png" alt="Annotated Coins" style="width:100%"><figcaption><em>Combining interactive annotation and segmentation algorithms with napari.</em></figcaption></figure><p>In the months since then, we've spent a lot of time improving the code, and
 polishing the little edge cases, like making sure the coordinates reported by
 the cursor are pixel perfect, merging the previously separate Image (2D) and
 Volume (3D) layers, and extending 3D and multi-resolution support to all
