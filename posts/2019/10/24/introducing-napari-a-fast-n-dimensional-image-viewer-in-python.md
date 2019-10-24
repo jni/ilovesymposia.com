@@ -74,7 +74,7 @@ apartment, napari (lowercase n) was born (though it did not yet have a name).
 
 <figure>
   <img src="/napari/loic-walking-sf.jpg" alt="Loïc walking SF" style="width:100%">
-  <figcaption>*Loïc walking around San Francisco the weekend after I landed.*</figcaption>
+  <figcaption><em>Loïc walking around San Francisco the weekend after I landed.</em></figcaption>
 </figure>
 
 Following on from his work on ClearVolume, Loïc and I agreed on some founding
@@ -101,7 +101,7 @@ Kira is one of those for me. (Nelle agreed.)
 
 <figure>
   <img src="/napari/kira-john-emma-me-dask.jpg" alt="John explains dask-image" style="width:100%">
-  <figcaption>*John Kirkham explains dask-image to Kira, Emmanuelle Gouillart, and me at the Berkeley sprint.*</figcaption>
+  <figcaption><em>John Kirkham explains dask-image to Kira, Emmanuelle Gouillart, and me at the Berkeley sprint.</em></figcaption>
 </figure>
 
 That week at the sprint, Loïc was able to hack out a quick prototype.
@@ -175,7 +175,7 @@ layer.
 
 <figure>
   <img src="/napari/loic-napari-master-class.jpg" alt="Loïc explains napari" style="width:100%">
-  <figcaption>*Loïc explaining napari's design to John Kirkham and Wei Ouyang at the Chan Zuckerberg Biohub the day after the CZI meeting.*</figcaption>
+  <figcaption><em>Loïc explaining napari's design to John Kirkham and Wei Ouyang at the Chan Zuckerberg Biohub the day after the CZI meeting.</em></figcaption>
 </figure>
 
 I came out of the March meeting thinking hey, this napari thing might have legs!
@@ -208,7 +208,7 @@ and popping the resulting segmentation as another layer to napari.
 
 <figure>
   <img src="/napari/napari-annotated-coins.png" alt="Annotated Coins" style="width:100%">
-  <figcaption>*Combining interactive annotation and segmentation algorithms with napari.*</figcaption>
+  <figcaption><em>Combining interactive annotation and segmentation algorithms with napari.</em></figcaption>
 </figure> 
 
 In the months since then, we've spent a lot of time improving the code, and
