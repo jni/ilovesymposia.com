@@ -2,7 +2,7 @@
 .. title: Introducing napari: a fast n-dimensional image viewer in Python
 .. slug: introducing-napari-a-fast-n-dimensional-image-viewer-in-python
 .. date: 2019-10-01 23:07:54 UTC+10:00
-.. status: draft
+.. status: published
 .. tags: 
 .. category: 
 .. link: 
@@ -10,12 +10,13 @@
 .. type: text
 -->
 
-I'm really excited to finally share a new(ish) project, napari, with the world.
+I'm really excited to finally, officially, share a new(ish) project, napari,
+with the world.
 We have been developing napari [in the open](https://github.com/napari/napari)
 from the very first commit, but we didn't want to make any premature fanfare
 about it… Until now. It's still alpha software, but for months now, both the
 core napari team and a few collaborators/early adopters have been using napari
-in our daily work. I've found it *life-changing*.
+in our daily work. I've found it life-changing.
 
 # The background
 
@@ -30,14 +31,14 @@ loading them into ITK-SNAP — which worked ok but required me to constantly be
 changing terminals, and anyway was pretty inefficient because my disk ended up
 cluttered with “temporary” VTK volumes.
 
-I tried a bunch of stuff after that time, including Mayavi and even building my
+I tried a bunch of things after that time, including Mayavi and even building my
 own orthogonal views viewer with Matplotlib (which was super slow), but nothing
 really clicked. What's worse, I didn't see any movement on this — I even found
 a very discouraging thread on MNE-Python in which Gaël Varoquaux concluded,
 given the lack of support, that 3D visualisation was not mission critical to
 anyone and not worth pursuing further. (!) Throughout that time, I kept living
 with either manually picking out 2D slices, or going back to tools outside of
-Python, with all the context switching that that entailed. The end result is
+Python, with all the context switching that entailed. The end result is
 that I was looking at my data far less than I should have been, which slowed
 down my work. I can't count the number of silly mistakes I made and dead ends I
 chased, just because I wasn't looking at the data enough.
@@ -68,8 +69,13 @@ do so), and, despite the hard work of many to integrate Fiji with the major
 deep learning learning libraries (which are Python), as well as the wider
 scientific Python ecosystem, it remains challenging to use both together. It
 might well remain so, because the build, installation, and dependency tooling
-is so disparate between the two communities.  And so, that evening, in Loïc's
+is so disparate between the two communities.  And so that evening, in Loïc's
 apartment, napari (lowercase n) was born (though it did not yet have a name).
+
+<figure>
+  <img src="/napari/loic-walking-sf.jpg" alt="Loïc walking SF" style="width:100%">
+  <figcaption>*Loïc walking around San Francisco the weekend after I landed.*</figcaption>
+</figure>
 
 Following on from his work on ClearVolume, Loïc and I agreed on some founding
 design principles for our tool:
@@ -93,6 +99,11 @@ don't even think about. On certain rare occasions, though, you make decisions
 on which you look back and think, hot damn that was a good decision! Inviting
 Kira is one of those for me. (Nelle agreed.)
 
+<figure>
+  <img src="/napari/kira-john-emma-me-dask.jpg" alt="John explains dask-image" style="width:100%">
+  <figcaption>*John Kirkham explains dask-image to Kira, Emmanuelle Gouillart, and me at the Berkeley sprint.*</figcaption>
+</figure>
+
 That week at the sprint, Loïc was able to hack out a quick prototype.
 Meanwhile, Kira was busy helping scikit-image with n-dimensional rotations,
 LowLevelCallables in C and Cython, and various other crazy things.
@@ -103,25 +114,27 @@ events are VisPy events, and its visual building blocks are VisPy Visuals. I
 don't know the history of VisPy, but I want to thank all its
 [contributors](https://github.com/vispy/vispy/graphs/contributors), especially
 Almar Klein, who drove it for a very long time, and David Hoese, who
-resurrected when Almar was unable to continue maintaining it, and who maintains
+resurrected it when Almar could no longer maintain it, and who maintains
 it today. VisPy is yet another example of open source software being
 [inadequately supported by academia](https://ilovesymposia.com/2019/05/28/why-citations-are-not-enough-for-open-source-software/).
 
-The next week, on the Caltrain
-choosing a name, after playing around with some terrible acronyms, we
-instead decided to continue the theme of Pacific islands begun by Fiji (though
-Fiji itself is a spectacular recursive acronym, “Fiji Is Just ImageJ”). With so
-many to choose from, we needed a starting point, and we finally settled on the
+The next weekend, on the Caltrain to the [Computing History
+Museum](https://computerhistory.org/), we worked on choosing a name.
+After playing around with some terrible acronyms, we
+decided to continue the theme of Pacific islands begun by Fiji (though
+Fiji itself is a spectacular recursive acronym, “Fiji Is Just ImageJ”).
+We needed a starting point, and we settled on the
 geographic midpoint between Loïc's base of San Francisco and mine of Melbourne.
-Of course that ends up being in the middle of the ocean, but not too far from
-that point is the tiny village of Napari, in the Republic of Kiribati. We
+That's in the middle of the ocean, of course, but not too far from
+the tiny village of Napari, in the Republic of Kiribati. We
 thought it had a nice ring to it, and the name stuck.
 
-But starting a new lab from scratch is hard work, and he
+There was a big risk of napari never getting off the ground. Starting a new lab
+is hard work, and Loïc
 knew he would not have time to develop it further. He did, however, have some
-funds available for a summer intern, and after seeing the work she did that
-week, he offered it to Kira. (As a result, she is now officially a college
-dropout and full-time software engineer at CZI, the Chan Zuckerberg
+funds available for a summer intern, and after seeing the work Kira did that
+week, he offered her the internship. (As a result, Kira is now officially a
+college dropout and full-time software engineer at CZI, the Chan Zuckerberg
 Initiative.) That summer, under the guidance of Loïc, Stéfan van der Walt, and
 myself, Kira put together the first implementation of napari as you see it
 today.
@@ -129,22 +142,21 @@ today.
 By late summer/early fall, although internally napari was quite a mess, as
 tends to happen in new, fast-growing projects, functionally it was already
 impressive enough that Jeremy Freeman and Nick Sofroniew, from CZI's
-Computational Biology division, started paying close attention.  Nick, who had
-had similar experiences to mine working with Python and nD images, soon fell in
+Computational Biology division, started paying close attention. Nick, who'd
+had similar experiences to mine working with Python and nD images, fell in
 love with it, and literally could not wait for us to move it forward. He took
 matters into his own hands.
 
 Initially, Nick brought some brilliant management to napari, instituting weekly
 meetings that he drove (and continues to drive) like a champion. Those meetings
-were critical to bring others into the loop, including Ahmet Can Solak, Kevin
+were critical to bringing others into the loop, including Ahmet Can Solak, Kevin
 Yamauchi, Bryant Chunn, and Shannon Axelrod, who started to make pull requests
 to improve napari.  Pretty soon, though, Nick made his own pull request, and
 after that it was like seeing a racecar take off.  No one has done more for
-napari than Nick, and Loïc and I owe him an enormous debt of gratitude for
-that.
+napari than Nick, and Loïc and I owe him an enormous debt of gratitude.
 
 Soon after that, the [StarFISH team](https://github.com/spacetx/starfish) at
-CZI adopted napari as their main image viewer, which again helped us to
+CZI adopted napari as their main image viewer, which again helped us
 discover bugs, improve our UI, and add features. By February, everyone in the
 project was using it regularly, despite its warts. We started to think about
 broadening the group of people with eyes on napari.
@@ -154,21 +166,20 @@ Scientists](https://go.chanzuckerberg.com/imaging) and [Imaging Software
 Fellows](https://go.chanzuckerberg.com/imaging#imaging-software-fellows)
 programs in March, which we thought would be a good opportunity to grow the
 team. Among others, we invited John Kirkham (NVIDIA), Eric Perlman (then at
-Johns Hopkins). The CZI meeting was a dramatic demonstration of the power of
+Johns Hopkins, now freelancing). The CZI meeting was a dramatic demonstration of the power of
 bringing together people with complementary experience, as John added support
 for viewing bigger-than-RAM [dask
 arrays](https://docs.dask.org/en/stable/array.html) in about 20 minutes flat,
 and Eric massively improved the performance of our segmentation visualisation
 layer.
 
-Meanwhile, this visit, as CZI had invited me, I was staying at a hotel downtown
-rather than at Loïc's. One night, Loïc sent me an exasperated message that
-still brings a smile to my face: “You know, if you'd stayed at your stupid
-hotel a year ago, there would be no napari.” It does constantly amaze me how
-many things had to line up for napari to exist, let alone be where it is today.
+<figure>
+  <img src="/napari/loic-napari-master-class.jpg" alt="Loïc explains napari" style="width:100%">
+  <figcaption>*Loïc explaining napari's design to John Kirkham and Wei Ouyang at the Chan Zuckerberg Biohub the day after the CZI meeting.*</figcaption>
+</figure>
 
-I came out of the March meeting thinking hey, this napari thing might have legs
-on it! Not only had newcomers been able to improve it quickly without knowing
+I came out of the March meeting thinking hey, this napari thing might have legs!
+Not only had newcomers been able to improve it quickly without knowing
 the codebase (which usually points to at least *decent* design), but we heard
 over and over from the imaging scientists that viewing and annotating large
 datasets remained a challenge for them.
@@ -195,7 +206,10 @@ compare them. And it was super easy to add interactivity to the mix, clicking
 on some points in napari, then grabbing those points to use as watershed seeds,
 and popping the resulting segmentation as another layer to napari.
 
-[screenshot: image, watershed seeds, watershed]
+<figure>
+  <img src="/napari/napari-annotated-coins.png" alt="Annotated Coins" style="width:100%">
+  <figcaption>*Combining interactive annotation and segmentation algorithms with napari.*</figcaption>
+</figure> 
 
 In the months since then, we've spent a lot of time improving the code, and
 polishing the little edge cases, like making sure the coordinates reported by
@@ -215,7 +229,7 @@ of a project.
 # napari now
 
 As I mentioned at the start, currently, everyone on the team uses napari on a
-daily basis for their own work. Awesomely, our workflows actually look quite
+daily basis for their own work. Our workflows actually look quite
 different, yet napari meets the needs of all of them, in some form or another.
 Last month we were surprised to find that Constantin Pape, at EMBL, was
 developing his own viewer, Heimdall, on top of napari, completely independently
@@ -264,7 +278,7 @@ Now we can look at the volume in napari:
 viewer = napari.view_image(blobs)
 ```
 
-<video width="90%" autoplay loop muted playsinline>
+<video width="90%" controls autoplay loop muted playsinline>
   <source src="/napari/napari-blobs-720p.mp4" type="video/mp4" />
   <source src="/napari/napari-blobs-720p.ogg" type="video/ogg" />
   <img src="/napari/napari-blobs-720p-frame.jpg"
@@ -283,7 +297,7 @@ We can click on the little cube icon to switch to a 3D view (or type
 `viewer.dims.ndisplay = 3` in our IPython terminal). Napari will remove
 one of the sliders, and display a maximum intensity projection of the volume.
 
-<video width="90%" autoplay loop muted playsinline>
+<video width="90%" controls autoplay loop muted playsinline>
   <source src="/napari/napari-blobs-3d-720p.mp4" type="video/mp4" />
   <source src="/napari/napari-blobs-3d-720p.ogg" type="video/ogg" />
   <img src="/napari/napari-blobs-3d-720p-frame.jpg"
@@ -313,7 +327,7 @@ Those axes are time, z, channels, y, and x (TZCYX).
 viewer = napari.view_image(mitosis, name='mitosis')
 ```
 
-<video width="90%" autoplay loop muted playsinline>
+<video width="90%" controls autoplay loop muted playsinline>
   <source src="/napari/napari-mitosis-720p.mp4" type="video/mp4" />
   <source src="/napari/napari-mitosis-720p.ogg" type="video/ogg" />
   <img src="/napari/napari-mitosis-720p-frame.jpg"
@@ -340,7 +354,7 @@ viewer = napari.view_multichannel(
 )
 ```
 
-<video width="90%" autoplay loop muted playsinline>
+<video width="90%" controls autoplay loop muted playsinline>
   <source src="/napari/napari-mitosis-3d-720p.mp4" type="video/mp4" />
   <source src="/napari/napari-mitosis-3d-720p.ogg" type="video/ogg" />
   <img src="/napari/napari-mitosis-3d-720p-frame.jpg"
@@ -371,7 +385,7 @@ methods if the results don't look so great mid-pipeline.
 In this example, I open napari from IPython and I keep adding layers as I try
 different segmentation methods on the coins example image from scikit-image:
 
-<video width="90%" autoplay loop muted playsinline>
+<video width="90%" controls autoplay loop muted playsinline>
   <source src="/napari/napari-coins-pipeline.mp4" type="video/mp4" />
   <source src="/napari/napari-coins-pipeline.ogg" type="video/ogg" />
   <img src="/napari/napari-coins-pipeline-frame.jpg"
@@ -380,7 +394,7 @@ different segmentation methods on the coins example image from scikit-image:
 
 ## 3. Annotating data
 
-Sometimes, it can be difficult to get an algorithm to exactly pick out what
+Sometimes, it can be difficult to get an algorithm to pick out exactly what
 you want in an image. With the right UI, however, annotation can be extremely
 fast, and just a little interaction can dramatically help automated algorithms.
 
@@ -418,7 +432,7 @@ segments = segmentation.watershed(edges, markers=markers)
 labels_layer = viewer.add_labels(segments - 1)  # make background 0
 ```
 
-<video width="90%" autoplay muted playsinline>
+<video width="90%" controls autoplay loop muted playsinline>
   <source src="/napari/napari-annotate-coins.mp4" type="video/mp4" />
   <source src="/napari/napari-annotate-coins.ogg" type="video/ogg" />
   <img src="/napari/napari-annotate-coins-frame.jpg"
@@ -451,7 +465,7 @@ viewer = napari.view_image(image, name='560nm', colormap='magma',
                            contrast_limits=[0, 150_000])
 ```
 
-<video width="90%" autoplay loop muted playsinline>
+<video width="90%" controls autoplay loop muted playsinline>
   <source src="/napari/napari-gokul-lls.mp4" type="video/mp4" />
   <source src="/napari/napari-gokul-lls.ogg" type="video/ogg" />
   <img src="/napari/napari-gokul-lls-frame.jpg"
@@ -470,7 +484,7 @@ Volker Hilsentein and André Nogueira Alves:
 napari ~/data/ovarioles/droso-ovarioles-isotropic.tif
 ```
 
-<video width="90%" autoplay loop muted playsinline>
+<video width="90%" controls autoplay loop muted playsinline>
   <source src="/napari/napari-ovarioles.mp4" type="video/mp4" />
   <source src="/napari/napari-ovarioles.ogg" type="video/ogg" />
   <img src="/napari/napari-ovarioles-frame.jpg"
@@ -485,7 +499,7 @@ images):
 napari ~/data/EmbryoCE
 ```
 
-<video width="90%" autoplay loop muted playsinline>
+<video width="90%" controls autoplay loop muted playsinline>
   <source src="/napari/napari-embryo-ce.mp4" type="video/mp4" />
   <source src="/napari/napari-embryo-ce.ogg" type="video/ogg" />
   <img src="/napari/napari-embryo-ce-frame.jpg"
@@ -502,7 +516,7 @@ my
 napari ~/data/schizonts/*.tif
 ```
 
-<video width="90%" autoplay loop muted playsinline>
+<video width="90%" controls autoplay loop muted playsinline>
   <source src="/napari/napari-schizonts.mp4" type="video/mp4" />
   <source src="/napari/napari-schizonts.ogg" type="video/ogg" />
   <img src="/napari/napari-schizonts-frame.jpg"
@@ -543,7 +557,7 @@ viewer.add_image(all_thresholds,
 
 We can even have a bit of fun at the end with 3D rendering... 🙃
 
-<video width="90%" autoplay loop muted playsinline>
+<video width="90%" controls autoplay loop muted playsinline>
   <source src="/napari/napari-coins-thresholding.mp4" type="video/mp4" />
   <source src="/napari/napari-coins-thresholding.ogg" type="video/ogg" />
   <img src="/napari/napari-coins-thresholding-frame.jpg"
@@ -573,7 +587,7 @@ result_image = viewer.add_image(result, name='result', colormap='magenta',
                                 blending='additive')
 ```
 
-<video width="90%" autoplay loop muted playsinline>
+<video width="90%" controls autoplay loop muted playsinline>
   <source src="/napari/napari-hmaxima-bug.mp4" type="video/mp4" />
   <source src="/napari/napari-hmaxima-bug.ogg" type="video/ogg" />
   <img src="/napari/napari-hmaxima-bug-frame.jpg"
@@ -645,14 +659,21 @@ At the risk of sounding like a broken record, napari has already proven itself
 insanely useful for all of us at the team, as well as a few extended members of
 our community. But we are just getting started. We want to napari to help not
 just Python practitioners, but also biologists and other scientists who want to
-access Python's enormous scientific ecosystem.
+access Python's enormous scientific ecosystem, but don't necessarily want to
+learn Python.
 
 We are [working](https://github.com/napari/napari/pull/263) on a plugin system
-to allow the data from napari layers to be the input to Python functions.
+to allow the data from napari layers to be the input to Python functions, and
+have their outputs appear as new layers. A sneak peek:
 
-[image: plugins menu]
+<video width="90%" controls autoplay loop muted playsinline>
+  <source src="/napari/napari-plugins-720p.mp4" type="video/mp4" />
+  <source src="/napari/napari-plugins-720p.ogg" type="video/ogg" />
+  <img src="/napari/napari-plugins-720p-frame.jpg"
+      title="Your browser does not support the video tag." />
+</video>
 
-We are doing this in
+We are building this in
 [collaboration](https://github.com/napari/napari/issues/140) with the
 developers of [ImJoy](https://imjoy.io/) to make our plugins cross-compatible.
 
@@ -660,29 +681,60 @@ In addition to applying functions and seeing the outputs (what ImJoy's Wei
 Ouyang refers to as *functional* plugins), we see napari as a basis for more
 complex interactivity, such as closed-loop learning in the style of
 [Ilastik](https://www.ilastik.org/), skeleton tracing, 3D annotation, and more.
-Indeed, we already provide a framework to add or modify keyboard shortcuts or
-mouse interactivity.
+We already provide a framework to add or modify keyboard shortcuts or
+mouse interactivity, so it's possible to write this functionality on top of
+napari *now*. But we want to provide a *unified* framework that will prevent
+plugins from clobbering each other's functionality.
 
-Finally, we want to use Python's powerful introspection capabilities to make
-every action recordable as valid Python. Someone once asked me whether we would
-provide a headless mode for napari processing. Not really: napari-headless is
-just Python. We think that napari could be a platform to teach
+Our aim for the plugin framework is for every function to produce
+valid and *readable* Python code, so that path from performing a set of
+operations to producing a Python module — and thus a plugin — is perfectly
+smooth.
+
+At the March CZI meeting, someone asked me whether we would
+provide a headless mode for napari processing. Yes and no: Our motto developing
+the plugin system is that *napari-headless is just Python.*
+With the recording capability and built-in IPython console, we think that
+napari could be a platform to teach
 non-computational scientists the basics of Python, thus providing an
-accelerated loop converting scientists from users to library and plugin
-contributors.
+accelerated loop converting scientists from users to plugin
+contributors, and then to library contributors, and improving the whole
+ecosystem in the process.
 
 # Join us!
 
 In a little over a year, napari has grown beyond what I thought possible. But
 we still have a lot of work to do! In addition to our [issues
 list](https://github.com/napari/napari/issues), we have an [open
-roadmap](https://github.com/napari/napari/issues/420).
+roadmap](https://github.com/napari/napari/issues/420). Feel free to jump in and
+join the fray!
 
-We of course encourage you to help the many open source projects on which we
+We also encourage you to contribute to the many open source projects on which we
 depend, starting with VisPy: if you have OpenGL experience, they could really
-use your help! Some of our other dependencies that could use help include
+use your help! Other libraries we build on include
 NumPy, SciPy, IPython, QtConsole, ImageIO, scikit-image, QtPy, and PyOpenGL.
 
 # Acknowledgements
 
+I've tried to name people's contributions to napari as they happened, but so
+many have helped to build it, it was impossible to name everyone. Our
+ever-growing [committers list](https://github.com/napari/napari/graphs/contributors)
+can be found on GitHub, but many more have contributed in countless ways. CZI's
+Shannon Axelrod and Ambrose Carr helped us make early design decisions when they
+adopted napari as the main viewer for StarFISH. Charlotte Weaver helped us build
+a (still upcoming) binary installer, and serves on our [Code of
+Conduct](https://github.com/napari/napari/blob/master/docs/CODE_OF_CONDUCT.md)
+(modelled after SciPy's). Greg Johnson and his team at the Allen Institute have
+used napari to build a corpus of annotated images — and helped drive
+the design of napari for that use case.
 
+At the Imaging Kickoff Meeting last March, since CZI had invited me, I was
+staying at a hotel downtown rather than at Loïc's. One night, Loïc sent me an
+exasperated message that still brings a smile to my face: “You know, if you'd
+stayed at your stupid hotel a year ago, there would be no napari.” It
+constantly amazes me how many things had to line up for napari to exist, let
+alone be where it is today.
+
+I'm so grateful to everyone who has helped napari get to get to this point. If
+I haven't mentioned your contribution, please email me and I'll make it right.
+One nice thing about blog posts is that they are easy to update!
