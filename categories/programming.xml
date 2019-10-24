@@ -3,7 +3,7 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by/4.0/"&gt;
 &lt;img alt="Creative Commons License BY"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Thu, 24 Oct 2019 15:25:03 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Introducing napari: a fast n-dimensional image viewer in Python</title><link>https://ilovesymposia.com/2019/10/24/introducing-napari-a-fast-n-dimensional-image-viewer-in-python/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;I'm really excited to finally, officially, share a new(ish) project called
+src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Thu, 24 Oct 2019 15:28:09 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Introducing napari: a fast n-dimensional image viewer in Python</title><link>https://ilovesymposia.com/2019/10/24/introducing-napari-a-fast-n-dimensional-image-viewer-in-python/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;I'm really excited to finally, officially, share a new(ish) project called
 napari with the world.
 We have been developing napari &lt;a href="https://github.com/napari/napari"&gt;in the open&lt;/a&gt;
 from the very first commit, but we didn't want to make any premature fanfare
@@ -32,6 +32,8 @@ Python, with all the context switching that entailed. The end result is
 that I was looking at my data far less than I should have been, which slowed
 down my work. I can't count the number of silly mistakes I made and dead ends I
 chased, just because I wasn't looking at the data enough.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+
 &lt;h2&gt;The beginning&lt;/h2&gt;
 &lt;p&gt;In the meantime though, I was busy improving support for n-dimensional images
 in scikit-image. In May last year, Nelle Varoquaux organised a joint sprint with

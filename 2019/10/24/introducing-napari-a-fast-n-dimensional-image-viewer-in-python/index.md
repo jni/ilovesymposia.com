@@ -43,6 +43,8 @@ that I was looking at my data far less than I should have been, which slowed
 down my work. I can't count the number of silly mistakes I made and dead ends I
 chased, just because I wasn't looking at the data enough.
 
+<!-- TEASER_END -->
+
 # The beginning
 
 In the meantime though, I was busy improving support for n-dimensional images
