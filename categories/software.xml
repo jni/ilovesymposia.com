@@ -3,7 +3,7 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by/4.0/"&gt;
 &lt;img alt="Creative Commons License BY"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Fri, 25 Oct 2019 02:53:00 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Introducing napari: a fast n-dimensional image viewer in Python</title><link>https://ilovesymposia.com/2019/10/24/introducing-napari-a-fast-n-dimensional-image-viewer-in-python/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;I'm really excited to finally, officially, share a new(ish) project called
+src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Fri, 25 Oct 2019 03:28:03 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Introducing napari: a fast n-dimensional image viewer in Python</title><link>https://ilovesymposia.com/2019/10/24/introducing-napari-a-fast-n-dimensional-image-viewer-in-python/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;I'm really excited to finally, officially, share a new(ish) project called
 napari with the world.
 We have been developing napari &lt;a href="https://github.com/napari/napari"&gt;in the open&lt;/a&gt;
 from the very first commit, but we didn't want to make any premature fanfare
@@ -139,11 +139,16 @@ CZI adopted napari as their main image viewer, which again helped us
 discover bugs, improve our UI, and add features. By February, everyone in the
 project was using it regularly, despite its warts. We started to think about
 broadening the group of people with eyes on napari.&lt;/p&gt;
+&lt;figure&gt;
+  &lt;img src="https://ilovesymposia.com/napari/nick-neurodegen-meeting.jpg" alt="Nick demoing napari" style="width:100%"&gt;
+  &lt;figcaption&gt;&lt;em&gt;Nick shows napari to attendees of the &lt;a href="https://medium.com/@cziscience/building-a-scientific-community-that-is-more-than-the-sum-of-its-parts-ffc0171617a5"&gt;Neurodegeneration Challenge Network Investigators Meeting&lt;/a&gt; in Februrary. &lt;a href="https://twitter.com/cziscience/status/1101005066599723009"&gt;Photo by CZI Science.&lt;/a&gt;&lt;/em&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+
 &lt;p&gt;CZI was organising a meeting for grantees of its &lt;a href="https://go.chanzuckerberg.com/imaging"&gt;Imaging
 Scientists&lt;/a&gt; and &lt;a href="https://go.chanzuckerberg.com/imaging#imaging-software-fellows"&gt;Imaging Software
 Fellows&lt;/a&gt;
 programs in March, which we thought would be a good opportunity to grow the
-team. Among others, we invited John Kirkham (NVIDIA), Eric Perlman (then at
+team. Among others, we invited John Kirkham (NVIDIA) and Eric Perlman (then at
 Johns Hopkins, now freelancing). The CZI meeting was a dramatic demonstration of the power of
 bringing together people with complementary experience, as John added support
 for viewing bigger-than-RAM &lt;a href="https://docs.dask.org/en/stable/array.html"&gt;dask
