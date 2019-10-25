@@ -172,7 +172,7 @@ CZI was organising a meeting for grantees of its [Imaging
 Scientists](https://go.chanzuckerberg.com/imaging) and [Imaging Software
 Fellows](https://go.chanzuckerberg.com/imaging#imaging-software-fellows)
 programs in March, which we thought would be a good opportunity to grow the
-team. Among others, we invited John Kirkham (NVIDIA), Eric Perlman (then at
+team. Among others, we invited John Kirkham (NVIDIA) and Eric Perlman (then at
 Johns Hopkins, now freelancing). The CZI meeting was a dramatic demonstration of the power of
 bringing together people with complementary experience, as John added support
 for viewing bigger-than-RAM [dask
