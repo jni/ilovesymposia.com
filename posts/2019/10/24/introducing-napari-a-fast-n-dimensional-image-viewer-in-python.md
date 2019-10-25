@@ -163,6 +163,11 @@ discover bugs, improve our UI, and add features. By February, everyone in the
 project was using it regularly, despite its warts. We started to think about
 broadening the group of people with eyes on napari.
 
+<figure>
+  <img src="/napari/nick-neurodegen-meeting.jpg" alt="Nick demoing napari" style="width:100%">
+  <figcaption><em>Nick shows napari to attendees of the <a href="https://medium.com/@cziscience/building-a-scientific-community-that-is-more-than-the-sum-of-its-parts-ffc0171617a5">Neurodegeneration Challenge Network Investigators Meeting</a>) in Februrary. <a href="https://twitter.com/cziscience/status/1101005066599723009">Photo by CZI Science.</a></em></figcaption>
+</figure>
+
 CZI was organising a meeting for grantees of its [Imaging
 Scientists](https://go.chanzuckerberg.com/imaging) and [Imaging Software
 Fellows](https://go.chanzuckerberg.com/imaging#imaging-software-fellows)
