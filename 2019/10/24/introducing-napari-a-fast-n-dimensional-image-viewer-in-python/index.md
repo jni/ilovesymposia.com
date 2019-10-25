@@ -485,7 +485,7 @@ When you `pip install napari`, you also get a command-line client that lets
 you quickly view image stacks. Here is a
 [downsampled, isotropic version](/data/droso-ovarioles-isotropic.tif) of
 [this image](https://figshare.com/articles/_/9985568) from my colleagues,
-Volker Hilsentein and André Nogueira Alves:
+Volker Hilsenstein and André Nogueira Alves:
 
 ```console
 napari ~/data/ovarioles/droso-ovarioles-isotropic.tif
