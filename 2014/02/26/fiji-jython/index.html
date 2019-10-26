@@ -152,25 +152,25 @@ optional arguments:
 from ij import IJ # the IJ class has utility methods for many common tasks.
 <p>def convert_file(fn):
     """Convert the input file to png format.</p>
-<pre class="code literal-block"><span></span><span class="gh">Parameters</span>
-<span class="gh">----------</span>
-fn : string
-    The filename of the image to be converted.
-"""
-imp = IJ.openImage(fn)
-# imp is the common name for an ImagePlus object,
-# ImageJ's base image class
-fnout = fn.rsplit('.', 1)[0] + '.png'
-IJ.saveAs(imp, 'png', fnout)
+<pre class="code literal-block"><span></span><span class="nv">Parameters</span>
+<span class="o">----------</span>
+<span class="nv">fn</span> : <span class="nv">string</span>
+    <span class="nv">The</span> <span class="nv">filename</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">image</span> <span class="nv">to</span> <span class="nv">be</span> <span class="nv">converted</span>.
+<span class="s2">"""</span>
+<span class="nv">imp</span> <span class="o">=</span> <span class="nv">IJ</span>.<span class="nv">openImage</span><span class="ss">(</span><span class="nv">fn</span><span class="ss">)</span>
+# <span class="nv">imp</span> <span class="nv">is</span> <span class="nv">the</span> <span class="nv">common</span> <span class="nv">name</span> <span class="k">for</span> <span class="nv">an</span> <span class="nv">ImagePlus</span> <span class="nv">object</span>,
+# <span class="nv">ImageJ</span><span class="s1">'</span><span class="s">s base image class</span>
+<span class="nv">fnout</span> <span class="o">=</span> <span class="nv">fn</span>.<span class="nv">rsplit</span><span class="ss">(</span><span class="s1">'</span><span class="s">.</span><span class="s1">'</span>, <span class="mi">1</span><span class="ss">)</span>[<span class="mi">0</span>] <span class="o">+</span> <span class="s1">'</span><span class="s">.png</span><span class="s1">'</span>
+<span class="nv">IJ</span>.<span class="nv">saveAs</span><span class="ss">(</span><span class="nv">imp</span>, <span class="s1">'</span><span class="s">png</span><span class="s1">'</span>, <span class="nv">fnout</span><span class="ss">)</span>
 </pre>
 
 
 <p>if <strong>name</strong> == '<strong>main</strong>':
     parser = argparse.ArgumentParser(description="Convert TIFF to PNG.")
     parser.add_argument('images', nargs='+', help="Input images.")</p>
-<pre class="code literal-block"><span></span>args = parser.parse_args()
-for fn in args.images:
-    convert_file(fn)
+<pre class="code literal-block"><span></span><span class="nv">args</span> <span class="o">=</span> <span class="nv">parser</span>.<span class="nv">parse_args</span><span class="ss">()</span>
+<span class="k">for</span> <span class="nv">fn</span> <span class="nv">in</span> <span class="nv">args</span>.<span class="nv">images</span>:
+    <span class="nv">convert_file</span><span class="ss">(</span><span class="nv">fn</span><span class="ss">)</span>
 </pre>
 
 

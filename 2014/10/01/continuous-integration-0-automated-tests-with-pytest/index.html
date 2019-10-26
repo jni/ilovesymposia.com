@@ -129,14 +129,14 @@ For a quick intro to pytest, you can watch Andreas Pelme's talk at this year's E
 
 <p>But the basics are very simple: sprinkle files named <code>test_something.py</code> throughout your project, each containing one or more <code>test_function()</code> definition; then type <code>py.test</code> on the command line (at your project root directory), and voila! Pytest will traverse all your subdirectories, gather up all the test files and functions, and run your tests.</p>
 <p>Here's the output for the minimal <code>maths</code> project described above:</p>
-<pre class="code literal-block"><span></span>~/projects/maths $ py.test
-============================= test session starts ==============================
-platform darwin -- Python 2.7.8 -- py-1.4.20 -- pytest-2.5.2
-collected 1 items
+<pre class="code literal-block"><span></span><span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">maths</span> <span class="err">$</span> <span class="n">py</span><span class="p">.</span><span class="n">test</span>
+<span class="o">=============================</span> <span class="n">test</span> <span class="k">session</span> <span class="n">starts</span> <span class="o">==============================</span>
+<span class="n">platform</span> <span class="n">darwin</span> <span class="c1">-- Python 2.7.8 -- py-1.4.20 -- pytest-2.5.2</span>
+<span class="n">collected</span> <span class="mi">1</span> <span class="n">items</span>
 
-test_maths.py .
+<span class="n">test_maths</span><span class="p">.</span><span class="n">py</span> <span class="p">.</span>
 
-=========================== 1 passed in 0.03 seconds ===========================
+<span class="o">===========================</span> <span class="mi">1</span> <span class="n">passed</span> <span class="k">in</span> <span class="mi">0</span><span class="p">.</span><span class="mi">03</span> <span class="n">seconds</span> <span class="o">===========================</span>
 </pre>
 
 
@@ -157,15 +157,15 @@ test_maths.py .
 
 <p>(See my <a href="http://ilovesymposia.com/2014/01/09/best-practices-addendum-find-and-follow-the-conventions-of-your-programming-community/">post on NumPy docstring conventions</a> for what should go in the ellipsis above.)</p>
 <p>Depending the complexity of your code, doctests, test functions, or both will be the appropriate route. Pytest supports doctests with the <code>--doctest-modules</code> flag. (This runs both your standard tests <em>and</em> doctests.)</p>
-<pre class="code literal-block"><span></span>~/projects/maths $ py.test --doctest-modules
-============================= test session starts ==============================
-platform darwin -- Python 2.7.8 -- py-1.4.20 -- pytest-2.5.2
-collected 2 items
+<pre class="code literal-block"><span></span><span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">maths</span> <span class="err">$</span> <span class="n">py</span><span class="p">.</span><span class="n">test</span> <span class="c1">--doctest-modules</span>
+<span class="o">=============================</span> <span class="n">test</span> <span class="k">session</span> <span class="n">starts</span> <span class="o">==============================</span>
+<span class="n">platform</span> <span class="n">darwin</span> <span class="c1">-- Python 2.7.8 -- py-1.4.20 -- pytest-2.5.2</span>
+<span class="n">collected</span> <span class="mi">2</span> <span class="n">items</span>
 
-maths.py .
-test_maths.py .
+<span class="n">maths</span><span class="p">.</span><span class="n">py</span> <span class="p">.</span>
+<span class="n">test_maths</span><span class="p">.</span><span class="n">py</span> <span class="p">.</span>
 
-=========================== 2 passed in 0.06 seconds ===========================
+<span class="o">===========================</span> <span class="mi">2</span> <span class="n">passed</span> <span class="k">in</span> <span class="mi">0</span><span class="p">.</span><span class="mi">06</span> <span class="n">seconds</span> <span class="o">===========================</span>
 </pre>
 
 

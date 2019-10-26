@@ -3,7 +3,7 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by/4.0/"&gt;
 &lt;img alt="Creative Commons License BY"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Fri, 25 Oct 2019 02:53:00 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Continuous integration in Python, 7: some helper tools and final thoughts</title><link>https://ilovesymposia.com/2014/10/27/continuous-integration-in-python-7-some-helper-tools-and-final-thoughts/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;Almost everything I know about good Python development I've learned from &lt;a href="https://github.com/stefanv"&gt;Stéfan van der Walt&lt;/a&gt;, &lt;a href="https://github.com/tonysyu"&gt;Tony Yu&lt;/a&gt;, and the rest of the &lt;a href="https://github.com/scikit-image/scikit-image/graphs/contributors"&gt;scikit-image team&lt;/a&gt;. But a few weeks ago, I was trying to emulate the scikit-image CI process for my own project: &lt;a href="https://github.com/jni/cellom2tif"&gt;cellom2tif&lt;/a&gt;, a tool to liberate images from a &lt;a href="http://www.openmicroscopy.org/site/support/bio-formats5/formats/cellomics.html"&gt;rather useless&lt;/a&gt; proprietary format. (I consider this parenthetical comment sufficient fanfare to announce the &lt;a href="https://pypi.python.org/pypi/cellom2tif/0.2.0"&gt;0.2 release!&lt;/a&gt;) As I started copying and editing config files, I found that even from a complete template, getting started was not very straightforward. First, scikit-image has much more complicated requirements, so that a lot of the &lt;code&gt;.travis.yml&lt;/code&gt; file was just noise for my purposes. And second, as detailed in the previous posts, a lot of the steps are not found or recorded anywhere in the repository, but rather must be navigated to on the webpages of GitHub, Travis, and Coveralls. I therefore decided to write this series as both a notetaking exercise and a guide for future CI novices. (Such as future me.)
+src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Sat, 26 Oct 2019 10:01:19 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Continuous integration in Python, 7: some helper tools and final thoughts</title><link>https://ilovesymposia.com/2014/10/27/continuous-integration-in-python-7-some-helper-tools-and-final-thoughts/</link><dc:creator>Juan Nunez-Iglesias</dc:creator><description>&lt;div&gt;&lt;p&gt;Almost everything I know about good Python development I've learned from &lt;a href="https://github.com/stefanv"&gt;Stéfan van der Walt&lt;/a&gt;, &lt;a href="https://github.com/tonysyu"&gt;Tony Yu&lt;/a&gt;, and the rest of the &lt;a href="https://github.com/scikit-image/scikit-image/graphs/contributors"&gt;scikit-image team&lt;/a&gt;. But a few weeks ago, I was trying to emulate the scikit-image CI process for my own project: &lt;a href="https://github.com/jni/cellom2tif"&gt;cellom2tif&lt;/a&gt;, a tool to liberate images from a &lt;a href="http://www.openmicroscopy.org/site/support/bio-formats5/formats/cellomics.html"&gt;rather useless&lt;/a&gt; proprietary format. (I consider this parenthetical comment sufficient fanfare to announce the &lt;a href="https://pypi.python.org/pypi/cellom2tif/0.2.0"&gt;0.2 release!&lt;/a&gt;) As I started copying and editing config files, I found that even from a complete template, getting started was not very straightforward. First, scikit-image has much more complicated requirements, so that a lot of the &lt;code&gt;.travis.yml&lt;/code&gt; file was just noise for my purposes. And second, as detailed in the previous posts, a lot of the steps are not found or recorded anywhere in the repository, but rather must be navigated to on the webpages of GitHub, Travis, and Coveralls. I therefore decided to write this series as both a notetaking exercise and a guide for future CI novices. (Such as future me.)
 .. has_math: no
 .. status: published
 .. wp-status: publish
@@ -83,16 +83,16 @@ src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright>
 &lt;p&gt;The &lt;a href="https://coveralls.io"&gt;Coveralls&lt;/a&gt; service, once again free for open-source repositories, takes advantage of this: you just need to install an extra piece of software from PyPI, and run it after your tests have passed. Do so by adding the line &lt;code&gt;pip install coveralls&lt;/code&gt; to your &lt;code&gt;before_install&lt;/code&gt; section, and just the &lt;code&gt;coveralls&lt;/code&gt; command to a new &lt;code&gt;after_success&lt;/code&gt; section:&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
 
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;language&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;python&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;python&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;language&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;python&lt;/span&gt;
+&lt;span class="nt"&gt;python&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
 &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="s"&gt;"2.7"&lt;/span&gt;
 &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="s"&gt;"3.4"&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;before_install&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+&lt;span class="nt"&gt;before_install&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
 &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;pip install pytest pytest-cov&lt;/span&gt;
 &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;pip install coveralls&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;script&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+&lt;span class="nt"&gt;script&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
 &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;py.test&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;after_success&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+&lt;span class="nt"&gt;after_success&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
 &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;coveralls&lt;/span&gt;
 &lt;/pre&gt;
 
@@ -109,7 +109,7 @@ src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright>
 &lt;p&gt;&lt;img src="https://ilovesymposia.files.wordpress.com/2014/10/screen-shot-2014-10-16-at-3-49-30-pm.png" alt="Coveralls dashboard"&gt;&lt;/p&gt;
 &lt;p&gt;Tune in tomorrow for the final chapter in continuous integration in Python: showing off! No, it's not a blog post about blogging about it. =P&lt;/p&gt;
 &lt;p&gt;(Addendum: the above &lt;code&gt;.travis.yml&lt;/code&gt; will run Coveralls &lt;em&gt;twice&lt;/em&gt;, once per Python version, so it will also comment twice for your PRs, notify you twice, etc. If you want to test more Python versions, the problem multiplies. Therefore, you can choose to call Coveralls &lt;em&gt;only for a specific Python version&lt;/em&gt;, like so:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;after_success&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;after_success&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
 &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;if [[ $ENV == python=3.4* ]]; then&lt;/span&gt;
 &lt;span class="l l-Scalar l-Scalar-Plain"&gt;coveralls;&lt;/span&gt;
 &lt;span class="l l-Scalar l-Scalar-Plain"&gt;fi&lt;/span&gt;
@@ -132,13 +132,13 @@ src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright>
 &lt;h3&gt;What to do&lt;/h3&gt;
 
 &lt;p&gt;You need to first add a &lt;code&gt;.travis.yml&lt;/code&gt; file to the root of your project. This tells Travis how to install your program's dependencies, install your program, and run the tests. Here's an example file to run tests and coverage on our &lt;code&gt;maths.py&lt;/code&gt; sample project:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;language&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;python&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;python&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;language&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;python&lt;/span&gt;
+&lt;span class="nt"&gt;python&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
     &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="s"&gt;"2.7"&lt;/span&gt;
     &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="s"&gt;"3.4"&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;before_install&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+&lt;span class="nt"&gt;before_install&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
     &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;pip install pytest pytest-cov&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;script&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+&lt;span class="nt"&gt;script&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
     &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;py.test&lt;/span&gt;
 &lt;/pre&gt;
 
@@ -193,23 +193,23 @@ src="https://i.creativecommons.org/l/by/4.0/88x31.png"&gt;&lt;/a&gt;</copyright>
 &lt;!-- TEASER_END --&gt;
 
 &lt;p&gt;For the same reasons that testing is important, measuring coverage is important. Pytest can measure coverage for you with the coverage plugin, found in the &lt;a href="https://pypi.python.org/pypi/pytest-cov"&gt;pytest-cov&lt;/a&gt; package. Once you've installed the extension, a test coverage measurement is just a command-line option away:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt; ~/projects/maths $ py.test --doctest-modules --cov .
-============================= test session starts ==============================
-platform darwin -- Python 2.7.8 -- py-1.4.25 -- pytest-2.6.3
-plugins: cov
-collected 2 items 
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt; &lt;span class="o"&gt;~/&lt;/span&gt;&lt;span class="n"&gt;projects&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;maths&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;py&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt; &lt;span class="c1"&gt;--doctest-modules --cov .&lt;/span&gt;
+&lt;span class="o"&gt;=============================&lt;/span&gt; &lt;span class="n"&gt;test&lt;/span&gt; &lt;span class="k"&gt;session&lt;/span&gt; &lt;span class="n"&gt;starts&lt;/span&gt; &lt;span class="o"&gt;==============================&lt;/span&gt;
+&lt;span class="n"&gt;platform&lt;/span&gt; &lt;span class="n"&gt;darwin&lt;/span&gt; &lt;span class="c1"&gt;-- Python 2.7.8 -- py-1.4.25 -- pytest-2.6.3&lt;/span&gt;
+&lt;span class="n"&gt;plugins&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;cov&lt;/span&gt;
+&lt;span class="n"&gt;collected&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="n"&gt;items&lt;/span&gt; 
 
-maths.py .
-test_maths.py .
---------------- coverage: platform darwin, python 2.7.8-final-0 ----------------
-Name         Stmts   Miss  Cover
---------------------------------
-maths            2      0   100%
-test_maths       4      0   100%
---------------------------------
-TOTAL            6      0   100%
+&lt;span class="n"&gt;maths&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;
+&lt;span class="n"&gt;test_maths&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;
+&lt;span class="c1"&gt;--------------- coverage: platform darwin, python 2.7.8-final-0 ----------------&lt;/span&gt;
+&lt;span class="n"&gt;Name&lt;/span&gt;         &lt;span class="n"&gt;Stmts&lt;/span&gt;   &lt;span class="n"&gt;Miss&lt;/span&gt;  &lt;span class="n"&gt;Cover&lt;/span&gt;
+&lt;span class="c1"&gt;--------------------------------&lt;/span&gt;
+&lt;span class="n"&gt;maths&lt;/span&gt;            &lt;span class="mi"&gt;2&lt;/span&gt;      &lt;span class="mi"&gt;0&lt;/span&gt;   &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;
+&lt;span class="n"&gt;test_maths&lt;/span&gt;       &lt;span class="mi"&gt;4&lt;/span&gt;      &lt;span class="mi"&gt;0&lt;/span&gt;   &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;
+&lt;span class="c1"&gt;--------------------------------&lt;/span&gt;
+&lt;span class="n"&gt;TOTAL&lt;/span&gt;            &lt;span class="mi"&gt;6&lt;/span&gt;      &lt;span class="mi"&gt;0&lt;/span&gt;   &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;
 
-=========================== 2 passed in 0.07 seconds ===========================
+&lt;span class="o"&gt;===========================&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="n"&gt;passed&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;07&lt;/span&gt; &lt;span class="n"&gt;seconds&lt;/span&gt; &lt;span class="o"&gt;===========================&lt;/span&gt;
 &lt;/pre&gt;
 
 
@@ -222,24 +222,24 @@ TOTAL            6      0   100%
 
 
 &lt;p&gt;(The typo is intentional.)&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;--------------- coverage: platform darwin, python 2.7.8-final-0 ----------------
-Name         Stmts   Miss  Cover
---------------------------------
-maths            4      1    75%
-test_maths       4      0   100%
---------------------------------
-TOTAL            8      1    88%
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;--------------- coverage: platform darwin, python 2.7.8-final-0 ----------------&lt;/span&gt;
+&lt;span class="n"&gt;Name&lt;/span&gt;         &lt;span class="n"&gt;Stmts&lt;/span&gt;   &lt;span class="n"&gt;Miss&lt;/span&gt;  &lt;span class="n"&gt;Cover&lt;/span&gt;
+&lt;span class="c1"&gt;--------------------------------&lt;/span&gt;
+&lt;span class="n"&gt;maths&lt;/span&gt;            &lt;span class="mi"&gt;4&lt;/span&gt;      &lt;span class="mi"&gt;1&lt;/span&gt;    &lt;span class="mi"&gt;75&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;
+&lt;span class="n"&gt;test_maths&lt;/span&gt;       &lt;span class="mi"&gt;4&lt;/span&gt;      &lt;span class="mi"&gt;0&lt;/span&gt;   &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;
+&lt;span class="c1"&gt;--------------------------------&lt;/span&gt;
+&lt;span class="n"&gt;TOTAL&lt;/span&gt;            &lt;span class="mi"&gt;8&lt;/span&gt;      &lt;span class="mi"&gt;1&lt;/span&gt;    &lt;span class="mi"&gt;88&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;
 &lt;/pre&gt;
 
 
 &lt;p&gt;With one more option, &lt;code&gt;--cov-report term-missing&lt;/code&gt;, I can see which lines I &lt;em&gt;haven't&lt;/em&gt; covered, so I can try to design tests specifically for that code:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;--------------- coverage: platform darwin, python 2.7.8-final-0 ----------------
-Name         Stmts   Miss  Cover   Missing
-------------------------------------------
-maths            4      1    75%   24
-test_maths       4      0   100%   
-------------------------------------------
-TOTAL            8      1    88%   
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;--------------- coverage: platform darwin, python 2.7.8-final-0 ----------------&lt;/span&gt;
+&lt;span class="n"&gt;Name&lt;/span&gt;         &lt;span class="n"&gt;Stmts&lt;/span&gt;   &lt;span class="n"&gt;Miss&lt;/span&gt;  &lt;span class="n"&gt;Cover&lt;/span&gt;   &lt;span class="n"&gt;Missing&lt;/span&gt;
+&lt;span class="c1"&gt;------------------------------------------&lt;/span&gt;
+&lt;span class="n"&gt;maths&lt;/span&gt;            &lt;span class="mi"&gt;4&lt;/span&gt;      &lt;span class="mi"&gt;1&lt;/span&gt;    &lt;span class="mi"&gt;75&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;   &lt;span class="mi"&gt;24&lt;/span&gt;
+&lt;span class="n"&gt;test_maths&lt;/span&gt;       &lt;span class="mi"&gt;4&lt;/span&gt;      &lt;span class="mi"&gt;0&lt;/span&gt;   &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;   
+&lt;span class="c1"&gt;------------------------------------------&lt;/span&gt;
+&lt;span class="n"&gt;TOTAL&lt;/span&gt;            &lt;span class="mi"&gt;8&lt;/span&gt;      &lt;span class="mi"&gt;1&lt;/span&gt;    &lt;span class="mi"&gt;88&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;   
 &lt;/pre&gt;
 
 
@@ -295,14 +295,14 @@ For a quick intro to pytest, you can watch Andreas Pelme's talk at this year's E
 
 &lt;p&gt;But the basics are very simple: sprinkle files named &lt;code&gt;test_something.py&lt;/code&gt; throughout your project, each containing one or more &lt;code&gt;test_function()&lt;/code&gt; definition; then type &lt;code&gt;py.test&lt;/code&gt; on the command line (at your project root directory), and voila! Pytest will traverse all your subdirectories, gather up all the test files and functions, and run your tests.&lt;/p&gt;
 &lt;p&gt;Here's the output for the minimal &lt;code&gt;maths&lt;/code&gt; project described above:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;~/projects/maths $ py.test
-============================= test session starts ==============================
-platform darwin -- Python 2.7.8 -- py-1.4.20 -- pytest-2.5.2
-collected 1 items
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;~/&lt;/span&gt;&lt;span class="n"&gt;projects&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;maths&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;py&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;
+&lt;span class="o"&gt;=============================&lt;/span&gt; &lt;span class="n"&gt;test&lt;/span&gt; &lt;span class="k"&gt;session&lt;/span&gt; &lt;span class="n"&gt;starts&lt;/span&gt; &lt;span class="o"&gt;==============================&lt;/span&gt;
+&lt;span class="n"&gt;platform&lt;/span&gt; &lt;span class="n"&gt;darwin&lt;/span&gt; &lt;span class="c1"&gt;-- Python 2.7.8 -- py-1.4.20 -- pytest-2.5.2&lt;/span&gt;
+&lt;span class="n"&gt;collected&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="n"&gt;items&lt;/span&gt;
 
-test_maths.py .
+&lt;span class="n"&gt;test_maths&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;
 
-=========================== 1 passed in 0.03 seconds ===========================
+&lt;span class="o"&gt;===========================&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="n"&gt;passed&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;03&lt;/span&gt; &lt;span class="n"&gt;seconds&lt;/span&gt; &lt;span class="o"&gt;===========================&lt;/span&gt;
 &lt;/pre&gt;
 
 
@@ -323,15 +323,15 @@ test_maths.py .
 
 &lt;p&gt;(See my &lt;a href="http://ilovesymposia.com/2014/01/09/best-practices-addendum-find-and-follow-the-conventions-of-your-programming-community/"&gt;post on NumPy docstring conventions&lt;/a&gt; for what should go in the ellipsis above.)&lt;/p&gt;
 &lt;p&gt;Depending the complexity of your code, doctests, test functions, or both will be the appropriate route. Pytest supports doctests with the &lt;code&gt;--doctest-modules&lt;/code&gt; flag. (This runs both your standard tests &lt;em&gt;and&lt;/em&gt; doctests.)&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;~/projects/maths $ py.test --doctest-modules
-============================= test session starts ==============================
-platform darwin -- Python 2.7.8 -- py-1.4.20 -- pytest-2.5.2
-collected 2 items
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;~/&lt;/span&gt;&lt;span class="n"&gt;projects&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;maths&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;py&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt; &lt;span class="c1"&gt;--doctest-modules&lt;/span&gt;
+&lt;span class="o"&gt;=============================&lt;/span&gt; &lt;span class="n"&gt;test&lt;/span&gt; &lt;span class="k"&gt;session&lt;/span&gt; &lt;span class="n"&gt;starts&lt;/span&gt; &lt;span class="o"&gt;==============================&lt;/span&gt;
+&lt;span class="n"&gt;platform&lt;/span&gt; &lt;span class="n"&gt;darwin&lt;/span&gt; &lt;span class="c1"&gt;-- Python 2.7.8 -- py-1.4.20 -- pytest-2.5.2&lt;/span&gt;
+&lt;span class="n"&gt;collected&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="n"&gt;items&lt;/span&gt;
 
-maths.py .
-test_maths.py .
+&lt;span class="n"&gt;maths&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;
+&lt;span class="n"&gt;test_maths&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;
 
-=========================== 2 passed in 0.06 seconds ===========================
+&lt;span class="o"&gt;===========================&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="n"&gt;passed&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;06&lt;/span&gt; &lt;span class="n"&gt;seconds&lt;/span&gt; &lt;span class="o"&gt;===========================&lt;/span&gt;
 &lt;/pre&gt;
 
 

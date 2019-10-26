@@ -95,16 +95,16 @@ MathJax.Hub.Config({
 <p>The <a href="https://coveralls.io">Coveralls</a> service, once again free for open-source repositories, takes advantage of this: you just need to install an extra piece of software from PyPI, and run it after your tests have passed. Do so by adding the line <code>pip install coveralls</code> to your <code>before_install</code> section, and just the <code>coveralls</code> command to a new <code>after_success</code> section:</p>
 <!-- TEASER_END -->
 
-<pre class="code literal-block"><span></span><span class="l l-Scalar l-Scalar-Plain">language</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">python</span>
-<span class="l l-Scalar l-Scalar-Plain">python</span><span class="p p-Indicator">:</span>
+<pre class="code literal-block"><span></span><span class="nt">language</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">python</span>
+<span class="nt">python</span><span class="p">:</span>
 <span class="p p-Indicator">-</span> <span class="s">"2.7"</span>
 <span class="p p-Indicator">-</span> <span class="s">"3.4"</span>
-<span class="l l-Scalar l-Scalar-Plain">before_install</span><span class="p p-Indicator">:</span>
+<span class="nt">before_install</span><span class="p">:</span>
 <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pip install pytest pytest-cov</span>
 <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pip install coveralls</span>
-<span class="l l-Scalar l-Scalar-Plain">script</span><span class="p p-Indicator">:</span>
+<span class="nt">script</span><span class="p">:</span>
 <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">py.test</span>
-<span class="l l-Scalar l-Scalar-Plain">after_success</span><span class="p p-Indicator">:</span>
+<span class="nt">after_success</span><span class="p">:</span>
 <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">coveralls</span>
 </pre>
 
@@ -121,7 +121,7 @@ MathJax.Hub.Config({
 <p><img src="https://ilovesymposia.files.wordpress.com/2014/10/screen-shot-2014-10-16-at-3-49-30-pm.png" alt="Coveralls dashboard"></p>
 <p>Tune in tomorrow for the final chapter in continuous integration in Python: showing off! No, it's not a blog post about blogging about it. =P</p>
 <p>(Addendum: the above <code>.travis.yml</code> will run Coveralls <em>twice</em>, once per Python version, so it will also comment twice for your PRs, notify you twice, etc. If you want to test more Python versions, the problem multiplies. Therefore, you can choose to call Coveralls <em>only for a specific Python version</em>, like so:</p>
-<pre class="code literal-block"><span></span><span class="l l-Scalar l-Scalar-Plain">after_success</span><span class="p p-Indicator">:</span>
+<pre class="code literal-block"><span></span><span class="nt">after_success</span><span class="p">:</span>
 <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">if [[ $ENV == python=3.4* ]]; then</span>
 <span class="l l-Scalar l-Scalar-Plain">coveralls;</span>
 <span class="l l-Scalar l-Scalar-Plain">fi</span>

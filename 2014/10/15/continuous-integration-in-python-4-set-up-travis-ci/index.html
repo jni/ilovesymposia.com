@@ -111,13 +111,13 @@ Measurin'>
 <h3>What to do</h3>
 
 <p>You need to first add a <code>.travis.yml</code> file to the root of your project. This tells Travis how to install your program's dependencies, install your program, and run the tests. Here's an example file to run tests and coverage on our <code>maths.py</code> sample project:</p>
-<pre class="code literal-block"><span></span><span class="l l-Scalar l-Scalar-Plain">language</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">python</span>
-<span class="l l-Scalar l-Scalar-Plain">python</span><span class="p p-Indicator">:</span>
+<pre class="code literal-block"><span></span><span class="nt">language</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">python</span>
+<span class="nt">python</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="s">"2.7"</span>
     <span class="p p-Indicator">-</span> <span class="s">"3.4"</span>
-<span class="l l-Scalar l-Scalar-Plain">before_install</span><span class="p p-Indicator">:</span>
+<span class="nt">before_install</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pip install pytest pytest-cov</span>
-<span class="l l-Scalar l-Scalar-Plain">script</span><span class="p p-Indicator">:</span>
+<span class="nt">script</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">py.test</span>
 </pre>
 

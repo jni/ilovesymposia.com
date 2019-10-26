@@ -98,23 +98,23 @@ MathJax.Hub.Config({
 <!-- TEASER_END -->
 
 <p>For the same reasons that testing is important, measuring coverage is important. Pytest can measure coverage for you with the coverage plugin, found in the <a href="https://pypi.python.org/pypi/pytest-cov">pytest-cov</a> package. Once you've installed the extension, a test coverage measurement is just a command-line option away:</p>
-<pre class="code literal-block"><span></span> ~/projects/maths $ py.test --doctest-modules --cov .
-============================= test session starts ==============================
-platform darwin -- Python 2.7.8 -- py-1.4.25 -- pytest-2.6.3
-plugins: cov
-collected 2 items 
+<pre class="code literal-block"><span></span> <span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">maths</span> <span class="err">$</span> <span class="n">py</span><span class="p">.</span><span class="n">test</span> <span class="c1">--doctest-modules --cov .</span>
+<span class="o">=============================</span> <span class="n">test</span> <span class="k">session</span> <span class="n">starts</span> <span class="o">==============================</span>
+<span class="n">platform</span> <span class="n">darwin</span> <span class="c1">-- Python 2.7.8 -- py-1.4.25 -- pytest-2.6.3</span>
+<span class="n">plugins</span><span class="p">:</span> <span class="n">cov</span>
+<span class="n">collected</span> <span class="mi">2</span> <span class="n">items</span> 
 
-maths.py .
-test_maths.py .
---------------- coverage: platform darwin, python 2.7.8-final-0 ----------------
-Name         Stmts   Miss  Cover
---------------------------------
-maths            2      0   100%
-test_maths       4      0   100%
---------------------------------
-TOTAL            6      0   100%
+<span class="n">maths</span><span class="p">.</span><span class="n">py</span> <span class="p">.</span>
+<span class="n">test_maths</span><span class="p">.</span><span class="n">py</span> <span class="p">.</span>
+<span class="c1">--------------- coverage: platform darwin, python 2.7.8-final-0 ----------------</span>
+<span class="n">Name</span>         <span class="n">Stmts</span>   <span class="n">Miss</span>  <span class="n">Cover</span>
+<span class="c1">--------------------------------</span>
+<span class="n">maths</span>            <span class="mi">2</span>      <span class="mi">0</span>   <span class="mi">100</span><span class="o">%</span>
+<span class="n">test_maths</span>       <span class="mi">4</span>      <span class="mi">0</span>   <span class="mi">100</span><span class="o">%</span>
+<span class="c1">--------------------------------</span>
+<span class="n">TOTAL</span>            <span class="mi">6</span>      <span class="mi">0</span>   <span class="mi">100</span><span class="o">%</span>
 
-=========================== 2 passed in 0.07 seconds ===========================
+<span class="o">===========================</span> <span class="mi">2</span> <span class="n">passed</span> <span class="k">in</span> <span class="mi">0</span><span class="p">.</span><span class="mi">07</span> <span class="n">seconds</span> <span class="o">===========================</span>
 </pre>
 
 
@@ -127,24 +127,24 @@ TOTAL            6      0   100%
 
 
 <p>(The typo is intentional.)</p>
-<pre class="code literal-block"><span></span>--------------- coverage: platform darwin, python 2.7.8-final-0 ----------------
-Name         Stmts   Miss  Cover
---------------------------------
-maths            4      1    75%
-test_maths       4      0   100%
---------------------------------
-TOTAL            8      1    88%
+<pre class="code literal-block"><span></span><span class="c1">--------------- coverage: platform darwin, python 2.7.8-final-0 ----------------</span>
+<span class="n">Name</span>         <span class="n">Stmts</span>   <span class="n">Miss</span>  <span class="n">Cover</span>
+<span class="c1">--------------------------------</span>
+<span class="n">maths</span>            <span class="mi">4</span>      <span class="mi">1</span>    <span class="mi">75</span><span class="o">%</span>
+<span class="n">test_maths</span>       <span class="mi">4</span>      <span class="mi">0</span>   <span class="mi">100</span><span class="o">%</span>
+<span class="c1">--------------------------------</span>
+<span class="n">TOTAL</span>            <span class="mi">8</span>      <span class="mi">1</span>    <span class="mi">88</span><span class="o">%</span>
 </pre>
 
 
 <p>With one more option, <code>--cov-report term-missing</code>, I can see which lines I <em>haven't</em> covered, so I can try to design tests specifically for that code:</p>
-<pre class="code literal-block"><span></span>--------------- coverage: platform darwin, python 2.7.8-final-0 ----------------
-Name         Stmts   Miss  Cover   Missing
-------------------------------------------
-maths            4      1    75%   24
-test_maths       4      0   100%   
-------------------------------------------
-TOTAL            8      1    88%   
+<pre class="code literal-block"><span></span><span class="c1">--------------- coverage: platform darwin, python 2.7.8-final-0 ----------------</span>
+<span class="n">Name</span>         <span class="n">Stmts</span>   <span class="n">Miss</span>  <span class="n">Cover</span>   <span class="n">Missing</span>
+<span class="c1">------------------------------------------</span>
+<span class="n">maths</span>            <span class="mi">4</span>      <span class="mi">1</span>    <span class="mi">75</span><span class="o">%</span>   <span class="mi">24</span>
+<span class="n">test_maths</span>       <span class="mi">4</span>      <span class="mi">0</span>   <span class="mi">100</span><span class="o">%</span>   
+<span class="c1">------------------------------------------</span>
+<span class="n">TOTAL</span>            <span class="mi">8</span>      <span class="mi">1</span>    <span class="mi">88</span><span class="o">%</span>   
 </pre>
 
 
