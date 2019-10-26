@@ -76,7 +76,7 @@
 'render_taxonomies:output/categories/science/index.html', (2289664, 6744)
 'copy_files:output/2009/06/picture-3.png', (166400, 265)
 'render_sources:output/2014/10/01/continuous-integration-0-automated-tests-with-pytest/index.md', (166912, 351)
-'sitemap:output/sitemap.xml', (2223616, 44170)
+'sitemap:output/sitemap.xml', (2223616, 44166)
 'render_sources:output/2014/10/27/continuous-integration-in-python-7-some-helper-tools-and-final-thoughts/index.md', (210432, 390)
 'render_taxonomies:output/categories/video.xml', (210944, 1245)
 'render_taxonomies:output/categories/scipy.xml', (2052096, 3473)

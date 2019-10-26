@@ -50,7 +50,8 @@ chased, just because I wasn't looking at the data enough.
 In the meantime though, I was busy improving support for n-dimensional images
 in scikit-image. In May last year, Nelle Varoquaux organised a joint sprint with
 developers from scikit-learn, scikit-image, and dask at UC Berkeley, and I was
-one of the lucky invitees. I'd recently seen that Loïc Royer, a good friend
+one of the lucky invitees. I'd recently seen that
+[Loïc Royer](https://twitter.com/loicaroyer), a good friend
 from my Janelia days, had moved to San Francisco to start his lab at the Chan
 Zuckerberg Biohub, so I asked him if I could crash at his place for a few days
 before the sprint.
