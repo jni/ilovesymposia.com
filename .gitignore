@@ -111,3 +111,6 @@ venv.bak/
 
 # macOS cruft
 *.DS_Store
+
+# vim swap files
+.*.swp
