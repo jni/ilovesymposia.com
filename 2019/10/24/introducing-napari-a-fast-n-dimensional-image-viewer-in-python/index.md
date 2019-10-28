@@ -348,28 +348,11 @@ slices along each axis, making it easy to figure out which axis is what. (This
 was one of Lia's recommendations that Nick implemented.) (And yes, labeled axes
 are in our roadmap!)
 
+**Edit: 2019-10-28:** *removed broken use of `view_multichannel` function.*
+
 We want to see the two channels as individual images to overlay, rather than as
-an extra dimension.  We can do this manually with two `add_image` calls, or we
-can use the `view_multichannel` function to overlay multiple channels on one
-another. Finally, we can add a scale keyword argument to account for the
-different scales in xy and in z:
-
-```python
-viewer = napari.view_multichannel(
-    mitosis, axis=2, colormap=['magenta', 'green'],
-    name=['aurora-B', 'tubulin'], scale=[1, 10, 1, 1],
-    contrast_limits=[[1500, 6500], [1600, 16000]],
-)
-```
-
-<video width="90%" controls autoplay loop muted playsinline>
-  <source src="/napari/napari-mitosis-3d-720p.mp4" type="video/mp4" />
-  <source src="/napari/napari-mitosis-3d-720p.ogg" type="video/ogg" />
-  <img src="/napari/napari-mitosis-3d-720p-frame.jpg"
-      title="Your browser does not support the video tag." />
-</video>
-
-The alternate way to do this, which you'll need for more complex workflows, is:
+an extra dimension.  We can do this manually with two `add_image` calls, adding
+a scale keyword argument to account for the different scales in xy and in z:
 
 ```python
 viewer = napari.Viewer()
@@ -380,6 +363,13 @@ viewer.add_image(mitosis[:, :, 1, :, :], colormap='green',
                  name='tubulin', scale=[1, 10, 1, 1],
                  contrast_limits=[1600, 16000])
 ```
+
+<video width="90%" controls autoplay loop muted playsinline>
+  <source src="/napari/napari-mitosis-3d-720p.mp4" type="video/mp4" />
+  <source src="/napari/napari-mitosis-3d-720p.ogg" type="video/ogg" />
+  <img src="/napari/napari-mitosis-3d-720p-frame.jpg"
+      title="Your browser does not support the video tag." />
+</video>
 
 ## 2. Overlaying computation results
 
