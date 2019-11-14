@@ -286,7 +286,7 @@ Now we can look at the volume in napari:
 viewer = napari.view_image(blobs)
 ```
 
-<video width="90%" controls autoplay loop muted playsinline>
+<video width="90%" autoplay loop muted playsinline>
   <source src="/napari/napari-blobs-720p.mp4" type="video/mp4" />
   <source src="/napari/napari-blobs-720p.ogg" type="video/ogg" />
   <img src="/napari/napari-blobs-720p-frame.jpg"
@@ -305,7 +305,7 @@ We can click on the little cube icon to switch to a 3D view (or type
 `viewer.dims.ndisplay = 3` in our IPython terminal). Napari will remove
 one of the sliders, and display a maximum intensity projection of the volume.
 
-<video width="90%" controls autoplay loop muted playsinline>
+<video width="90%" autoplay loop muted playsinline>
   <source src="/napari/napari-blobs-3d-720p.mp4" type="video/mp4" />
   <source src="/napari/napari-blobs-3d-720p.ogg" type="video/ogg" />
   <img src="/napari/napari-blobs-3d-720p-frame.jpg"
@@ -335,7 +335,7 @@ Those axes are time, z, channels, y, and x (TZCYX).
 viewer = napari.view_image(mitosis, name='mitosis')
 ```
 
-<video width="90%" controls autoplay loop muted playsinline>
+<video width="90%" autoplay loop muted playsinline>
   <source src="/napari/napari-mitosis-720p.mp4" type="video/mp4" />
   <source src="/napari/napari-mitosis-720p.ogg" type="video/ogg" />
   <img src="/napari/napari-mitosis-720p-frame.jpg"
@@ -364,7 +364,7 @@ viewer.add_image(mitosis[:, :, 1, :, :], colormap='green',
                  contrast_limits=[1600, 16000])
 ```
 
-<video width="90%" controls autoplay loop muted playsinline>
+<video width="90%" autoplay loop muted playsinline>
   <source src="/napari/napari-mitosis-3d-720p.mp4" type="video/mp4" />
   <source src="/napari/napari-mitosis-3d-720p.ogg" type="video/ogg" />
   <img src="/napari/napari-mitosis-3d-720p-frame.jpg"
@@ -383,7 +383,7 @@ methods if the results don't look so great mid-pipeline.
 In this example, I open napari from IPython and I keep adding layers as I try
 different segmentation methods on the coins example image from scikit-image:
 
-<video width="90%" controls autoplay loop muted playsinline>
+<video width="90%" autoplay loop muted playsinline>
   <source src="/napari/napari-coins-pipeline.mp4" type="video/mp4" />
   <source src="/napari/napari-coins-pipeline.ogg" type="video/ogg" />
   <img src="/napari/napari-coins-pipeline-frame.jpg"
@@ -430,7 +430,7 @@ segments = segmentation.watershed(edges, markers=markers)
 labels_layer = viewer.add_labels(segments - 1)  # make background 0
 ```
 
-<video width="90%" controls autoplay loop muted playsinline>
+<video width="90%" autoplay loop muted playsinline>
   <source src="/napari/napari-annotate-coins.mp4" type="video/mp4" />
   <source src="/napari/napari-annotate-coins.ogg" type="video/ogg" />
   <img src="/napari/napari-annotate-coins-frame.jpg"
@@ -463,7 +463,7 @@ viewer = napari.view_image(image, name='560nm', colormap='magma',
                            contrast_limits=[0, 150_000])
 ```
 
-<video width="90%" controls autoplay loop muted playsinline>
+<video width="90%" autoplay loop muted playsinline>
   <source src="/napari/napari-gokul-lls.mp4" type="video/mp4" />
   <source src="/napari/napari-gokul-lls.ogg" type="video/ogg" />
   <img src="/napari/napari-gokul-lls-frame.jpg"
@@ -482,7 +482,7 @@ Volker Hilsenstein and André Nogueira Alves:
 napari ~/data/ovarioles/droso-ovarioles-isotropic.tif
 ```
 
-<video width="90%" controls autoplay loop muted playsinline>
+<video width="90%" autoplay loop muted playsinline>
   <source src="/napari/napari-ovarioles.mp4" type="video/mp4" />
   <source src="/napari/napari-ovarioles.ogg" type="video/ogg" />
   <img src="/napari/napari-ovarioles-frame.jpg"
@@ -497,7 +497,7 @@ images):
 napari ~/data/EmbryoCE
 ```
 
-<video width="90%" controls autoplay loop muted playsinline>
+<video width="90%" autoplay loop muted playsinline>
   <source src="/napari/napari-embryo-ce.mp4" type="video/mp4" />
   <source src="/napari/napari-embryo-ce.ogg" type="video/ogg" />
   <img src="/napari/napari-embryo-ce-frame.jpg"
@@ -514,7 +514,7 @@ my
 napari ~/data/schizonts/*.tif
 ```
 
-<video width="90%" controls autoplay loop muted playsinline>
+<video width="90%" autoplay loop muted playsinline>
   <source src="/napari/napari-schizonts.mp4" type="video/mp4" />
   <source src="/napari/napari-schizonts.ogg" type="video/ogg" />
   <img src="/napari/napari-schizonts-frame.jpg"
@@ -555,7 +555,7 @@ viewer.add_image(all_thresholds,
 
 We can even have a bit of fun at the end with 3D rendering... 🙃
 
-<video width="90%" controls autoplay loop muted playsinline>
+<video width="90%" autoplay loop muted playsinline>
   <source src="/napari/napari-coins-thresholding.mp4" type="video/mp4" />
   <source src="/napari/napari-coins-thresholding.ogg" type="video/ogg" />
   <img src="/napari/napari-coins-thresholding-frame.jpg"
@@ -585,7 +585,7 @@ result_image = viewer.add_image(result, name='result', colormap='magenta',
                                 blending='additive')
 ```
 
-<video width="90%" controls autoplay loop muted playsinline>
+<video width="90%" autoplay loop muted playsinline>
   <source src="/napari/napari-hmaxima-bug.mp4" type="video/mp4" />
   <source src="/napari/napari-hmaxima-bug.ogg" type="video/ogg" />
   <img src="/napari/napari-hmaxima-bug-frame.jpg"
@@ -664,7 +664,7 @@ We are [working](https://github.com/napari/napari/pull/263) on a plugin system
 to allow the data from napari layers to be the input to Python functions, and
 have their outputs appear as new layers. A sneak peek:
 
-<video width="90%" controls autoplay loop muted playsinline>
+<video width="90%" autoplay loop muted playsinline>
   <source src="/napari/napari-plugins-720p.mp4" type="video/mp4" />
   <source src="/napari/napari-plugins-720p.ogg" type="video/ogg" />
   <img src="/napari/napari-plugins-720p-frame.jpg"
